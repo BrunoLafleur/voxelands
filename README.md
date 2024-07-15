@@ -25,7 +25,7 @@ Voxelands is a sandbox construction game based on Minetest, which was
  and singleplayer worlds across multiple game modes.
 
 DEPENDENCIES:
-Voxelands requires the standard C++ library, irrlicht 1.8 or later,
+Voxelands requires the standard C++ library, irrlicht 1.8.5 or later,
  freetype, openAL, vorbisfile, ogg, zlib. CMake, make, and g++ (or other
  C++ compiler) and bzip2 and jpeg are required to build from source.
 
