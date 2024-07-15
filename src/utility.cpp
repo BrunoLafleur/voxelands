@@ -1,0 +1,277 @@
+/************************************************************************
+* Minetest-c55
+* Copyright (C) 2010 celeron55, Perttu Ahola <celeron55@gmail.com>
+*
+* utility.cpp
+* voxelands - 3d voxel world sandbox game
+* Copyright (C) Lisa 'darkrose' Milne 2014 <lisa@ltmnet.com>
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful, but
+* WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>
+*
+* License updated from GPLv2 or later to GPLv3 or later by Lisa Milne
+* for Voxelands.
+************************************************************************/
+
+#include "utility.h"
+#include "gettime.h"
+#include "sha1.h"
+#include "base64.h"
+#include "log.h"
+
+TimeTaker::TimeTaker(const char *name, u32 *result)
+{
+	m_name = name;
+	m_result = result;
+	m_running = true;
+	m_time1 = getTimeMs();
+}
+
+u32 TimeTaker::stop(bool quiet)
+{
+	if(m_running)
+	{
+		u32 time2 = getTimeMs();
+		u32 dtime = time2 - m_time1;
+		if(m_result != NULL)
+		{
+			(*m_result) += dtime;
+		}
+		else
+		{
+			if(quiet == false)
+				infostream<<m_name<<" took "<<dtime<<"ms"<<std::endl;
+		}
+		m_running = false;
+		return dtime;
+	}
+	return 0;
+}
+
+u32 TimeTaker::getTime()
+{
+	u32 time2 = getTimeMs();
+	u32 dtime = time2 - m_time1;
+	return dtime;
+}
+
+const v3s16 g_6dirs[6] =
+{
+	// +right, +top, +back
+	v3s16( 0, 0, 1), // back
+	v3s16( 0, 1, 0), // top
+	v3s16( 1, 0, 0), // right
+	v3s16( 0, 0,-1), // front
+	v3s16( 0,-1, 0), // bottom
+	v3s16(-1, 0, 0) // left
+};
+
+const v3s16 g_26dirs[26] =
+{
+	// +right, +top, +back
+	v3s16( 0, 0, 1), // back
+	v3s16( 0, 1, 0), // top
+	v3s16( 1, 0, 0), // right
+	v3s16( 0, 0,-1), // front
+	v3s16( 0,-1, 0), // bottom
+	v3s16(-1, 0, 0), // left
+	// 6
+	v3s16(-1, 1, 0), // top left
+	v3s16( 1, 1, 0), // top right
+	v3s16( 0, 1, 1), // top back
+	v3s16( 0, 1,-1), // top front
+	v3s16(-1, 0, 1), // back left
+	v3s16( 1, 0, 1), // back right
+	v3s16(-1, 0,-1), // front left
+	v3s16( 1, 0,-1), // front right
+	v3s16(-1,-1, 0), // bottom left
+	v3s16( 1,-1, 0), // bottom right
+	v3s16( 0,-1, 1), // bottom back
+	v3s16( 0,-1,-1), // bottom front
+	// 18
+	v3s16(-1, 1, 1), // top back-left
+	v3s16( 1, 1, 1), // top back-right
+	v3s16(-1, 1,-1), // top front-left
+	v3s16( 1, 1,-1), // top front-right
+	v3s16(-1,-1, 1), // bottom back-left
+	v3s16( 1,-1, 1), // bottom back-right
+	v3s16(-1,-1,-1), // bottom front-left
+	v3s16( 1,-1,-1), // bottom front-right
+	// 26
+};
+
+const v3s16 g_27dirs[27] =
+{
+	// +right, +top, +back
+	v3s16( 0, 0, 1), // back
+	v3s16( 0, 1, 0), // top
+	v3s16( 1, 0, 0), // right
+	v3s16( 0, 0,-1), // front
+	v3s16( 0,-1, 0), // bottom
+	v3s16(-1, 0, 0), // left
+	// 6
+	v3s16(-1, 1, 0), // top left
+	v3s16( 1, 1, 0), // top right
+	v3s16( 0, 1, 1), // top back
+	v3s16( 0, 1,-1), // top front
+	v3s16(-1, 0, 1), // back left
+	v3s16( 1, 0, 1), // back right
+	v3s16(-1, 0,-1), // front left
+	v3s16( 1, 0,-1), // front right
+	v3s16(-1,-1, 0), // bottom left
+	v3s16( 1,-1, 0), // bottom right
+	v3s16( 0,-1, 1), // bottom back
+	v3s16( 0,-1,-1), // bottom front
+	// 18
+	v3s16(-1, 1, 1), // top back-left
+	v3s16( 1, 1, 1), // top back-right
+	v3s16(-1, 1,-1), // top front-left
+	v3s16( 1, 1,-1), // top front-right
+	v3s16(-1,-1, 1), // bottom back-left
+	v3s16( 1,-1, 1), // bottom back-right
+	v3s16(-1,-1,-1), // bottom front-left
+	v3s16( 1,-1,-1), // bottom front-right
+	// 26
+	v3s16(0,0,0),
+};
+
+static unsigned long next = 1;
+
+/* RAND_MAX assumed to be 32767 */
+int myrand(void)
+{
+	next = next * 1103515245 + 12345;
+	return((unsigned)(next/65536) % 32768);
+}
+
+void mysrand(unsigned seed)
+{
+	next = seed;
+}
+
+int myrand_range(int min, int max)
+{
+	if (max-min > MYRAND_MAX) {
+		errorstream<<"WARNING: myrand_range: max-min > MYRAND_MAX"<<std::endl;
+		assert(0);
+	}
+	if (min > max) {
+		assert(0);
+		return max;
+	}
+	return (myrand()%(max-min+1))+min;
+}
+
+#ifndef SERVER
+// Sets the color of all vertices in the mesh
+void setMeshVerticesColor(scene::IMesh* mesh, video::SColor& color)
+{
+	if (mesh == NULL)
+		return;
+
+	u16 mc = mesh->getMeshBufferCount();
+	for (u16 j=0; j<mc; j++) {
+		scene::IMeshBuffer *buf = mesh->getMeshBuffer(j);
+		if (!buf)
+			continue;
+		u16 vc = buf->getVertexCount();
+		if (!vc)
+			continue;
+		video::S3DVertex *vertices = (video::S3DVertex*)buf->getVertices();
+		if (!vertices)
+			continue;
+		for (u16 i=0; i<vc; i++) {
+			vertices[i].Color = color;
+		}
+	}
+}
+#endif
+
+/*
+	blockpos: position of block in block coordinates
+	camera_pos: position of camera in nodes
+	camera_dir: an unit vector pointing to camera direction
+	range: viewing range
+*/
+bool isBlockInSight(v3s16 blockpos_b, v3f camera_pos, v3f camera_dir,
+		f32 camera_fov, f32 range, f32 *distance_ptr)
+{
+	v3s16 blockpos_nodes = blockpos_b * MAP_BLOCKSIZE;
+
+	// Block center position
+	v3f blockpos(
+			((float)blockpos_nodes.X + MAP_BLOCKSIZE/2) * BS,
+			((float)blockpos_nodes.Y + MAP_BLOCKSIZE/2) * BS,
+			((float)blockpos_nodes.Z + MAP_BLOCKSIZE/2) * BS
+	);
+
+	// Block position relative to camera
+	v3f blockpos_relative = blockpos - camera_pos;
+
+	// Distance in camera direction (+=front, -=back)
+	f32 dforward = blockpos_relative.dotProduct(camera_dir);
+
+	// Total distance
+	f32 d = blockpos_relative.getLength();
+
+	if(distance_ptr)
+		*distance_ptr = d;
+
+	// If block is very close, it is always in sight
+	if(d < 1.44*1.44*MAP_BLOCKSIZE*BS/2)
+		return true;
+
+	// If block is far away, it's not in sight
+	if(d > range * BS)
+		return false;
+
+	// Maximum radius of a block
+	f32 block_max_radius = 0.5*1.44*1.44*MAP_BLOCKSIZE*BS;
+
+	// If block is (nearly) touching the camera, don't
+	// bother validating further (that is, render it anyway)
+	if(d < block_max_radius)
+		return true;
+
+	// Cosine of the angle between the camera direction
+	// and the block direction (camera_dir is an unit vector)
+	f32 cosangle = dforward / d;
+
+	// Compensate for the size of the block
+	// (as the block has to be shown even if it's a bit off FOV)
+	// This is an estimate, plus an arbitary factor
+	cosangle += block_max_radius / d * 0.5;
+
+	// If block is not in the field of view, skip it
+	if(cosangle < cos(camera_fov / 2))
+		return false;
+
+	return true;
+}
+
+#include "common.h"
+
+std::string translatePassword(std::string playername, std::wstring password)
+{
+	char buff[256];
+	if (password.length() == 0)
+		return "";
+
+	if (str_topwd((char*)playername.c_str(), (char*)password.c_str(),buff,256))
+		return "";
+
+	return std::string(buff);
+}
+
+
+

@@ -1,0 +1,4636 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Lisa 'darkrose' Milne
+# This file is distributed under the same license as the voxelands package.
+# 
+# Translators:
+# Capricorn, 2016
+# Capricorn, 2016
+# Emon, 2015-2016
+# i486DX2, 2017
+# i486DX2, 2017
+# trekmarvel <trekmarvel@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Voxelands\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-09-02 17:10+1000\n"
+"PO-Revision-Date: 2017-09-22 15:23+0000\n"
+"Last-Translator: Lisa 'darkrose' Milne <lisa@ltmnet.com>\n"
+"Language-Team: Italian (http://www.transifex.com/voxelands/voxelands/language/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/character_creator.cpp:55
+msgid "White Skin"
+msgstr "Pelle bianca"
+
+#: src/character_creator.cpp:56
+msgid "Red Skin"
+msgstr "Pelle rossa"
+
+#: src/character_creator.cpp:57
+msgid "Green Skin"
+msgstr "Pelle verde"
+
+#: src/character_creator.cpp:58
+msgid "Fair Skin"
+msgstr "Pelle chiara"
+
+#: src/character_creator.cpp:59
+msgid "Tanned Skin"
+msgstr "Pelle abbronzata"
+
+#: src/character_creator.cpp:60
+msgid "Dark Skin"
+msgstr "Pelle scura"
+
+#: src/character_creator.cpp:61
+msgid "Black Skin"
+msgstr "Pelle nera"
+
+#: src/character_creator.cpp:63
+msgid "Human Face"
+msgstr "Volto umano"
+
+#: src/character_creator.cpp:64
+msgid "Elven Face"
+msgstr "Volto elfico"
+
+#: src/character_creator.cpp:65
+msgid "Dwarven Face"
+msgstr "Volto nanico"
+
+#: src/character_creator.cpp:66
+msgid "Alien Face"
+msgstr "Volto alieno"
+
+#: src/character_creator.cpp:68
+msgid "White Hair"
+msgstr "Capelli bianchi"
+
+#: src/character_creator.cpp:69
+msgid "Blue Hair"
+msgstr "Capelli blu"
+
+#: src/character_creator.cpp:70
+msgid "Green Hair"
+msgstr "Capelli verdi"
+
+#: src/character_creator.cpp:71
+msgid "Orange Hair"
+msgstr "Capelli arancioni"
+
+#: src/character_creator.cpp:72
+msgid "Brown Hair"
+msgstr "Capelli castani"
+
+#: src/character_creator.cpp:73
+msgid "Purple Hair"
+msgstr "Capelli viola"
+
+#: src/character_creator.cpp:74
+msgid "Red Hair"
+msgstr "Capelli rossi"
+
+#: src/character_creator.cpp:75
+msgid "Blonde Hair"
+msgstr "Capelli biondi"
+
+#: src/character_creator.cpp:76
+msgid "Black Hair"
+msgstr "Capelli neri"
+
+#: src/character_creator.cpp:78
+msgid "Short Hair"
+msgstr "Capelli corti"
+
+#: src/character_creator.cpp:79
+msgid "Medium Hair"
+msgstr "Capelli medi"
+
+#: src/character_creator.cpp:80
+msgid "Long Hair"
+msgstr "Capelli lunghi"
+
+#: src/character_creator.cpp:81
+msgid "Styled Hair"
+msgstr "Capelli acconciati"
+
+#: src/character_creator.cpp:83
+msgid "White Eyes"
+msgstr "Occhi bianchi"
+
+#: src/character_creator.cpp:84
+msgid "Blue Eyes"
+msgstr "Occhi blu"
+
+#: src/character_creator.cpp:85
+msgid "Green Eyes"
+msgstr "Occhi verdi"
+
+#: src/character_creator.cpp:86
+msgid "Orange Eyes"
+msgstr "Occhi arancioni"
+
+#: src/character_creator.cpp:87
+msgid "Brown Eyes"
+msgstr "Occhi castani"
+
+#: src/character_creator.cpp:88
+msgid "Purple Eyes"
+msgstr "Occhi viola"
+
+#: src/character_creator.cpp:89
+msgid "Red Eyes"
+msgstr "Occhi rossi"
+
+#: src/character_creator.cpp:90
+msgid "Yellow Eyes"
+msgstr "Occhi gialli"
+
+#: src/character_creator.cpp:91
+msgid "Black Eyes"
+msgstr "Occhi neri"
+
+#: src/character_creator.cpp:93
+msgid "White T-Shirt"
+msgstr "Maglietta bianca"
+
+#: src/character_creator.cpp:94
+msgid "Blue T-Shirt"
+msgstr "Maglietta blu"
+
+#: src/character_creator.cpp:95
+msgid "Green T-Shirt"
+msgstr "Maglietta verde"
+
+#: src/character_creator.cpp:96
+msgid "Orange T-Shirt"
+msgstr "Maglietta arancione"
+
+#: src/character_creator.cpp:97
+msgid "Purple T-Shirt"
+msgstr "Maglietta viola"
+
+#: src/character_creator.cpp:98
+msgid "Red T-Shirt"
+msgstr "Maglietta rossa"
+
+#: src/character_creator.cpp:99
+msgid "Yellow T-Shirt"
+msgstr "Maglietta gialla"
+
+#: src/character_creator.cpp:100
+msgid "Black T-Shirt"
+msgstr "Maglietta nera"
+
+#: src/character_creator.cpp:102
+msgid "White Pants"
+msgstr "Pantaloni bianchi"
+
+#: src/character_creator.cpp:103
+msgid "Blue Pants"
+msgstr "Pantaloni blu"
+
+#: src/character_creator.cpp:104
+msgid "Green Pants"
+msgstr "Pantaloni verdi"
+
+#: src/character_creator.cpp:105
+msgid "Orange Pants"
+msgstr "Pantaloni arancioni"
+
+#: src/character_creator.cpp:106
+msgid "Purple Pants"
+msgstr "Pantaloni viola"
+
+#: src/character_creator.cpp:107
+msgid "Red Pants"
+msgstr "Pantaloni rossi"
+
+#: src/character_creator.cpp:108
+msgid "Yellow Pants"
+msgstr "Pantaloni gialli"
+
+#: src/character_creator.cpp:109
+msgid "Black Pants"
+msgstr "Pantaloni neri"
+
+#: src/character_creator.cpp:111 src/content_clothesitem.cpp:1720
+msgid "Leather Shoes"
+msgstr "Scarpe di cuoio"
+
+#: src/character_creator.cpp:112 src/content_clothesitem.cpp:2536
+msgid "Fur Shoes"
+msgstr "Scarpe di pelliccia"
+
+#: src/character_creator.cpp:113 src/content_clothesitem.cpp:959
+msgid "Canvas Shoes"
+msgstr "Scarpe di tela"
+
+#: src/character_creator.cpp:203
+msgid ""
+"Here you can create your default character, this is how other players will see you in-game. When you join a new server you will start with the clothing you select here. Additional clothing, both protective and decorative, can be crafted in-game.\n"
+"You can return here from the main menu anytime to change your character."
+msgstr "Qui potete creare il vostro personaggio predefinito, è come gli altri giocatori vi vedranno nel gioco. Quando vi unirete a un nuovo server inizierete coi vestiti che scegliete qua. L'abbigliamento aggiuntivo, sia protettivo che decorativo, può essere creato nel gioco.\nPotete tornare qui per modificare il vostro personaggio in qualsiasi momento, dal menu principale."
+
+#: src/character_creator.cpp:224
+msgid "Create Your Character"
+msgstr "Create il vostro personaggio"
+
+#: src/character_creator.cpp:231
+msgid "Male"
+msgstr "Maschio "
+
+#: src/character_creator.cpp:236
+msgid "Female"
+msgstr "Femmina"
+
+#: src/character_creator.cpp:243
+msgid "Taller"
+msgstr "Più alto"
+
+#: src/character_creator.cpp:248
+msgid "Shorter"
+msgstr "Più basso"
+
+#: src/character_creator.cpp:255
+msgid "Wider"
+msgstr "Più largo"
+
+#: src/character_creator.cpp:260
+msgid "Thinner"
+msgstr "Più magro"
+
+#: src/character_creator.cpp:419
+msgid "Done"
+msgstr "Fatto"
+
+#: src/character_creator.cpp:424 src/guiSingleplayerMenu.cpp:221
+#: src/keycode.cpp:238
+msgid "Cancel"
+msgstr "Annullare"
+
+#: src/content_clothesitem.cpp:67
+msgid "Space Suit Pants"
+msgstr "Pantaloni della tuta spaziale"
+
+#: src/content_clothesitem.cpp:89
+msgid "Space Suit Shirt"
+msgstr "Maglia della tuta spaziale"
+
+#: src/content_clothesitem.cpp:111
+msgid "Space Suit Helmet"
+msgstr "Casco della tuta spaziale"
+
+#: src/content_clothesitem.cpp:127
+msgid "Space Suit Boots"
+msgstr "Stivali della tuta spaziale"
+
+#: src/content_clothesitem.cpp:144
+msgid "Cotton T-Shirt"
+msgstr "Maglietta di cotone"
+
+#: src/content_clothesitem.cpp:158
+msgid "Blue Cotton T-Shirt"
+msgstr "Maglietta blu di cotone"
+
+#: src/content_clothesitem.cpp:172
+msgid "Green Cotton T-Shirt"
+msgstr "Maglietta verde di cotone"
+
+#: src/content_clothesitem.cpp:186
+msgid "Orange Cotton Tshirt"
+msgstr "Maglietta arancione di cotone"
+
+#: src/content_clothesitem.cpp:200
+msgid "Purple Cotton T-Shirt"
+msgstr "Maglietta viola di cotone"
+
+#: src/content_clothesitem.cpp:214
+msgid "Red Cotton T-Shirt"
+msgstr "Maglietta rossa di cotone"
+
+#: src/content_clothesitem.cpp:228
+msgid "Yellow Cotton T-Shirt"
+msgstr "Maglietta gialla di cotone"
+
+#: src/content_clothesitem.cpp:242
+msgid "Black Cotton T-Shirt"
+msgstr "Maglietta nera di cotone"
+
+#: src/content_clothesitem.cpp:257
+msgid "Cotton Shirt"
+msgstr "Camicia di cotone"
+
+#: src/content_clothesitem.cpp:271
+msgid "Blue Cotton Shirt"
+msgstr "Camicia blu di cotone"
+
+#: src/content_clothesitem.cpp:285
+msgid "Green Cotton Shirt"
+msgstr "Camicia verde di cotone"
+
+#: src/content_clothesitem.cpp:299
+msgid "Orange Cotton Shirt"
+msgstr "Camicia arancione di cotone"
+
+#: src/content_clothesitem.cpp:313
+msgid "Purple Cotton Shirt"
+msgstr "Camicia viola di cotone"
+
+#: src/content_clothesitem.cpp:327
+msgid "Red Cotton Shirt"
+msgstr "Camicia rossa di cotone"
+
+#: src/content_clothesitem.cpp:341
+msgid "Yellow Cotton Shirt"
+msgstr "Camicia gialla di cotone"
+
+#: src/content_clothesitem.cpp:355
+msgid "Black Cotton Shirt"
+msgstr "Camicia nera di cotone"
+
+#: src/content_clothesitem.cpp:370
+msgid "Cotton Shorts"
+msgstr "Pantaloncini di cotone"
+
+#: src/content_clothesitem.cpp:385
+msgid "Blue Cotton Shorts"
+msgstr "Pantaloncini blu di cotone"
+
+#: src/content_clothesitem.cpp:400
+msgid "Green Cotton Shorts"
+msgstr "Pantaloncini verdi di cotone"
+
+#: src/content_clothesitem.cpp:415
+msgid "Orange Cotton Shorts"
+msgstr "Pantaloncini arancioni di cotone"
+
+#: src/content_clothesitem.cpp:430
+msgid "Purple Cotton Shorts"
+msgstr "Pantaloncini viola di cotone"
+
+#: src/content_clothesitem.cpp:445
+msgid "Red Cotton Shorts"
+msgstr "Pantaloncini rossi di cotone"
+
+#: src/content_clothesitem.cpp:460
+msgid "Yellow Cotton Shorts"
+msgstr "Pantaloncini gialli di cotone"
+
+#: src/content_clothesitem.cpp:475
+msgid "Black Cotton Shorts"
+msgstr "Pantaloncini neri di cotone"
+
+#: src/content_clothesitem.cpp:491
+msgid "Cotton Hat"
+msgstr "Cappello di cotone"
+
+#: src/content_clothesitem.cpp:505
+msgid "Blue Cotton Hat"
+msgstr "Cappello blu di cotone"
+
+#: src/content_clothesitem.cpp:519
+msgid "Green Cotton Hat"
+msgstr "Cappello verde di cotone"
+
+#: src/content_clothesitem.cpp:533
+msgid "Orange Cotton Hat"
+msgstr "Cappello arancione di cotone"
+
+#: src/content_clothesitem.cpp:547
+msgid "Purple Cotton Hat"
+msgstr "Cappello viola di cotone"
+
+#: src/content_clothesitem.cpp:561
+msgid "Red Cotton Hat"
+msgstr "Cappello rosso di cotone"
+
+#: src/content_clothesitem.cpp:575
+msgid "Yellow Cotton Hat"
+msgstr "Cappello giallo di cotone"
+
+#: src/content_clothesitem.cpp:589
+msgid "Black Cotton Hat"
+msgstr "Cappello nero di cotone"
+
+#: src/content_clothesitem.cpp:604
+msgid "Cotton Tie"
+msgstr "Cravatta di cotone"
+
+#: src/content_clothesitem.cpp:618
+msgid "Blue Cotton Tie"
+msgstr "Cravatta blu di cotone"
+
+#: src/content_clothesitem.cpp:632
+msgid "Green Cotton Tie"
+msgstr "Cravatta verde di cotone"
+
+#: src/content_clothesitem.cpp:646
+msgid "Orange Cotton Tie"
+msgstr "Cravatta arancione di cotone"
+
+#: src/content_clothesitem.cpp:660
+msgid "Purple Cotton Tie"
+msgstr "Cravatta viola di cotone"
+
+#: src/content_clothesitem.cpp:674
+msgid "Red Cotton Tie"
+msgstr "Cravatta rossa di cotone"
+
+#: src/content_clothesitem.cpp:688
+msgid "Yellow Cotton Tie"
+msgstr "Cravatta gialla di cotone"
+
+#: src/content_clothesitem.cpp:702
+msgid "Black Cotton Tie"
+msgstr "Cravatta nera di cotone"
+
+#: src/content_clothesitem.cpp:717
+msgid "Canvas Shirt"
+msgstr "Camicia di tela"
+
+#: src/content_clothesitem.cpp:732
+msgid "Blue Canvas Shirt"
+msgstr "Camicia blu di tela"
+
+#: src/content_clothesitem.cpp:747
+msgid "Green Canvas Shirt"
+msgstr "Camicia verde di tela"
+
+#: src/content_clothesitem.cpp:762
+msgid "Orange Canvas Shirt"
+msgstr "Camicia arancione di tela"
+
+#: src/content_clothesitem.cpp:777
+msgid "Purple Canvas Shirt"
+msgstr "Camicia viola di tela"
+
+#: src/content_clothesitem.cpp:792
+msgid "Red Canvas Shirt"
+msgstr "Camicia rossa di tela"
+
+#: src/content_clothesitem.cpp:807
+msgid "Yellow Canvas Shirt"
+msgstr "Camicia gialla di tela"
+
+#: src/content_clothesitem.cpp:822
+msgid "Black Canvas Shirt"
+msgstr "Camicia nera di tela"
+
+#: src/content_clothesitem.cpp:838
+msgid "Canvas Pants"
+msgstr "Pantaloni di tela"
+
+#: src/content_clothesitem.cpp:853
+msgid "Blue Canvas Pants"
+msgstr "Pantaloni blu di tela"
+
+#: src/content_clothesitem.cpp:868
+msgid "Green Canvas Pants"
+msgstr "Pantaloni verdi di tela"
+
+#: src/content_clothesitem.cpp:883
+msgid "Orange Canvas Pants"
+msgstr "Pantaloni arancioni di tela"
+
+#: src/content_clothesitem.cpp:898
+msgid "Purple Canvas Pants"
+msgstr "Pantaloni viola di tela"
+
+#: src/content_clothesitem.cpp:913
+msgid "Red Canvas Pants"
+msgstr "Pantaloni rossi di tela"
+
+#: src/content_clothesitem.cpp:928
+msgid "Yellow Canvas Pants"
+msgstr "Pantaloni gialli di tela"
+
+#: src/content_clothesitem.cpp:943
+msgid "Black Canvas Pants"
+msgstr "Pantaloni neri di tela"
+
+#: src/content_clothesitem.cpp:973
+msgid "Blue Canvas Shoes"
+msgstr "Scarpe blu di tela"
+
+#: src/content_clothesitem.cpp:987
+msgid "Green Canvas Shoes"
+msgstr "Scarpe verdi di tela"
+
+#: src/content_clothesitem.cpp:1001
+msgid "Orange Canvas Shoes"
+msgstr "Scarpe arancioni di tela"
+
+#: src/content_clothesitem.cpp:1015
+msgid "Purple Canvas Shoes"
+msgstr "Scarpe viola di tela"
+
+#: src/content_clothesitem.cpp:1029
+msgid "Red Canvas Shoes"
+msgstr "Scarpe rosse di tela"
+
+#: src/content_clothesitem.cpp:1043
+msgid "Yellow Canvas Shoes"
+msgstr "Scarpe gialle di tela"
+
+#: src/content_clothesitem.cpp:1057
+msgid "Black Canvas Shoes"
+msgstr "Scarpe nere di tela"
+
+#: src/content_clothesitem.cpp:1072
+msgid "Canvas Belt"
+msgstr "Cintura di tela"
+
+#: src/content_clothesitem.cpp:1086
+msgid "Blue Canvas Belt"
+msgstr "Cintura blu di tela"
+
+#: src/content_clothesitem.cpp:1100
+msgid "Green Canvas Belt"
+msgstr "Cintura verde di tela"
+
+#: src/content_clothesitem.cpp:1114
+msgid "Orange Canvas Belt"
+msgstr "Cintura arancione di tela"
+
+#: src/content_clothesitem.cpp:1128
+msgid "Purple Canvas Belt"
+msgstr "Cintura viola di tela"
+
+#: src/content_clothesitem.cpp:1142
+msgid "Red Canvas Belt"
+msgstr "Cintura rossa di tela"
+
+#: src/content_clothesitem.cpp:1156
+msgid "Yellow Canvas Belt"
+msgstr "Cintura gialla di tela"
+
+#: src/content_clothesitem.cpp:1170
+msgid "Black Canvas Belt"
+msgstr "Cintura nera di tela"
+
+#: src/content_clothesitem.cpp:1185
+msgid "Leather Jacket"
+msgstr "Giacca di pelle"
+
+#: src/content_clothesitem.cpp:1200
+msgid "White Leather Jacket"
+msgstr "Giacca bianca di pelle"
+
+#: src/content_clothesitem.cpp:1215
+msgid "Blue Leather Jacket"
+msgstr "Giacca blu di pelle"
+
+#: src/content_clothesitem.cpp:1230
+msgid "Green Leather Jacket"
+msgstr "Giacca verde di pelle"
+
+#: src/content_clothesitem.cpp:1245
+msgid "Orange Leather Jacket"
+msgstr "Giacca arancione di pelle"
+
+#: src/content_clothesitem.cpp:1260
+msgid "Purple Leather Jacket"
+msgstr "Giacca viola di pelle"
+
+#: src/content_clothesitem.cpp:1275
+msgid "Red Leather Jacket"
+msgstr "Giacca rossa di pelle"
+
+#: src/content_clothesitem.cpp:1290
+msgid "Yellow Leather Jacket"
+msgstr "Giacca gialla di pelle"
+
+#: src/content_clothesitem.cpp:1305
+msgid "Black Leather Jacket"
+msgstr "Giacca nera di pelle"
+
+#: src/content_clothesitem.cpp:1321
+msgid "Leather Pants"
+msgstr "Pantaloni di pelle"
+
+#: src/content_clothesitem.cpp:1336
+msgid "White Leather Pants"
+msgstr "Pantaloni bianchi di pelle"
+
+#: src/content_clothesitem.cpp:1351
+msgid "Blue Leather Pants"
+msgstr "Pantaloni blu di pelle"
+
+#: src/content_clothesitem.cpp:1366
+msgid "Green Leather Pants"
+msgstr "Pantaloni verdi di pelle"
+
+#: src/content_clothesitem.cpp:1381
+msgid "Orange Leather Pants"
+msgstr "Pantaloni arancioni di pelle"
+
+#: src/content_clothesitem.cpp:1396
+msgid "Purple Leather Pants"
+msgstr "Pantaloni viola di pelle"
+
+#: src/content_clothesitem.cpp:1411
+msgid "Red Leather Pants"
+msgstr "Pantaloni rossi di pelle"
+
+#: src/content_clothesitem.cpp:1426
+msgid "Yellow Leather Pants"
+msgstr "Pantaloni gialli di pelle"
+
+#: src/content_clothesitem.cpp:1441
+msgid "Black Leather Pants"
+msgstr "Pantaloni neri di pelle"
+
+#: src/content_clothesitem.cpp:1457
+msgid "Leather Hat"
+msgstr "Cappello di pelle"
+
+#: src/content_clothesitem.cpp:1471
+msgid "White Leather Hat"
+msgstr "Cappello bianco di pelle"
+
+#: src/content_clothesitem.cpp:1485
+msgid "Blue Leather Hat"
+msgstr "Cappello blu di pelle"
+
+#: src/content_clothesitem.cpp:1499
+msgid "Green Leather Hat"
+msgstr "Cappello verde di pelle"
+
+#: src/content_clothesitem.cpp:1513
+msgid "Orange Leather Hat"
+msgstr "Cappello arancione di pelle"
+
+#: src/content_clothesitem.cpp:1527
+msgid "Purple Leather Hat"
+msgstr "Cappello viola di pelle"
+
+#: src/content_clothesitem.cpp:1541
+msgid "Red Leather Hat"
+msgstr "Cappello rosso di pelle"
+
+#: src/content_clothesitem.cpp:1555
+msgid "Yellow Leather Hat"
+msgstr "Cappello giallo di pelle"
+
+#: src/content_clothesitem.cpp:1569
+msgid "Black Leather Hat"
+msgstr "Cappello nero di pelle"
+
+#: src/content_clothesitem.cpp:1584
+msgid "Leather Helmet"
+msgstr "Elmo di pelle"
+
+#: src/content_clothesitem.cpp:1599
+msgid "White Leather Helmet"
+msgstr "Elmo bianco di pelle"
+
+#: src/content_clothesitem.cpp:1614
+msgid "Blue Leather Helmet"
+msgstr "Elmo blu di pelle"
+
+#: src/content_clothesitem.cpp:1629
+msgid "Green Leather Helmet"
+msgstr "Elmo verde di pelle"
+
+#: src/content_clothesitem.cpp:1644
+msgid "Orange Leather Helmet"
+msgstr "Elmo arancione di pelle"
+
+#: src/content_clothesitem.cpp:1659
+msgid "Purple Leather Helmet"
+msgstr "Elmo viola di pelle"
+
+#: src/content_clothesitem.cpp:1674
+msgid "Red Leather Helmet"
+msgstr "Elmo rosso di pelle"
+
+#: src/content_clothesitem.cpp:1689
+msgid "Yellow Leather Helmet"
+msgstr "Elmo giallo di pelle"
+
+#: src/content_clothesitem.cpp:1704
+msgid "Black Leather Helmet"
+msgstr "Elmo nero di pelle"
+
+#: src/content_clothesitem.cpp:1735
+msgid "White Leather Shoes"
+msgstr "Scarpe bianche di pelle"
+
+#: src/content_clothesitem.cpp:1750
+msgid "Blue Leather Shoes"
+msgstr "Scarpe blu di pelle"
+
+#: src/content_clothesitem.cpp:1765
+msgid "Green Leather Shoes"
+msgstr "Scarpe verdi di pelle"
+
+#: src/content_clothesitem.cpp:1780
+msgid "Orange Leather Shoes"
+msgstr "Scarpe arancioni di pelle"
+
+#: src/content_clothesitem.cpp:1795
+msgid "Purple Leather Shoes"
+msgstr "Scarpe viola di pelle"
+
+#: src/content_clothesitem.cpp:1810
+msgid "Red Leather Shoes"
+msgstr "Scarpe rosse di pelle"
+
+#: src/content_clothesitem.cpp:1825
+msgid "Yellow Leather Shoes"
+msgstr "Scarpe gialle di pelle"
+
+#: src/content_clothesitem.cpp:1840
+msgid "Black Leather Shoes"
+msgstr "Scarpe nere di pelle"
+
+#: src/content_clothesitem.cpp:1856
+msgid "Leather Boots"
+msgstr "Stivali di pelle"
+
+#: src/content_clothesitem.cpp:1871
+msgid "White Leather Boots"
+msgstr "Stivali bianchi di pelle"
+
+#: src/content_clothesitem.cpp:1886
+msgid "Blue Leather Boots"
+msgstr "Stivali blu di pelle"
+
+#: src/content_clothesitem.cpp:1901
+msgid "Green Leather Boots"
+msgstr "Stivali verdi di pelle"
+
+#: src/content_clothesitem.cpp:1916
+msgid "Orange Leather Boots"
+msgstr "Stivali arancioni di pelle"
+
+#: src/content_clothesitem.cpp:1931
+msgid "Purple Leather Boots"
+msgstr "Stivali viola di pelle"
+
+#: src/content_clothesitem.cpp:1946
+msgid "Red Leather Boots"
+msgstr "Stivali rossi di pelle"
+
+#: src/content_clothesitem.cpp:1961
+msgid "Yellow Leather Boots"
+msgstr "Stivali gialli di pelle"
+
+#: src/content_clothesitem.cpp:1976
+msgid "Black Leather Boots"
+msgstr "Stivali neri di pelle"
+
+#: src/content_clothesitem.cpp:1992
+msgid "Leather Belt"
+msgstr "Cintura di pelle"
+
+#: src/content_clothesitem.cpp:2007
+msgid "White Leather Belt"
+msgstr "Cintura bianca di pelle"
+
+#: src/content_clothesitem.cpp:2022
+msgid "Blue Leather Belt"
+msgstr "Cintura blu di pelle"
+
+#: src/content_clothesitem.cpp:2037
+msgid "Green Leather Belt"
+msgstr "Cintura verde di pelle"
+
+#: src/content_clothesitem.cpp:2052
+msgid "Orange Leather Belt"
+msgstr "Cintura arancione di pelle"
+
+#: src/content_clothesitem.cpp:2067
+msgid "Purple Leather Belt"
+msgstr "Cintura viola di pelle"
+
+#: src/content_clothesitem.cpp:2082
+msgid "Red Leather Belt"
+msgstr "Cintura rossa di pelle"
+
+#: src/content_clothesitem.cpp:2097
+msgid "Yellow Leather Belt"
+msgstr "Cintura gialla di pelle"
+
+#: src/content_clothesitem.cpp:2112
+msgid "Black Leather Belt"
+msgstr "Cintura nera di pelle"
+
+#: src/content_clothesitem.cpp:2128
+msgid "Fur Coat"
+msgstr "Cappotto di pelliccia"
+
+#: src/content_clothesitem.cpp:2143
+msgid "White Fur Coat"
+msgstr "Cappotto bianco di pelliccia"
+
+#: src/content_clothesitem.cpp:2158
+msgid "Blue Fur Coat"
+msgstr "Cappotto blu di pelliccia"
+
+#: src/content_clothesitem.cpp:2173
+msgid "Green Fur Coat"
+msgstr "Cappotto verde di pelliccia"
+
+#: src/content_clothesitem.cpp:2188
+msgid "Orange Fur Coat"
+msgstr "Cappotto arancione di pelliccia"
+
+#: src/content_clothesitem.cpp:2203
+msgid "Purple Fur Coat"
+msgstr "Cappotto viola di pelliccia"
+
+#: src/content_clothesitem.cpp:2218
+msgid "Red Fur Coat"
+msgstr "Cappotto rosso di pelliccia"
+
+#: src/content_clothesitem.cpp:2233
+msgid "Yellow Fur Coat"
+msgstr "Cappotto giallo di pelliccia"
+
+#: src/content_clothesitem.cpp:2248
+msgid "Black Fur Coat"
+msgstr "Cappotto nero di pelliccia"
+
+#: src/content_clothesitem.cpp:2264
+msgid "Fur Pants"
+msgstr "Pantaloni di pelliccia"
+
+#: src/content_clothesitem.cpp:2279
+msgid "White Fur Pants"
+msgstr "Pantaloni bianchi di pelliccia"
+
+#: src/content_clothesitem.cpp:2294
+msgid "Blue Fur Pants"
+msgstr "Pantaloni blu di pelliccia"
+
+#: src/content_clothesitem.cpp:2309
+msgid "Green Fur Pants"
+msgstr "Pantaloni verdi di pelliccia"
+
+#: src/content_clothesitem.cpp:2324
+msgid "Orange Fur Pants"
+msgstr "Pantaloni arancioni di pelliccia"
+
+#: src/content_clothesitem.cpp:2339
+msgid "Purple Fur Pants"
+msgstr "Pantaloni viola di pelliccia"
+
+#: src/content_clothesitem.cpp:2354
+msgid "Red Fur Pants"
+msgstr "Pantaloni rossi di pelliccia"
+
+#: src/content_clothesitem.cpp:2369
+msgid "Yellow Fur Pants"
+msgstr "Pantaloni gialli di pelliccia"
+
+#: src/content_clothesitem.cpp:2384
+msgid "Black Fur Pants"
+msgstr "Pantaloni neri di pelliccia"
+
+#: src/content_clothesitem.cpp:2400
+msgid "Fur Hat"
+msgstr "Cappello di pelliccia"
+
+#: src/content_clothesitem.cpp:2415
+msgid "White Fur Hat"
+msgstr "Cappello bianco di pelliccia"
+
+#: src/content_clothesitem.cpp:2430
+msgid "Blue Fur Hat"
+msgstr "Cappello blu di pelliccia"
+
+#: src/content_clothesitem.cpp:2445
+msgid "Green Fur Hat"
+msgstr "Cappello verde di pelliccia"
+
+#: src/content_clothesitem.cpp:2460
+msgid "Orange Fur Hat"
+msgstr "Cappello arancione di pelliccia"
+
+#: src/content_clothesitem.cpp:2475
+msgid "Purple Fur Hat"
+msgstr "Cappello viola di pelliccia"
+
+#: src/content_clothesitem.cpp:2490
+msgid "Red Fur Hat"
+msgstr "Cappello rosso di pelliccia"
+
+#: src/content_clothesitem.cpp:2505
+msgid "Yellow Fur Hat"
+msgstr "Cappello giallo di pelliccia"
+
+#: src/content_clothesitem.cpp:2520
+msgid "Black Fur Hat"
+msgstr "Cappello nero di pelliccia"
+
+#: src/content_clothesitem.cpp:2550
+msgid "White Fur Shoes"
+msgstr "Scarpe bianche di pelliccia"
+
+#: src/content_clothesitem.cpp:2564
+msgid "Blue Fur Shoes"
+msgstr "Scarpe blu di pelliccia"
+
+#: src/content_clothesitem.cpp:2578
+msgid "Green Fur Shoes"
+msgstr "Scarpe verdi di pelliccia"
+
+#: src/content_clothesitem.cpp:2592
+msgid "Orange Fur Shoes"
+msgstr "Scarpe arancioni di pelliccia"
+
+#: src/content_clothesitem.cpp:2606
+msgid "Purple Fur Shoes"
+msgstr "Scarpe viola di pelliccia"
+
+#: src/content_clothesitem.cpp:2620
+msgid "Red Fur Shoes"
+msgstr "Scarpe rosse di pelliccia"
+
+#: src/content_clothesitem.cpp:2634
+msgid "Yellow Fur Shoes"
+msgstr "Scarpe gialle di pelliccia"
+
+#: src/content_clothesitem.cpp:2648
+msgid "Black Fur Shoes"
+msgstr "Scarpe nere di pelliccia"
+
+#: src/content_clothesitem.cpp:2663
+msgid "Fur Boots"
+msgstr "Stivali di pelliccia"
+
+#: src/content_clothesitem.cpp:2678
+msgid "White Fur Boots"
+msgstr "Stivali bianchi di pelliccia"
+
+#: src/content_clothesitem.cpp:2693
+msgid "Blue Fur Boots"
+msgstr "Stivali blu di pelliccia"
+
+#: src/content_clothesitem.cpp:2708
+msgid "Green Fur Boots"
+msgstr "Stivali verdi di pelliccia"
+
+#: src/content_clothesitem.cpp:2723
+msgid "Orange Fur Boots"
+msgstr "Stivali arancioni di pelliccia"
+
+#: src/content_clothesitem.cpp:2738
+msgid "Purple Fur Boots"
+msgstr "Stivali viola di pelliccia"
+
+#: src/content_clothesitem.cpp:2753
+msgid "Red Fur Boots"
+msgstr "Stivali rossi di pelliccia"
+
+#: src/content_clothesitem.cpp:2768
+msgid "Yellow Fur Boots"
+msgstr "Stivali gialli di pelliccia"
+
+#: src/content_clothesitem.cpp:2783
+msgid "Black Fur Boots"
+msgstr "Stivali neri di pelliccia"
+
+#: src/content_clothesitem.cpp:2799
+msgid "Leather Necklace"
+msgstr "Collana di pelle"
+
+#: src/content_clothesitem.cpp:2822
+msgid "Gold Medallion"
+msgstr "Medaglione d'oro"
+
+#: src/content_clothesitem.cpp:2838
+msgid "Copper Medallion"
+msgstr "Medaglione di rame"
+
+#: src/content_clothesitem.cpp:2854
+msgid "Silver Medallion"
+msgstr "Medaglione d'argento"
+
+#: src/content_clothesitem.cpp:2870
+msgid "Tin Medallion"
+msgstr "Medaglione di latta"
+
+#: src/content_clothesitem.cpp:2886
+msgid "Iron Medallion"
+msgstr "Medaglione di ferro"
+
+#: src/content_clothesitem.cpp:2902
+msgid "Quartz Medallion"
+msgstr "Medaglione di quarzo"
+
+#: src/content_clothesitem.cpp:2919
+msgid "Iron Helmet"
+msgstr ""
+
+#: src/content_clothesitem.cpp:2934
+msgid "Iron Chest Armour"
+msgstr ""
+
+#: src/content_clothesitem.cpp:2949
+msgid "Iron Pants"
+msgstr ""
+
+#: src/content_clothesitem.cpp:2964
+msgid "Iron Boots"
+msgstr ""
+
+#: src/content_clothesitem.cpp:2979
+msgid "Copper Helmet"
+msgstr "Elmo di rame"
+
+#: src/content_clothesitem.cpp:2993
+msgid "Copper Chest Armour"
+msgstr "Corazza di rame"
+
+#: src/content_clothesitem.cpp:3007
+msgid "Copper Pants"
+msgstr "Pantaloni di rame"
+
+#: src/content_clothesitem.cpp:3021
+msgid "Copper Boots"
+msgstr "Stivali di rame"
+
+#: src/content_craftitem.cpp:87
+msgid "Paper"
+msgstr "Carta"
+
+#: src/content_craftitem.cpp:96
+msgid "Padlock"
+msgstr ""
+
+#: src/content_craftitem.cpp:105
+msgid "Charcoal Lump"
+msgstr "Grumo di carbonella"
+
+#: src/content_craftitem.cpp:113
+msgid "Coal Lump"
+msgstr "Grumo di carbone"
+
+#: src/content_craftitem.cpp:121
+msgid "Iron Ore"
+msgstr ""
+
+#: src/content_craftitem.cpp:131
+msgid "Clay Lump"
+msgstr "Grumo di argilla"
+
+#: src/content_craftitem.cpp:140
+msgid "Tin Ore"
+msgstr ""
+
+#: src/content_craftitem.cpp:149
+msgid "Copper Ore"
+msgstr ""
+
+#: src/content_craftitem.cpp:158
+msgid "Silver Ore"
+msgstr ""
+
+#: src/content_craftitem.cpp:168
+msgid "Gold Ore"
+msgstr ""
+
+#: src/content_craftitem.cpp:178
+msgid "Quartz Crystal"
+msgstr "Cristallo di quarzo"
+
+#: src/content_craftitem.cpp:185
+msgid "Tin Ingot"
+msgstr "Lingotto di latta"
+
+#: src/content_craftitem.cpp:192
+msgid "Copper Ingot"
+msgstr "Lingotto di rame"
+
+#: src/content_craftitem.cpp:199
+msgid "Silver Ingot"
+msgstr "Lingotto di argento"
+
+#: src/content_craftitem.cpp:206
+msgid "Gold Ingot"
+msgstr "Lingotto d'oro"
+
+#: src/content_craftitem.cpp:213
+msgid "Flint"
+msgstr "Selce"
+
+#: src/content_craftitem.cpp:220
+msgid "Iron Ingot"
+msgstr ""
+
+#: src/content_craftitem.cpp:227
+msgid "Bronze Ingot"
+msgstr ""
+
+#: src/content_craftitem.cpp:247 src/content_mapnode.cpp:835
+msgid "Brick"
+msgstr "Mattoni"
+
+#: src/content_craftitem.cpp:254 src/content_mob.cpp:363
+msgid "Rat"
+msgstr "Ratto"
+
+#: src/content_craftitem.cpp:265
+msgid "Cooked Rat"
+msgstr "Ratto cotto"
+
+#: src/content_craftitem.cpp:278 src/content_mob.cpp:382
+msgid "Firefly"
+msgstr "Lucciola"
+
+#: src/content_craftitem.cpp:287 src/content_mapnode_plants.cpp:854
+msgid "Apple"
+msgstr "Mela"
+
+#: src/content_craftitem.cpp:298
+msgid "Iron Apple"
+msgstr "Mela di ferro"
+
+#: src/content_craftitem.cpp:318
+msgid "Blue Dye"
+msgstr "Tintura blu"
+
+#: src/content_craftitem.cpp:327
+msgid "Green Dye"
+msgstr "Tintura verde"
+
+#: src/content_craftitem.cpp:336
+msgid "Orange Dye"
+msgstr "Tintura arancione"
+
+#: src/content_craftitem.cpp:345
+msgid "Purple Dye"
+msgstr "Tintura viola"
+
+#: src/content_craftitem.cpp:354
+msgid "Red Dye"
+msgstr "Tintura rossa"
+
+#: src/content_craftitem.cpp:363
+msgid "Yellow Dye"
+msgstr "Tintura gialla"
+
+#: src/content_craftitem.cpp:373
+msgid "White Dye"
+msgstr "Tintura bianca"
+
+#: src/content_craftitem.cpp:383
+msgid "Black Dye"
+msgstr "Tintura nera"
+
+#: src/content_craftitem.cpp:392
+msgid "Quartz Dust"
+msgstr "Polvere di quarzo"
+
+#: src/content_craftitem.cpp:401
+msgid "Saltpeter"
+msgstr "Salnitro"
+
+#: src/content_craftitem.cpp:408
+msgid "Gun Powder"
+msgstr "Polvere da sparo"
+
+#: src/content_craftitem.cpp:417
+msgid "Snow Ball"
+msgstr "Palla di neve"
+
+#: src/content_craftitem.cpp:424
+msgid "Stick"
+msgstr "Bastone"
+
+#: src/content_craftitem.cpp:444
+msgid "Pine Plank"
+msgstr "Asse di pino"
+
+#: src/content_craftitem.cpp:455
+msgid "Apple Wood Plank"
+msgstr ""
+
+#: src/content_craftitem.cpp:466
+msgid "Wood Plank"
+msgstr "Asse di legno"
+
+#: src/content_craftitem.cpp:478
+msgid "Jungle Wood Plank"
+msgstr "Asse di legno della giungla"
+
+#: src/content_craftitem.cpp:489
+msgid "TNT Stick"
+msgstr "Candelotto di TNT"
+
+#: src/content_craftitem.cpp:505
+msgid "Ash"
+msgstr "Cenere"
+
+#: src/content_craftitem.cpp:512
+msgid "Apple Blossoms"
+msgstr "Boccioli di melo"
+
+#: src/content_craftitem.cpp:524 src/content_mapnode_plants.cpp:704
+msgid "Cactus Berry"
+msgstr "Bacca di cactus"
+
+#: src/content_craftitem.cpp:536
+msgid "Mush"
+msgstr "Poltiglia"
+
+#: src/content_craftitem.cpp:546
+msgid "Sliced Pumpkin"
+msgstr "Fetta di zucca"
+
+#: src/content_craftitem.cpp:559
+msgid "Pumpkin Pie Slice"
+msgstr "Fetta di torta di zucca"
+
+#: src/content_craftitem.cpp:570
+msgid "Apple Pie Slice"
+msgstr "Fetta di torta di mela"
+
+#: src/content_craftitem.cpp:581
+msgid "Sliced Melon"
+msgstr "Fetta di anguria"
+
+#: src/content_craftitem.cpp:594 src/content_mapnode_farm.cpp:270
+msgid "Wheat"
+msgstr "Grano"
+
+#: src/content_craftitem.cpp:605
+msgid "Flour"
+msgstr "Farina"
+
+#: src/content_craftitem.cpp:618
+msgid "Dough"
+msgstr "Impasto"
+
+#: src/content_craftitem.cpp:633
+msgid "Bread"
+msgstr "Pane"
+
+#: src/content_craftitem.cpp:644 src/content_mapnode_farm.cpp:352
+msgid "Potato"
+msgstr "Patata"
+
+#: src/content_craftitem.cpp:657
+msgid "Potato Starch"
+msgstr "Fecola di patate"
+
+#: src/content_craftitem.cpp:666
+msgid "Roast Potato"
+msgstr "Patata arrosto"
+
+#: src/content_craftitem.cpp:677 src/content_mapnode_farm.cpp:372
+msgid "Carrot"
+msgstr "Carota"
+
+#: src/content_craftitem.cpp:688
+msgid "Raw Carrot Cake"
+msgstr "Torta di carote cruda"
+
+#: src/content_craftitem.cpp:702
+msgid "Carrot Cake"
+msgstr "Torta di carote"
+
+#: src/content_craftitem.cpp:713 src/content_mapnode_farm.cpp:392
+msgid "Beetroot"
+msgstr "Barbabietola"
+
+#: src/content_craftitem.cpp:724
+msgid "Bunch of Grapes"
+msgstr "Manciata di chicchi"
+
+#: src/content_craftitem.cpp:735
+msgid "String"
+msgstr "Filo"
+
+#: src/content_craftitem.cpp:744
+msgid "Mithril Dust"
+msgstr "Polvere di mithril "
+
+#: src/content_craftitem.cpp:755
+msgid "Resin"
+msgstr "Resina"
+
+#: src/content_craftitem.cpp:764
+msgid "Oerkki Dust"
+msgstr "Polvere di Oerkki"
+
+#: src/content_craftitem.cpp:782 src/content_mob.cpp:539
+msgid "Fish"
+msgstr "Pesce"
+
+#: src/content_craftitem.cpp:797
+msgid "Cooked Fish"
+msgstr "Pesce cotto"
+
+#: src/content_craftitem.cpp:810
+msgid "Meat"
+msgstr "Carne"
+
+#: src/content_craftitem.cpp:823
+msgid "Cooked Meat"
+msgstr "Carne cotta"
+
+#: src/content_craftitem.cpp:836
+msgid "Cotton Sheet"
+msgstr "Lenzuolo di cotone"
+
+#: src/content_craftitem.cpp:852
+msgid "Blue Cotton Sheet"
+msgstr "Lenzuolo blu di cotone"
+
+#: src/content_craftitem.cpp:861
+msgid "Green Cotton Sheet"
+msgstr "Lenzuolo verde di cotone"
+
+#: src/content_craftitem.cpp:870
+msgid "Orange Cotton Sheet"
+msgstr "Lenzuolo arancione di cotone"
+
+#: src/content_craftitem.cpp:879
+msgid "Purple Cotton Sheet"
+msgstr "Lenzuolo viola di cotone"
+
+#: src/content_craftitem.cpp:888
+msgid "Red Cotton Sheet"
+msgstr "Lenzuolo rosso di cotone"
+
+#: src/content_craftitem.cpp:897
+msgid "Yellow Cotton Sheet"
+msgstr "Lenzuolo giallo di cotone"
+
+#: src/content_craftitem.cpp:906
+msgid "Black Cotton Sheet"
+msgstr "Lenzuolo nero di cotone"
+
+#: src/content_craftitem.cpp:915
+msgid "Canvas Sheet"
+msgstr "Lenzuolo di tela"
+
+#: src/content_craftitem.cpp:931
+msgid "Blue Canvas Sheet"
+msgstr "Lenzuolo blu di tela"
+
+#: src/content_craftitem.cpp:940
+msgid "Green Canvas Sheet"
+msgstr "Lenzuolo verde di tela"
+
+#: src/content_craftitem.cpp:949
+msgid "Orange Canvas Sheet"
+msgstr "Lenzuolo arancione di tela"
+
+#: src/content_craftitem.cpp:958
+msgid "Purple Canvas Sheet"
+msgstr "Lenzuolo viola di tela"
+
+#: src/content_craftitem.cpp:967
+msgid "Red Canvas Sheet"
+msgstr "Lenzuolo rosso di tela"
+
+#: src/content_craftitem.cpp:976
+msgid "Yellow Canvas Sheet"
+msgstr "Lenzuolo giallo di tela"
+
+#: src/content_craftitem.cpp:985
+msgid "Black Canvas Sheet"
+msgstr "Lenzuolo nero di tela"
+
+#: src/content_craftitem.cpp:994
+msgid "Fur"
+msgstr "Pelliccia"
+
+#: src/content_craftitem.cpp:1001
+msgid "White Fur"
+msgstr "Pelliccia bianca"
+
+#: src/content_craftitem.cpp:1011
+msgid "Blue Fur"
+msgstr "Pelliccia blu"
+
+#: src/content_craftitem.cpp:1021
+msgid "Green Fur"
+msgstr "Pelliccia verde"
+
+#: src/content_craftitem.cpp:1031
+msgid "Orange Fur"
+msgstr "Pelliccia arancione"
+
+#: src/content_craftitem.cpp:1041
+msgid "Purple Fur"
+msgstr "Pelliccia viola"
+
+#: src/content_craftitem.cpp:1051
+msgid "Red Fur"
+msgstr "Pelliccia rossa"
+
+#: src/content_craftitem.cpp:1061
+msgid "Yellow Fur"
+msgstr "Pelliccia gialla"
+
+#: src/content_craftitem.cpp:1071
+msgid "Black Fur"
+msgstr "Pelliccia nera"
+
+#: src/content_craftitem.cpp:1081
+msgid "Leather"
+msgstr "Pelle"
+
+#: src/content_craftitem.cpp:1090
+msgid "White Leather"
+msgstr "Pelle bianca"
+
+#: src/content_craftitem.cpp:1100
+msgid "Blue Leather"
+msgstr "Pelle blu"
+
+#: src/content_craftitem.cpp:1110
+msgid "Green Leather"
+msgstr "Pelle verde"
+
+#: src/content_craftitem.cpp:1120
+msgid "Orange Leather"
+msgstr "Pelle arancione"
+
+#: src/content_craftitem.cpp:1130
+msgid "Purple Leather"
+msgstr "Pelle viola"
+
+#: src/content_craftitem.cpp:1140
+msgid "Red Leather"
+msgstr "Pelle rossa"
+
+#: src/content_craftitem.cpp:1150
+msgid "Yellow Leather"
+msgstr "Pelle gialla"
+
+#: src/content_craftitem.cpp:1160
+msgid "Black Leather"
+msgstr "Pelle nera"
+
+#: src/content_craftitem.cpp:1170 src/content_mob.cpp:719
+msgid "Arrow"
+msgstr "Freccia"
+
+#: src/content_craftitem.cpp:1180 src/content_mapnode_farm.cpp:51
+msgid "Fertilizer"
+msgstr "Fertilizzante"
+
+#: src/content_craftitem.cpp:1191
+msgid "White Oerkki Dust"
+msgstr "Polvere bianca di Oerkki"
+
+#: src/content_craftitem.cpp:1202
+msgid "Blue Oerkki Dust"
+msgstr "Polvere blu di Oerkki"
+
+#: src/content_craftitem.cpp:1213
+msgid "Green Oerkki Dust"
+msgstr "Polvere verde di Oerkki"
+
+#: src/content_craftitem.cpp:1224
+msgid "Orange Oerkki Dust"
+msgstr "Polvere arancione di Oerkki"
+
+#: src/content_craftitem.cpp:1235
+msgid "Purple Oerkki Dust"
+msgstr "Polvere viola di Oerkki"
+
+#: src/content_craftitem.cpp:1246
+msgid "Red Oerkki Dust"
+msgstr "Polvere rossa di Oerkki"
+
+#: src/content_craftitem.cpp:1257
+msgid "Yellow Oerkki Dust"
+msgstr "Polvere gialla di Oerkki"
+
+#: src/content_craftitem.cpp:1268
+msgid "Black Oerkki Dust"
+msgstr "Polvere nera di Oerkki"
+
+#: src/content_craftitem.cpp:1279
+msgid "Glass Bottle"
+msgstr "Bottiglia di vetro"
+
+#: src/content_craftitem.cpp:1296
+msgid "Grape Juice"
+msgstr "Succo d'uva"
+
+#: src/content_craftitem.cpp:1313
+msgid "Apple Juice"
+msgstr "Succo di mela"
+
+#: src/content_craftitem.cpp:1330
+msgid "Tea Leaves"
+msgstr "Foglie di tè"
+
+#: src/content_craftitem.cpp:1342
+msgid "Tea"
+msgstr "Tè"
+
+#: src/content_craftitem.cpp:1360
+msgid "Roasted Coffee Beans"
+msgstr "Chicchi di caffè arrostiti"
+
+#: src/content_craftitem.cpp:1373
+msgid "Coffee"
+msgstr "Caffè"
+
+#: src/content_craftitem.cpp:1391
+msgid "Iron Bottle"
+msgstr ""
+
+#: src/content_craftitem.cpp:1408
+msgid "Bottle of Water"
+msgstr "Bottiglia d'acqua"
+
+#: src/content_craftitem.cpp:1422
+msgid "Bottle of Hot Water"
+msgstr "Bottiglia d'acqua bollente"
+
+#: src/content_craftitem.cpp:1437
+msgid "Raw Mithril"
+msgstr "Mithril grezzo"
+
+#: src/content_craftitem.cpp:1448
+msgid "Unbound Mithril"
+msgstr "Mithril fuso"
+
+#: src/content_craftitem.cpp:1456 src/mineral.cpp:142
+msgid "Mithril"
+msgstr "Mithril"
+
+#: src/content_craftitem.cpp:1464 src/mineral.cpp:149
+msgid "Ruby"
+msgstr "Rubino"
+
+#: src/content_craftitem.cpp:1471
+msgid "Turquiose"
+msgstr "Turchese"
+
+#: src/content_craftitem.cpp:1478 src/mineral.cpp:165
+msgid "Amethyst"
+msgstr "Ametista"
+
+#: src/content_craftitem.cpp:1485 src/mineral.cpp:173
+msgid "Sapphire"
+msgstr "Zaffiro"
+
+#: src/content_craftitem.cpp:1492 src/mineral.cpp:181
+msgid "Sunstone"
+msgstr "Avventurina"
+
+#: src/content_craftitem.cpp:1499 src/mineral.cpp:189
+msgid "Salt"
+msgstr "Sale"
+
+#: src/content_craftitem.cpp:1506
+msgid "Space Dust"
+msgstr "Polvere spaziale"
+
+#: src/content_craftitem.cpp:1524
+msgid "Blueberries"
+msgstr "Mirtilli"
+
+#: src/content_craftitem.cpp:1535
+msgid "Raspberries"
+msgstr "Lamponi"
+
+#: src/content_craftitem.cpp:1546
+msgid "Storage Upgrade"
+msgstr ""
+
+#: src/content_craftitem.cpp:1591
+msgid "Exo Upgrade"
+msgstr ""
+
+#: src/content_craftitem.cpp:1608
+msgid "Cooking Upgrade"
+msgstr ""
+
+#: src/content_craftitem.cpp:1632
+msgid "Fuel Upgrade"
+msgstr ""
+
+#: src/content_craftitem.cpp:1656
+msgid "Straw"
+msgstr ""
+
+#: src/content_mapnode.cpp:213
+msgid "Stone"
+msgstr "Pietra"
+
+#: src/content_mapnode.cpp:230
+msgid "Limestone"
+msgstr "Pietra calcarea"
+
+#: src/content_mapnode.cpp:250
+msgid "Space Rock"
+msgstr "Roccia spaziale"
+
+#: src/content_mapnode.cpp:263
+msgid "Marble"
+msgstr "Marmo"
+
+#: src/content_mapnode.cpp:274
+msgid "Rock"
+msgstr "Roccia"
+
+#: src/content_mapnode.cpp:295
+msgid "Ice"
+msgstr "Ghiaccio"
+
+#: src/content_mapnode.cpp:311
+msgid "Coal Block"
+msgstr "Blocco di carbone"
+
+#: src/content_mapnode.cpp:328
+msgid "Charcoal Block"
+msgstr "Blocco di carbonella"
+
+#: src/content_mapnode.cpp:345
+msgid "Stone Brick"
+msgstr "Mattoni di pietra"
+
+#: src/content_mapnode.cpp:359
+msgid "Stone Block"
+msgstr "Blocco di pietra"
+
+#: src/content_mapnode.cpp:373
+msgid "Rough Stone Brick"
+msgstr "Mattoni di pietra grezza"
+
+#: src/content_mapnode.cpp:391
+msgid "Rough Stone Block"
+msgstr "Blocco di pietra grezza"
+
+#: src/content_mapnode.cpp:408 src/content_mapnode.cpp:441
+#: src/content_mapnode.cpp:455 src/content_mapnode.cpp:488
+msgid "Grass"
+msgstr "Erba"
+
+#: src/content_mapnode.cpp:426 src/content_mapnode.cpp:473
+msgid "Growing Grass"
+msgstr "Erba in crescita"
+
+#: src/content_mapnode.cpp:502
+msgid "Muddy Snow"
+msgstr "Neve fangosa"
+
+#: src/content_mapnode.cpp:518
+msgid "Mud"
+msgstr "Fango"
+
+#: src/content_mapnode.cpp:537
+msgid "Ash Block"
+msgstr "Blocco di cenere"
+
+#: src/content_mapnode.cpp:552
+msgid "Sand"
+msgstr "Sabbia"
+
+#: src/content_mapnode.cpp:572
+msgid "Desert Sand"
+msgstr "Sabbia del deserto"
+
+#: src/content_mapnode.cpp:592
+msgid "Gravel"
+msgstr "Ghiaia"
+
+#: src/content_mapnode.cpp:611
+msgid "Sandstone"
+msgstr ""
+
+#: src/content_mapnode.cpp:625
+msgid "Sandstone Bricks"
+msgstr ""
+
+#: src/content_mapnode.cpp:639
+msgid "Sandstone Blocks"
+msgstr ""
+
+#: src/content_mapnode.cpp:653
+msgid "Desert Sandstone"
+msgstr ""
+
+#: src/content_mapnode.cpp:667
+msgid "Desert Sandstone Bricks"
+msgstr ""
+
+#: src/content_mapnode.cpp:681
+msgid "Desert Sandstone Blocks"
+msgstr ""
+
+#: src/content_mapnode.cpp:695
+msgid "Clay"
+msgstr "Argilla"
+
+#: src/content_mapnode.cpp:715
+msgid "Blue Clay"
+msgstr "Argilla blu"
+
+#: src/content_mapnode.cpp:732
+msgid "Green Clay"
+msgstr "Argilla verde"
+
+#: src/content_mapnode.cpp:749
+msgid "Orange Clay"
+msgstr "Argilla arancione"
+
+#: src/content_mapnode.cpp:766
+msgid "Purple Clay"
+msgstr "Argilla viola"
+
+#: src/content_mapnode.cpp:783
+msgid "Red Clay"
+msgstr "Argilla rossa"
+
+#: src/content_mapnode.cpp:801
+msgid "Yellow Clay"
+msgstr "Argilla arancione"
+
+#: src/content_mapnode.cpp:818
+msgid "Black Clay"
+msgstr "Argilla nera"
+
+#: src/content_mapnode.cpp:854
+msgid "Terracotta"
+msgstr "Terracotta"
+
+#: src/content_mapnode.cpp:866
+msgid "Terracotta Brick"
+msgstr "Mattoni di terracotta"
+
+#: src/content_mapnode.cpp:880
+msgid "Terracotta Block"
+msgstr "Blocco di terracotta"
+
+#: src/content_mapnode.cpp:894
+msgid "Terracotta Tile"
+msgstr "Piastrelle di terracotta"
+
+#: src/content_mapnode.cpp:913
+msgid "Glass"
+msgstr "Vetro"
+
+#: src/content_mapnode.cpp:931
+msgid "Blue Glass"
+msgstr "Vetro blu"
+
+#: src/content_mapnode.cpp:951
+msgid "Green Glass"
+msgstr "Vetro verde"
+
+#: src/content_mapnode.cpp:971
+msgid "Orange Glass"
+msgstr "Vetro arancione"
+
+#: src/content_mapnode.cpp:991
+msgid "Purple Glass"
+msgstr "Vetro viola"
+
+#: src/content_mapnode.cpp:1011
+msgid "Red Glass"
+msgstr "Vetro rosso"
+
+#: src/content_mapnode.cpp:1031
+msgid "Yellow Glass"
+msgstr "Vetro giallo"
+
+#: src/content_mapnode.cpp:1051
+msgid "Black Glass"
+msgstr "Vetro nero"
+
+#: src/content_mapnode.cpp:1071
+msgid "Glass Pane"
+msgstr "Lastra di vetro"
+
+#: src/content_mapnode.cpp:1097
+msgid "Blue Glass Pane"
+msgstr "Lastra di vetro blu"
+
+#: src/content_mapnode.cpp:1124
+msgid "Green Glass Pane"
+msgstr "Lastra di vetro verde"
+
+#: src/content_mapnode.cpp:1151
+msgid "Orange Glass Pane"
+msgstr "Lastra di vetro arancione"
+
+#: src/content_mapnode.cpp:1178
+msgid "Purple Glass Pane"
+msgstr "Lastra di vetro viola"
+
+#: src/content_mapnode.cpp:1205
+msgid "Red Glass Pane"
+msgstr "Lastra di vetro rosso"
+
+#: src/content_mapnode.cpp:1232
+msgid "Yellow Glass Pane"
+msgstr "Lastra di vetro giallo"
+
+#: src/content_mapnode.cpp:1259
+msgid "Black Glass Pane"
+msgstr "Lastra di vetro nero"
+
+#: src/content_mapnode.cpp:1286 src/content_mapnode_farm.cpp:327
+msgid "Glass Light"
+msgstr "Vetro luminoso"
+
+#: src/content_mapnode.cpp:1307
+msgid "Wood"
+msgstr "Legno"
+
+#: src/content_mapnode.cpp:1324
+msgid "Apple Wood"
+msgstr ""
+
+#: src/content_mapnode.cpp:1341
+msgid "Jungle Wood"
+msgstr "Legno della giungla"
+
+#: src/content_mapnode.cpp:1358
+msgid "Pine"
+msgstr "Pino"
+
+#: src/content_mapnode.cpp:1375
+msgid "Sponge"
+msgstr "Spugna"
+
+#: src/content_mapnode.cpp:1390
+msgid "Waterlogged Sponge"
+msgstr "Spugna inzuppata"
+
+#: src/content_mapnode.cpp:1404
+msgid "Hay Bale"
+msgstr "Balla di fieno"
+
+#: src/content_mapnode.cpp:1421
+msgid "Raw Apple Pie"
+msgstr "Torta di mele cruda"
+
+#: src/content_mapnode.cpp:1449
+msgid "Apple Pie"
+msgstr "Torta di mele"
+
+#: src/content_mapnode.cpp:1540
+msgid "Raw Pumpkin Pie"
+msgstr "Torta di zucca cruda"
+
+#: src/content_mapnode.cpp:1568
+msgid "Pumpkin Pie"
+msgstr "Torta di zucca"
+
+#: src/content_mapnode.cpp:1659 src/content_mapnode.cpp:1706
+msgid "Snow"
+msgstr "Neve"
+
+#: src/content_mapnode.cpp:1675
+msgid "Snowman"
+msgstr "Pupazzo di neve"
+
+#: src/content_mapnode.cpp:1729 src/content_mapnode_farm.cpp:433
+msgid "Cotton"
+msgstr "Cotone"
+
+#: src/content_mapnode.cpp:1760
+msgid "Blue Cotton"
+msgstr "Cotone blu"
+
+#: src/content_mapnode.cpp:1777
+msgid "Green Cotton"
+msgstr "Cotone verde"
+
+#: src/content_mapnode.cpp:1794
+msgid "Orange Cotton"
+msgstr "Cotone arancione"
+
+#: src/content_mapnode.cpp:1811
+msgid "Purple Cotton"
+msgstr "Cotone viola"
+
+#: src/content_mapnode.cpp:1828
+msgid "Red Cotton"
+msgstr "Cotone rosso"
+
+#: src/content_mapnode.cpp:1845
+msgid "Yellow Cotton"
+msgstr "Cotone giallo"
+
+#: src/content_mapnode.cpp:1862
+msgid "Black Cotton"
+msgstr "Cotone nero"
+
+#: src/content_mapnode.cpp:1879
+msgid "Carpet"
+msgstr "Tappeto"
+
+#: src/content_mapnode.cpp:1901
+msgid "Blue Carpet"
+msgstr "Tappeto blu"
+
+#: src/content_mapnode.cpp:1924
+msgid "Green Carpet"
+msgstr "Tappeto verde"
+
+#: src/content_mapnode.cpp:1947
+msgid "Orange Carpet"
+msgstr "Tappeto arancione"
+
+#: src/content_mapnode.cpp:1970
+msgid "Purple Carpet"
+msgstr "Tappeto viola"
+
+#: src/content_mapnode.cpp:1993
+msgid "Red Carpet"
+msgstr "Tappeto rosso"
+
+#: src/content_mapnode.cpp:2016
+msgid "Yellow Carpet"
+msgstr "Teppeto giallo"
+
+#: src/content_mapnode.cpp:2039
+msgid "Black Carpet"
+msgstr "Teppeto nero"
+
+#: src/content_mapnode.cpp:2062 src/hud.cpp:668
+msgid "Air"
+msgstr "Aria"
+
+#: src/content_mapnode.cpp:2077
+msgid "Vacuum"
+msgstr "Vuoto"
+
+#: src/content_mapnode.cpp:2093 src/content_mapnode.cpp:2123
+msgid "Water"
+msgstr "Acqua"
+
+#: src/content_mapnode.cpp:2154 src/content_mapnode.cpp:2183 src/hud.cpp:669
+msgid "Lava"
+msgstr "Lava"
+
+#: src/content_mapnode.cpp:2216
+msgid "Rough Stone"
+msgstr "Pietra grezza"
+
+#: src/content_mapnode.cpp:2236
+msgid "Cobble Stone"
+msgstr "Ciottoli"
+
+#: src/content_mapnode.cpp:2254
+msgid "Mossy Cobble Stone"
+msgstr "Ciottoli muschiosi"
+
+#: src/content_mapnode.cpp:2269
+msgid "Iron Block"
+msgstr ""
+
+#: src/content_mapnode.cpp:2286
+msgid "Mithril Block"
+msgstr "Blocco di mithril"
+
+#: src/content_mapnode.cpp:2302
+msgid "Stone Knob"
+msgstr "Pomello di pietra"
+
+#: src/content_mapnode.cpp:2303
+msgid "Rough Stone Knob"
+msgstr "Pomello di pietra grezza"
+
+#: src/content_mapnode.cpp:2304
+msgid "Sandstone Knob"
+msgstr "Pomello di arenaria"
+
+#: src/content_mapnode.cpp:2305
+msgid "Wooden Knob"
+msgstr "Pomello di legno"
+
+#: src/content_mapnode.cpp:2306
+msgid "Junglewood Knob"
+msgstr "Pomello di legno della giungla"
+
+#: src/content_mapnode.cpp:2307
+msgid "Pine Knob"
+msgstr "Pomello di pino"
+
+#: src/content_mapnode.cpp:2311
+msgid "Copper Block"
+msgstr "Blocco di rame"
+
+#: src/content_mapnode.cpp:2328
+msgid "Gold Block"
+msgstr "Blocco di oro"
+
+#: src/content_mapnode.cpp:2345
+msgid "Silver Block"
+msgstr "Blocco di argento"
+
+#: src/content_mapnode.cpp:2362
+msgid "Tin Block"
+msgstr "Blocco di latta"
+
+#: src/content_mapnode.cpp:2379
+msgid "Quartz Block"
+msgstr "Blocco di quarzo"
+
+#: src/content_mapnode.cpp:2396
+msgid "Stone Tiles"
+msgstr "Piastrelle di pietra"
+
+#: src/content_mapnode.cpp:2416
+msgid "Wood Tiles"
+msgstr "Piastrelle di legno"
+
+#: src/content_mapnode.cpp:2438
+msgid "Stone Column"
+msgstr "Colonna di pietra"
+
+#: src/content_mapnode.cpp:2495
+msgid "Limestone Column"
+msgstr "Colonna di pietra calcarea"
+
+#: src/content_mapnode.cpp:2552
+msgid "Marble Column"
+msgstr "Colonna di marmo"
+
+#: src/content_mapnode.cpp:2609
+msgid "Sandstone Column"
+msgstr "Colonna di arenaria"
+
+#: src/content_mapnode.cpp:2667
+msgid "Brick Column"
+msgstr "Colonna di mattoni"
+
+#: src/content_mapnode.cpp:2722
+msgid "Apple wood Column"
+msgstr ""
+
+#: src/content_mapnode.cpp:2783
+msgid "Wood Column"
+msgstr "Colonna di legno"
+
+#: src/content_mapnode.cpp:2844
+msgid "Jungle Wood Column"
+msgstr "Colonna in legno della giungla"
+
+#: src/content_mapnode.cpp:2905
+msgid "Pine Wood Column"
+msgstr "Colonna in legno di pino"
+
+#: src/content_mapnode.cpp:2966
+msgid "Rough Stone Column"
+msgstr "Colonna in pietra grezza"
+
+#: src/content_mapnode_circuit.cpp:36
+msgid "Mithril Wire"
+msgstr "Cavo di mithril"
+
+#: src/content_mapnode_circuit.cpp:59
+msgid "Copper Wire"
+msgstr "Cavo di rame"
+
+#: src/content_mapnode_circuit.cpp:90
+msgid "Reactor"
+msgstr "Reattore"
+
+#: src/content_mapnode_circuit.cpp:112
+msgid "Solar Panel"
+msgstr "Pannello solare"
+
+#: src/content_mapnode_circuit.cpp:142
+msgid "Water Wheel"
+msgstr "Mulino ad acqua"
+
+#: src/content_mapnode_circuit.cpp:174
+msgid "Switch"
+msgstr "Interruttore"
+
+#: src/content_mapnode_circuit.cpp:209
+msgid "Button"
+msgstr "Pulsante"
+
+#: src/content_mapnode_circuit.cpp:240
+msgid "Stone Pressure Plate"
+msgstr "Lastra a pressione di pietra"
+
+#: src/content_mapnode_circuit.cpp:268
+msgid "Wood Pressure Plate"
+msgstr "Lastra a pressione di legno"
+
+#: src/content_mapnode_circuit.cpp:296
+msgid "Not Gate"
+msgstr "Cancello Not"
+
+#: src/content_mapnode_circuit.cpp:327
+msgid "Repeater"
+msgstr "Ripetitore"
+
+#: src/content_mapnode_circuit.cpp:358 src/content_mapnode_circuit.cpp:377
+msgid "Electric Lamp"
+msgstr "Lampada elettrica"
+
+#: src/content_mapnode_circuit.cpp:409 src/content_mapnode_circuit.cpp:443
+#: src/content_mapnode_circuit.cpp:493 src/content_mapnode_circuit.cpp:513
+#: src/content_mapnode_circuit.cpp:554 src/content_mapnode_circuit.cpp:574
+msgid "Piston"
+msgstr "Pistone"
+
+#: src/content_mapnode_circuit.cpp:468 src/content_mapnode_circuit.cpp:534
+#: src/content_mapnode_circuit.cpp:595
+msgid "Piston Arm"
+msgstr "Braccio di pistone"
+
+#: src/content_mapnode_circuit.cpp:615 src/content_mapnode_circuit.cpp:642
+#: src/content_mapnode_circuit.cpp:692 src/content_mapnode_circuit.cpp:712
+#: src/content_mapnode_circuit.cpp:753 src/content_mapnode_circuit.cpp:773
+msgid "Sticky Piston"
+msgstr "Pistone appiccicoso"
+
+#: src/content_mapnode_circuit.cpp:667 src/content_mapnode_circuit.cpp:733
+#: src/content_mapnode_circuit.cpp:794
+msgid "Sticky Piston Arm"
+msgstr "Braccio di pistone appiccicoso"
+
+#: src/content_mapnode_door.cpp:39 src/content_mapnode_door.cpp:65
+#: src/content_mapnode_door.cpp:632 src/content_mapnode_door.cpp:657
+msgid "Wood Door"
+msgstr "Porta di legno"
+
+#: src/content_mapnode_door.cpp:96 src/content_mapnode_door.cpp:123
+#: src/content_mapnode_door.cpp:738 src/content_mapnode_door.cpp:764
+msgid "Iron Door"
+msgstr ""
+
+#: src/content_mapnode_door.cpp:155 src/content_mapnode_door.cpp:183
+#: src/content_mapnode_door.cpp:683 src/content_mapnode_door.cpp:710
+msgid "Glass Door"
+msgstr "Porta di vetro"
+
+#: src/content_mapnode_door.cpp:216 src/content_mapnode_door.cpp:243
+#: src/content_mapnode_door.cpp:791 src/content_mapnode_door.cpp:816
+msgid "Wood Windowed Door"
+msgstr "Porta di legno con finestra"
+
+#: src/content_mapnode_door.cpp:276 src/content_mapnode_door.cpp:304
+#: src/content_mapnode_door.cpp:842 src/content_mapnode_door.cpp:868
+msgid "Iron Windowed Door"
+msgstr ""
+
+#: src/content_mapnode_door.cpp:339 src/content_mapnode_door.cpp:365
+#: src/content_mapnode_door.cpp:896 src/content_mapnode_door.cpp:923
+msgid "Right Hanging Wood Door"
+msgstr "Porta di legno destra"
+
+#: src/content_mapnode_door.cpp:394 src/content_mapnode_door.cpp:423
+#: src/content_mapnode_door.cpp:951 src/content_mapnode_door.cpp:980
+msgid "Right Hanging Glass Door"
+msgstr "Porta di vetro destra"
+
+#: src/content_mapnode_door.cpp:455 src/content_mapnode_door.cpp:482
+#: src/content_mapnode_door.cpp:1009 src/content_mapnode_door.cpp:1037
+msgid "Right Hanging Iron Door"
+msgstr ""
+
+#: src/content_mapnode_door.cpp:512 src/content_mapnode_door.cpp:539
+#: src/content_mapnode_door.cpp:1066 src/content_mapnode_door.cpp:1093
+msgid "Right Hanging Wood Windowed Door"
+msgstr "Porta di legno destra con finestra"
+
+#: src/content_mapnode_door.cpp:569 src/content_mapnode_door.cpp:597
+#: src/content_mapnode_door.cpp:1121 src/content_mapnode_door.cpp:1149
+msgid "Right Hanging Iron Windowed Door"
+msgstr ""
+
+#: src/content_mapnode_door.cpp:1179 src/content_mapnode_door.cpp:1350
+#: src/content_mapnode_door.cpp:1405
+msgid "Wood Hatch"
+msgstr "Portello di legno"
+
+#: src/content_mapnode_door.cpp:1205 src/content_mapnode_door.cpp:1377
+#: src/content_mapnode_door.cpp:1432
+msgid "Iron Hatch"
+msgstr ""
+
+#: src/content_mapnode_door.cpp:1231
+msgid "Wood Windowed Hatch"
+msgstr "Portello di legno con finestra"
+
+#: src/content_mapnode_door.cpp:1259
+msgid "Iron Windowed Hatch"
+msgstr ""
+
+#: src/content_mapnode_door.cpp:1289 src/content_mapnode_door.cpp:1461
+msgid "Wood Gate"
+msgstr "Cancello di legno"
+
+#: src/content_mapnode_door.cpp:1319 src/content_mapnode_door.cpp:1485
+msgid "Iron Gate"
+msgstr ""
+
+#: src/content_mapnode_farm.cpp:38
+msgid "Farm Dirt"
+msgstr "Terra della fattoria"
+
+#: src/content_mapnode_farm.cpp:68
+msgid "Trellis"
+msgstr "Graticcio"
+
+#: src/content_mapnode_farm.cpp:90
+msgid "Wheat Seeds"
+msgstr "Semi di grano"
+
+#: src/content_mapnode_farm.cpp:111
+msgid "Melon Seeds"
+msgstr "Semi di anguria"
+
+#: src/content_mapnode_farm.cpp:134
+msgid "Pumpkin Seeds"
+msgstr "Semi di zucca"
+
+#: src/content_mapnode_farm.cpp:157
+msgid "Potato Seeds"
+msgstr "Semi di patata"
+
+#: src/content_mapnode_farm.cpp:180
+msgid "Carrot Seeds"
+msgstr "Semi di carota"
+
+#: src/content_mapnode_farm.cpp:203
+msgid "Beetroot Seeds"
+msgstr "Semi di barbabietola"
+
+#: src/content_mapnode_farm.cpp:226
+msgid "Grape Seeds"
+msgstr "Semi di uva"
+
+#: src/content_mapnode_farm.cpp:249
+msgid "Cotton Seeds"
+msgstr "Semi di cotone"
+
+#: src/content_mapnode_farm.cpp:292
+msgid "Melon"
+msgstr "Anguria"
+
+#: src/content_mapnode_farm.cpp:309
+msgid "Pumpkin"
+msgstr "Zucca"
+
+#: src/content_mapnode_farm.cpp:412
+msgid "Grape"
+msgstr "Uva"
+
+#: src/content_mapnode_farm.cpp:456
+msgid "Trellis Grape"
+msgstr "Graticcio di uva"
+
+#: src/content_mapnode_farm.cpp:480 src/content_mapnode_farm.cpp:498
+msgid "Dead Vine"
+msgstr "Vite morta"
+
+#: src/content_mapnode_furniture.cpp:37
+msgid "Book Shelf"
+msgstr "Libreria"
+
+#: src/content_mapnode_furniture.cpp:70
+msgid "Junglewood Book Shelf"
+msgstr "Libreria di legno di giungla"
+
+#: src/content_mapnode_furniture.cpp:103
+msgid "Pine Book Shelf"
+msgstr "Libreria di legno di pino"
+
+#: src/content_mapnode_furniture.cpp:136
+msgid "Applewood Book Shelf"
+msgstr ""
+
+#: src/content_mapnode_furniture.cpp:169 src/content_mapnode_furniture.cpp:188
+#: src/content_mapnode_furniture.cpp:207 src/content_mapnode_furniture.cpp:226
+#: src/content_mapnode_furniture.cpp:245 src/content_mapnode_furniture.cpp:264
+msgid "Couch"
+msgstr "Poltrona"
+
+#: src/content_mapnode_furniture.cpp:293 src/content_mapnode_furniture.cpp:312
+#: src/content_mapnode_furniture.cpp:331 src/content_mapnode_furniture.cpp:350
+#: src/content_mapnode_furniture.cpp:369 src/content_mapnode_furniture.cpp:388
+msgid "Blue Couch"
+msgstr "Poltrona blu"
+
+#: src/content_mapnode_furniture.cpp:411 src/content_mapnode_furniture.cpp:430
+#: src/content_mapnode_furniture.cpp:449 src/content_mapnode_furniture.cpp:468
+#: src/content_mapnode_furniture.cpp:487 src/content_mapnode_furniture.cpp:506
+msgid "Green Couch"
+msgstr "Poltrona verde"
+
+#: src/content_mapnode_furniture.cpp:529 src/content_mapnode_furniture.cpp:548
+#: src/content_mapnode_furniture.cpp:567 src/content_mapnode_furniture.cpp:586
+#: src/content_mapnode_furniture.cpp:605 src/content_mapnode_furniture.cpp:624
+msgid "Orange Couch"
+msgstr "Poltrona arancione"
+
+#: src/content_mapnode_furniture.cpp:647 src/content_mapnode_furniture.cpp:666
+#: src/content_mapnode_furniture.cpp:685 src/content_mapnode_furniture.cpp:704
+#: src/content_mapnode_furniture.cpp:723 src/content_mapnode_furniture.cpp:742
+msgid "Purple Couch"
+msgstr "Poltrona viola"
+
+#: src/content_mapnode_furniture.cpp:765 src/content_mapnode_furniture.cpp:784
+#: src/content_mapnode_furniture.cpp:803 src/content_mapnode_furniture.cpp:822
+#: src/content_mapnode_furniture.cpp:841 src/content_mapnode_furniture.cpp:860
+msgid "Red Couch"
+msgstr "Poltrona rossa"
+
+#: src/content_mapnode_furniture.cpp:883 src/content_mapnode_furniture.cpp:902
+#: src/content_mapnode_furniture.cpp:921 src/content_mapnode_furniture.cpp:940
+#: src/content_mapnode_furniture.cpp:959 src/content_mapnode_furniture.cpp:978
+msgid "Yellow Couch"
+msgstr "Poltrona gialla"
+
+#: src/content_mapnode_furniture.cpp:1001
+#: src/content_mapnode_furniture.cpp:1020
+#: src/content_mapnode_furniture.cpp:1039
+#: src/content_mapnode_furniture.cpp:1058
+#: src/content_mapnode_furniture.cpp:1077
+#: src/content_mapnode_furniture.cpp:1096
+msgid "Black Couch"
+msgstr "Poltrona nera"
+
+#: src/content_mapnode_furniture.cpp:1119
+#: src/content_mapnode_furniture.cpp:1152
+#: src/content_mapnode_furniture.cpp:1175
+#: src/content_mapnode_furniture.cpp:1198
+#: src/content_mapnode_furniture.cpp:1221
+#: src/content_mapnode_furniture.cpp:1244
+msgid "Chair"
+msgstr "Sedia"
+
+#: src/content_mapnode_furniture.cpp:1267
+msgid "Table"
+msgstr "Tavolo"
+
+#: src/content_mapnode_furniture.cpp:1297
+#: src/content_mapnode_furniture.cpp:1329
+msgid "Bed"
+msgstr "Letto"
+
+#: src/content_mapnode_furniture.cpp:1356
+#: src/content_mapnode_furniture.cpp:1388
+msgid "Blue Bed"
+msgstr "Letto blu"
+
+#: src/content_mapnode_furniture.cpp:1415
+#: src/content_mapnode_furniture.cpp:1447
+msgid "Green Bed"
+msgstr "Letto verde"
+
+#: src/content_mapnode_furniture.cpp:1474
+#: src/content_mapnode_furniture.cpp:1506
+msgid "Orange Bed"
+msgstr "Letto arancione"
+
+#: src/content_mapnode_furniture.cpp:1533
+#: src/content_mapnode_furniture.cpp:1565
+msgid "Purple Bed"
+msgstr "Letto viola"
+
+#: src/content_mapnode_furniture.cpp:1592
+#: src/content_mapnode_furniture.cpp:1624
+msgid "Red Bed"
+msgstr "Letto rosso"
+
+#: src/content_mapnode_furniture.cpp:1651
+#: src/content_mapnode_furniture.cpp:1683
+msgid "Yellow Bed"
+msgstr "Letto giallo"
+
+#: src/content_mapnode_furniture.cpp:1710
+#: src/content_mapnode_furniture.cpp:1742
+msgid "Black Bed"
+msgstr "Letto nero"
+
+#: src/content_mapnode_furniture.cpp:1769
+#: src/content_mapnode_furniture.cpp:1803
+msgid "Camp Bed"
+msgstr "Letto da campo"
+
+#: src/content_mapnode_furniture.cpp:1826
+msgid "Colorful Painting"
+msgstr "Dipinto colorato"
+
+#: src/content_mapnode_furniture.cpp:1860
+msgid "Red Rose Painting"
+msgstr "Dipinto di rosa rossa"
+
+#: src/content_mapnode_furniture.cpp:1894
+msgid "Field Painting"
+msgstr "Dipinto campestre"
+
+#: src/content_mapnode_furniture.cpp:1928
+msgid "Blue Flower Painting"
+msgstr "Dipinto di fiori blu"
+
+#: src/content_mapnode_furniture.cpp:1962
+msgid "Painting Canvas"
+msgstr "Tela da dipinto"
+
+#: src/content_mapnode_furniture.cpp:1999
+msgid "Clock"
+msgstr "Orologio"
+
+#: src/content_mapnode_plants.cpp:41
+msgid "Tree"
+msgstr "Albero"
+
+#: src/content_mapnode_plants.cpp:60
+msgid "Apple Tree"
+msgstr "Melo"
+
+#: src/content_mapnode_plants.cpp:79
+msgid "Jungle Tree"
+msgstr "Albero della giungla"
+
+#: src/content_mapnode_plants.cpp:97
+msgid "Conifer Tree"
+msgstr "Conifera"
+
+#: src/content_mapnode_plants.cpp:116
+msgid "Young Tree"
+msgstr "Albero giovane"
+
+#: src/content_mapnode_plants.cpp:136
+msgid "Young Jungle Tree"
+msgstr "Albero giovane della giungla"
+
+#: src/content_mapnode_plants.cpp:156
+msgid "Young Apple Tree"
+msgstr "Melo giovane"
+
+#: src/content_mapnode_plants.cpp:176
+msgid "Young Conifer Tree"
+msgstr "Conifera giovane"
+
+#: src/content_mapnode_plants.cpp:196
+msgid "Jungle Grass"
+msgstr "Erba della giungla"
+
+#: src/content_mapnode_plants.cpp:220
+msgid "Jungle Fern"
+msgstr "Felce della giungla"
+
+#: src/content_mapnode_plants.cpp:241 src/content_mapnode_plants.cpp:273
+#: src/content_mapnode_plants.cpp:305 src/content_mapnode_plants.cpp:337
+msgid "Leaves"
+msgstr "Foglie"
+
+#: src/content_mapnode_plants.cpp:369
+msgid "Apple Tree Leaves"
+msgstr "Foglie di melo"
+
+#: src/content_mapnode_plants.cpp:402
+msgid "Jungle Leaves"
+msgstr "Foglie della giungla"
+
+#: src/content_mapnode_plants.cpp:434
+msgid "Conifer Leaves"
+msgstr "Foglie di conifera"
+
+#: src/content_mapnode_plants.cpp:466 src/content_mapnode_plants.cpp:491
+#: src/content_mapnode_plants.cpp:516
+msgid "Trimmed Leaves"
+msgstr "Foglie potate"
+
+#: src/content_mapnode_plants.cpp:541
+msgid "Trimmed Apple Tree Leaves"
+msgstr "Foglie potate di melo"
+
+#: src/content_mapnode_plants.cpp:566
+msgid "Trimmed Jungle Leaves"
+msgstr "Foglie potate di albero della giungla"
+
+#: src/content_mapnode_plants.cpp:591
+msgid "Trimmed Conifer Leaves"
+msgstr "Foglie potate di conifera"
+
+#: src/content_mapnode_plants.cpp:616
+msgid "Apple Tree Blossom"
+msgstr "Bocciolo di melo"
+
+#: src/content_mapnode_plants.cpp:641
+msgid "Trimmed Apple Tree Blossom"
+msgstr "Bocciolo potato di melo"
+
+#: src/content_mapnode_plants.cpp:663
+msgid "Cactus Blossom"
+msgstr "Bocciolo di cactus"
+
+#: src/content_mapnode_plants.cpp:683
+msgid "Cactus Flower"
+msgstr "Fiore di cactus"
+
+#: src/content_mapnode_plants.cpp:724 src/hud.cpp:670
+msgid "Cactus"
+msgstr "Cactus"
+
+#: src/content_mapnode_plants.cpp:747
+msgid "Papyrus"
+msgstr "Papiro"
+
+#: src/content_mapnode_plants.cpp:770
+msgid "Sapling"
+msgstr "Alberello"
+
+#: src/content_mapnode_plants.cpp:791
+msgid "Apple Tree Sapling"
+msgstr "Alberello di melo"
+
+#: src/content_mapnode_plants.cpp:812
+msgid "Jungle Sapling"
+msgstr "Alberello della giungla"
+
+#: src/content_mapnode_plants.cpp:833
+msgid "Conifer Sapling"
+msgstr "Alberello di conifera"
+
+#: src/content_mapnode_plants.cpp:878 src/content_mapnode_plants.cpp:902
+msgid "Wild Grass"
+msgstr "Erba selvatica"
+
+#: src/content_mapnode_plants.cpp:925
+msgid "Dead Grass"
+msgstr "Erba morta"
+
+#: src/content_mapnode_plants.cpp:947
+msgid "Flower Stem"
+msgstr "Gambo di fiore"
+
+#: src/content_mapnode_plants.cpp:969
+msgid "Rose"
+msgstr "Rosa"
+
+#: src/content_mapnode_plants.cpp:992
+msgid "Daffodil"
+msgstr "Narciso giallo"
+
+#: src/content_mapnode_plants.cpp:1015
+msgid "Tulip"
+msgstr "Tulipano"
+
+#: src/content_mapnode_plants.cpp:1038
+msgid "Tea Seeds"
+msgstr "Semi di tè"
+
+#: src/content_mapnode_plants.cpp:1057
+msgid "Tea Plant"
+msgstr "Pianta di tè"
+
+#: src/content_mapnode_plants.cpp:1080
+msgid "Coffee Beans"
+msgstr "Chicchi di caffè"
+
+#: src/content_mapnode_plants.cpp:1100
+msgid "Coffee Plant"
+msgstr "Pianta di caffè"
+
+#: src/content_mapnode_plants.cpp:1122
+msgid "Blueberry Bush"
+msgstr "Cespuglio di mirtilli"
+
+#: src/content_mapnode_plants.cpp:1152
+msgid "Raspberry Bush"
+msgstr "Cespuglio di lamponi"
+
+#: src/content_mapnode_sign.cpp:38 src/content_mapnode_sign.cpp:67
+#: src/content_mapnode_sign.cpp:93 src/content_mapnode_sign.cpp:118
+#: src/content_mapnode_sign.cpp:146 src/content_mapnode_sign.cpp:171
+#: src/content_mapnode_sign.cpp:195 src/content_mapnode_sign.cpp:223
+#: src/content_mapnode_sign.cpp:248 src/content_mapnode_sign.cpp:272
+#: src/content_mapnode_sign.cpp:300 src/content_mapnode_sign.cpp:325
+#: src/content_mapnode_sign.cpp:349 src/content_mapnode_sign.cpp:377
+#: src/content_mapnode_sign.cpp:402
+msgid "Sign"
+msgstr "Cartello"
+
+#: src/content_mapnode_sign.cpp:428 src/content_mapnode_sign.cpp:456
+#: src/content_mapnode_sign.cpp:486
+msgid "Locking Sign"
+msgstr "Cartello con serratura"
+
+#: src/content_mapnode_slab.cpp:38
+msgid "Rough Stone Slab"
+msgstr "Lastra di pietra grezza"
+
+#: src/content_mapnode_slab.cpp:56 src/content_mapnode_slab.cpp:444
+msgid "Cobble Stone Slab"
+msgstr "Lastra di ciottoli"
+
+#: src/content_mapnode_slab.cpp:74
+msgid "Mossy Cobble Stone Slab"
+msgstr "Lastra di ciottoli muschiosa"
+
+#: src/content_mapnode_slab.cpp:92
+msgid "Stone Slab"
+msgstr "Lastra di pietra"
+
+#: src/content_mapnode_slab.cpp:109
+msgid "Apple Wood Slab"
+msgstr ""
+
+#: src/content_mapnode_slab.cpp:128
+msgid "Wood Slab"
+msgstr "Lastra di legno"
+
+#: src/content_mapnode_slab.cpp:147
+msgid "Jungle Wood Slab"
+msgstr "Lastra di legno della giungla"
+
+#: src/content_mapnode_slab.cpp:166
+msgid "Brick Slab"
+msgstr "Lastra di mattoni"
+
+#: src/content_mapnode_slab.cpp:187
+msgid "Sand Stone Slab"
+msgstr "Lastra di arenaria"
+
+#: src/content_mapnode_slab.cpp:204 src/content_mapnode_slab.cpp:561
+msgid "Glass Slab"
+msgstr "Lastra di vetro"
+
+#: src/content_mapnode_slab.cpp:229 src/content_mapnode_slab.cpp:583
+msgid "Blue Glass Slab"
+msgstr "Lastra di vetro blu"
+
+#: src/content_mapnode_slab.cpp:255 src/content_mapnode_slab.cpp:605
+msgid "Green Glass Slab"
+msgstr "Lastra di vetro verde"
+
+#: src/content_mapnode_slab.cpp:281 src/content_mapnode_slab.cpp:627
+msgid "Orange Glass Slab"
+msgstr "Lastra di vetro arancione"
+
+#: src/content_mapnode_slab.cpp:307 src/content_mapnode_slab.cpp:649
+msgid "Purple Glass Slab"
+msgstr "Lastra di vetro viola"
+
+#: src/content_mapnode_slab.cpp:333 src/content_mapnode_slab.cpp:671
+msgid "Red Glass Slab"
+msgstr "Lastra di vetro rosso"
+
+#: src/content_mapnode_slab.cpp:359 src/content_mapnode_slab.cpp:693
+msgid "Yellow Glass Slab"
+msgstr "Lastra di vetro giallo"
+
+#: src/content_mapnode_slab.cpp:385 src/content_mapnode_slab.cpp:715
+msgid "Black Glass Slab"
+msgstr "Lastra di vetro nero"
+
+#: src/content_mapnode_slab.cpp:411
+msgid "Limestone Slab"
+msgstr "Lastra di pietra calcarea"
+
+#: src/content_mapnode_special.cpp:38
+msgid "Fence"
+msgstr "Recinzione"
+
+#: src/content_mapnode_special.cpp:64
+msgid "Iron Fence"
+msgstr ""
+
+#: src/content_mapnode_special.cpp:91
+msgid "Jungle Wood Fence"
+msgstr "Recinzione di legno della giungla"
+
+#: src/content_mapnode_special.cpp:117
+msgid "Pine Fence"
+msgstr "Recinzione di pino"
+
+#: src/content_mapnode_special.cpp:143
+msgid "Apple Wood Fence"
+msgstr ""
+
+#: src/content_mapnode_special.cpp:169
+msgid "Iron Bars"
+msgstr ""
+
+#: src/content_mapnode_special.cpp:197
+msgid "Rail"
+msgstr "Binario"
+
+#: src/content_mapnode_special.cpp:227
+msgid "Terracotta Roof Tile"
+msgstr "Tegole di tetto in terracotta"
+
+#: src/content_mapnode_special.cpp:243
+msgid "Wood Roof Tile"
+msgstr "Tegole di tetto in legno"
+
+#: src/content_mapnode_special.cpp:260
+msgid "Asphalt Roof Tile"
+msgstr "Tegole di tetto in asfalto"
+
+#: src/content_mapnode_special.cpp:283
+msgid "Stone Roof Tile"
+msgstr "Tegole di tetto in pietra"
+
+#: src/content_mapnode_special.cpp:299
+msgid "Glass Roof Tile"
+msgstr "Tegola di tetto in vetro"
+
+#: src/content_mapnode_special.cpp:321
+msgid "Blue Glass Roof Tile"
+msgstr "Tegola di tetto in vetro blu"
+
+#: src/content_mapnode_special.cpp:344
+msgid "Green Glass Roof Tile"
+msgstr "Tegola di tetto in vetro verde"
+
+#: src/content_mapnode_special.cpp:367
+msgid "Orange Glass Roof Tile"
+msgstr "Tegola di tetto in vetro arancione"
+
+#: src/content_mapnode_special.cpp:390
+msgid "Purple Glass Roof Tile"
+msgstr "Tegola di tetto in vetro viola"
+
+#: src/content_mapnode_special.cpp:413
+msgid "Red Glass Roof Tile"
+msgstr "Tegola di tetto in vetro rosso"
+
+#: src/content_mapnode_special.cpp:436
+msgid "Yellow Glass Roof Tile"
+msgstr "Tegola di tetto in vetro giallo"
+
+#: src/content_mapnode_special.cpp:459
+msgid "Black Glass Roof Tile"
+msgstr "Tegola di tetto in vetro nero"
+
+#: src/content_mapnode_special.cpp:482
+msgid "Thatch Roof Tile"
+msgstr "Tegole di tetto di paglia"
+
+#: src/content_mapnode_special.cpp:498 src/content_mapnode_special.cpp:546
+#: src/content_mapnode_special.cpp:569
+msgid "Ladder"
+msgstr "Scala a pioli"
+
+#: src/content_mapnode_special.cpp:592
+msgid "Border Stone"
+msgstr "Pietra di confine"
+
+#: src/content_mapnode_special.cpp:619
+msgid "Book"
+msgstr "Libro"
+
+#: src/content_mapnode_special.cpp:650
+msgid "Cook Book"
+msgstr "Manuale di cottura"
+
+#: src/content_mapnode_special.cpp:681
+msgid "Decraft Book"
+msgstr "Manuale di smontaggio"
+
+#: src/content_mapnode_special.cpp:711 src/content_mapnode_special.cpp:900
+msgid "Diary"
+msgstr "Diario"
+
+#: src/content_mapnode_special.cpp:742
+msgid "Craft Book"
+msgstr "Manuale di montaggio"
+
+#: src/content_mapnode_special.cpp:781
+msgid "Reverse Craft Book"
+msgstr "Manuale di montaggio inverso"
+
+#: src/content_mapnode_special.cpp:818
+msgid "Guide"
+msgstr "Guida"
+
+#: src/content_mapnode_special.cpp:846 src/content_nodemeta.h:694
+msgid "Cooking Guide"
+msgstr "Manuale di cottura"
+
+#: src/content_mapnode_special.cpp:873 src/content_nodemeta.h:720
+msgid "Decrafting Guide"
+msgstr "Manuale di smontaggio"
+
+#: src/content_mapnode_special.cpp:928 src/content_nodemeta.h:636
+msgid "Craft Guide"
+msgstr "Manuale di montaggio"
+
+#: src/content_mapnode_special.cpp:955 src/content_nodemeta.h:663
+msgid "Reverse Craft Guide"
+msgstr "Manuale di montaggio inverso"
+
+#: src/content_mapnode_special.cpp:984 src/content_mapnode_special.cpp:1086
+msgid "Wood Barrel"
+msgstr ""
+
+#: src/content_mapnode_special.cpp:1009 src/content_mapnode_special.cpp:1109
+msgid "Applewood Barrel"
+msgstr ""
+
+#: src/content_mapnode_special.cpp:1034 src/content_mapnode_special.cpp:1132
+msgid "Junglewood Barrel"
+msgstr ""
+
+#: src/content_mapnode_special.cpp:1059 src/content_mapnode_special.cpp:1155
+msgid "Pine Barrel"
+msgstr ""
+
+#: src/content_mapnode_special.cpp:1178 src/content_mapnode_special.cpp:1198
+#: src/hud.cpp:671
+msgid "Fire"
+msgstr "Fuoco"
+
+#: src/content_mapnode_special.cpp:1217
+msgid "Torch"
+msgstr "Torcia"
+
+#: src/content_mapnode_special.cpp:1244 src/content_mapnode_special.cpp:1278
+#: src/content_mapnode_special.cpp:1312 src/content_mapnode_special.cpp:1346
+#: src/content_mapnode_special.cpp:1380
+msgid "Chest"
+msgstr "Cassa"
+
+#: src/content_mapnode_special.cpp:1399
+msgid "Creative Chest"
+msgstr "Cassa creativa"
+
+#: src/content_mapnode_special.cpp:1420
+msgid "Locking Chest"
+msgstr "Cassa con serratura"
+
+#: src/content_mapnode_special.cpp:1440
+msgid "Safe"
+msgstr "Cassaforte"
+
+#: src/content_mapnode_special.cpp:1462 src/content_mapnode_special.cpp:1516
+msgid "Furnace"
+msgstr "Fornace"
+
+#: src/content_mapnode_special.cpp:1489
+msgid "Smeltery"
+msgstr ""
+
+#: src/content_mapnode_special.cpp:1537
+msgid "Locking Furnace"
+msgstr "Fornace con serratura"
+
+#: src/content_mapnode_special.cpp:1558 src/content_mapnode_special.cpp:1583
+msgid "Incinerator"
+msgstr "Inceneritore"
+
+#: src/content_mapnode_special.cpp:1603
+msgid "Camp Fire"
+msgstr "Fuoco da campo"
+
+#: src/content_mapnode_special.cpp:1642
+msgid "Crusher"
+msgstr ""
+
+#: src/content_mapnode_special.cpp:1662
+msgid "Nyan Cat"
+msgstr "Gatto Nyan"
+
+#: src/content_mapnode_special.cpp:1672
+msgid "Rainbow"
+msgstr "Arcobaleno"
+
+#: src/content_mapnode_special.cpp:1683
+msgid "Unfired Flower Pot"
+msgstr ""
+
+#: src/content_mapnode_special.cpp:1705
+msgid "Flower Pot"
+msgstr "Vaso per fiori"
+
+#: src/content_mapnode_special.cpp:1722
+msgid "Cobblestone Wall"
+msgstr "Muro di ciottoli"
+
+#: src/content_mapnode_special.cpp:1745
+msgid "Rough Stone Wall"
+msgstr "Muro di pietra grezza"
+
+#: src/content_mapnode_special.cpp:1768
+msgid "Mossy Cobblestone Wall"
+msgstr "Muro di ciottoli muschiosi"
+
+#: src/content_mapnode_special.cpp:1791
+msgid "Stone Wall"
+msgstr "Muro di pietra"
+
+#: src/content_mapnode_special.cpp:1814
+msgid "Sand Stone Wall"
+msgstr "Muro di arenaria"
+
+#: src/content_mapnode_special.cpp:1837
+msgid "Limestone Wall"
+msgstr "Muro di pietra calcarea"
+
+#: src/content_mapnode_special.cpp:1860
+msgid "Marble Wall"
+msgstr "Muro di marmo"
+
+#: src/content_mapnode_special.cpp:1883 src/hud.cpp:672
+msgid "TNT"
+msgstr "TNT"
+
+#: src/content_mapnode_special.cpp:1903
+msgid "In-Progress explosion - how did you get this???"
+msgstr "Esplosione in corso - come avete fatto a ottenerla???"
+
+#: src/content_mapnode_special.cpp:1922 src/hud.cpp:673
+msgid "Steam"
+msgstr "Vapore"
+
+#: src/content_mapnode_special.cpp:1942
+msgid "Home Flag"
+msgstr "Bandiera di casa"
+
+#: src/content_mapnode_special.cpp:1987
+msgid "Blue Home Flag"
+msgstr "Bandiera blu di casa"
+
+#: src/content_mapnode_special.cpp:2011
+msgid "Green Home Flag"
+msgstr "Bandiera verde di casa"
+
+#: src/content_mapnode_special.cpp:2035
+msgid "Orange Home Flag"
+msgstr "Bandiera arancione di casa"
+
+#: src/content_mapnode_special.cpp:2059
+msgid "Purple Home Flag"
+msgstr "Bandiera viola di casa"
+
+#: src/content_mapnode_special.cpp:2083
+msgid "Red Home Flag"
+msgstr "Bandiera rossa di casa"
+
+#: src/content_mapnode_special.cpp:2107
+msgid "Yellow Home Flag"
+msgstr "Bandiera gialla di casa"
+
+#: src/content_mapnode_special.cpp:2131
+msgid "Black Home Flag"
+msgstr "Bandiera nera di casa"
+
+#: src/content_mapnode_special.cpp:2155
+msgid "Life Support System"
+msgstr "Sistema di supporto vitale"
+
+#: src/content_mapnode_special.cpp:2179
+msgid "Parcel"
+msgstr "Lotto"
+
+#: src/content_mapnode_special.cpp:2204
+msgid "Cauldron"
+msgstr "Calderone"
+
+#: src/content_mapnode_special.cpp:2224
+msgid "Forge"
+msgstr "Forgia"
+
+#: src/content_mapnode_special.cpp:2251
+msgid "Forge Fire"
+msgstr "Fuoco della forgia"
+
+#: src/content_mapnode_special.cpp:2270
+msgid "Scaffolding"
+msgstr "Impalcatura"
+
+#: src/content_mapnode_special.cpp:2304
+msgid "Unfired Clay Vessel"
+msgstr ""
+
+#: src/content_mapnode_special.cpp:2325
+msgid "Clay Vessel"
+msgstr ""
+
+#: src/content_mapnode_stair.cpp:38
+msgid "Rough Stone Stair"
+msgstr "Scala di pietra grezza"
+
+#: src/content_mapnode_stair.cpp:56
+msgid "Cobble Stone Stair"
+msgstr "Scala di ciottoli"
+
+#: src/content_mapnode_stair.cpp:74
+msgid "Mossy Cobble Stone Stair"
+msgstr "Scala di ciottoli muschiosi"
+
+#: src/content_mapnode_stair.cpp:92
+msgid "Stone Stair"
+msgstr "Scala di pietra"
+
+#: src/content_mapnode_stair.cpp:111
+msgid "Apple wood Stair"
+msgstr ""
+
+#: src/content_mapnode_stair.cpp:131
+msgid "Wood Stair"
+msgstr "Scala di legno"
+
+#: src/content_mapnode_stair.cpp:151
+msgid "Jungle Wood Stair"
+msgstr "Scala di legno della giungla"
+
+#: src/content_mapnode_stair.cpp:171
+msgid "Brick Stair"
+msgstr "Scala di mattoni"
+
+#: src/content_mapnode_stair.cpp:194
+msgid "Sand Stone Stair"
+msgstr "Scala di arenaria"
+
+#: src/content_mapnode_stair.cpp:212
+msgid "Limestone Stair"
+msgstr "Scala di pietra calcarea"
+
+#: src/content_mob.cpp:401
+msgid "Oerkki"
+msgstr "Oerkki"
+
+#: src/content_mob.cpp:422
+msgid "Dungeon Master"
+msgstr "Dungeon Master"
+
+#: src/content_mob.cpp:443
+msgid "Fireball"
+msgstr "Palla di fuoco"
+
+#: src/content_mob.cpp:460
+msgid "Doe"
+msgstr "Cerva"
+
+#: src/content_mob.cpp:487 src/content_mob.cpp:516
+msgid "Stag"
+msgstr "Cervo"
+
+#: src/content_mob.cpp:565
+msgid "Shark"
+msgstr "Squalo"
+
+#: src/content_mob.cpp:590
+msgid "Wolf"
+msgstr "Lupo"
+
+#: src/content_mob.cpp:618
+msgid "Tame Wolf"
+msgstr "Lupo addomesticato"
+
+#: src/content_mob.cpp:644
+msgid "Sheep"
+msgstr "Pecora"
+
+#: src/content_mob.cpp:676
+msgid "Sheared Sheep"
+msgstr "Pecora tosata"
+
+#: src/content_mob.cpp:701
+msgid "Snowball"
+msgstr "Palla di neve"
+
+#: src/content_mob.cpp:737
+msgid "Grey Kitten"
+msgstr "Gattino grigio"
+
+#: src/content_mob.cpp:764
+msgid "White Kitten"
+msgstr "Gattino bianco"
+
+#: src/content_mob.cpp:791
+msgid "Siamese Kitten"
+msgstr "Gattino siamese"
+
+#: src/content_mob.cpp:818
+msgid "Ginger Kitten"
+msgstr "Gattino rosso"
+
+#: src/content_toolitem.cpp:288
+msgid "Stone Pick"
+msgstr "Piccone di pietra"
+
+#: src/content_toolitem.cpp:310
+msgid "Copper Pick"
+msgstr ""
+
+#: src/content_toolitem.cpp:323
+msgid "Flint Pick"
+msgstr "Piccone di selce"
+
+#: src/content_toolitem.cpp:336
+msgid "Bronze Pick"
+msgstr ""
+
+#: src/content_toolitem.cpp:349
+msgid "Iron Pick"
+msgstr ""
+
+#: src/content_toolitem.cpp:362
+msgid "Unbound Mithril Pick"
+msgstr "Piccone di mithril fuso"
+
+#: src/content_toolitem.cpp:375
+msgid "Mithril Pick"
+msgstr "Piccone di mithril"
+
+#: src/content_toolitem.cpp:389
+msgid "Creative Pick"
+msgstr "Piccone creativo"
+
+#: src/content_toolitem.cpp:404
+msgid "Stone Shovel"
+msgstr "Vanga di pietra"
+
+#: src/content_toolitem.cpp:417
+msgid "Copper Shovel"
+msgstr ""
+
+#: src/content_toolitem.cpp:430
+msgid "Flint Shovel"
+msgstr "Vanga di selce"
+
+#: src/content_toolitem.cpp:443
+msgid "Iron Shovel"
+msgstr ""
+
+#: src/content_toolitem.cpp:456
+msgid "Bronze Shovel"
+msgstr ""
+
+#: src/content_toolitem.cpp:469
+msgid "Unbound Mithril Shovel"
+msgstr "Vanga di mithril fuso"
+
+#: src/content_toolitem.cpp:482
+msgid "Mithril Shovel"
+msgstr "Vanga di mithril"
+
+#: src/content_toolitem.cpp:497
+msgid "Stone Axe"
+msgstr "Ascia di pietra"
+
+#: src/content_toolitem.cpp:520
+msgid "Copper Axe"
+msgstr ""
+
+#: src/content_toolitem.cpp:533
+msgid "Flint Axe"
+msgstr "Ascia di selce"
+
+#: src/content_toolitem.cpp:546
+msgid "Iron Axe"
+msgstr ""
+
+#: src/content_toolitem.cpp:559
+msgid "Bronze Axe"
+msgstr ""
+
+#: src/content_toolitem.cpp:572
+msgid "Unbound Mithril Axe"
+msgstr "Ascia di mithril fuso"
+
+#: src/content_toolitem.cpp:585
+msgid "Mithril Axe"
+msgstr "Ascia di mithril"
+
+#: src/content_toolitem.cpp:600
+msgid "Wooden Club"
+msgstr "Mazza di legno"
+
+#: src/content_toolitem.cpp:614
+msgid "Bow"
+msgstr "Arco"
+
+#: src/content_toolitem.cpp:637
+msgid "Stone Spear"
+msgstr "Lancia di pietra"
+
+#: src/content_toolitem.cpp:650
+msgid "Copper Spear"
+msgstr ""
+
+#: src/content_toolitem.cpp:663
+msgid "Flint Spear"
+msgstr "Lancia di selce"
+
+#: src/content_toolitem.cpp:676
+msgid "Iron Spear"
+msgstr ""
+
+#: src/content_toolitem.cpp:689
+msgid "Bronze Spear"
+msgstr ""
+
+#: src/content_toolitem.cpp:702
+msgid "Unbound Mithril Spear"
+msgstr "Lancia di mithril fuso"
+
+#: src/content_toolitem.cpp:715
+msgid "Mithril Spear"
+msgstr "Lancia di mithril"
+
+#: src/content_toolitem.cpp:730
+msgid "Copper Sword"
+msgstr ""
+
+#: src/content_toolitem.cpp:743
+msgid "Bronze Sword"
+msgstr ""
+
+#: src/content_toolitem.cpp:756
+msgid "Iron Sword"
+msgstr ""
+
+#: src/content_toolitem.cpp:769
+msgid "Unbound Mithril Sword"
+msgstr "Spada di mithril fuso"
+
+#: src/content_toolitem.cpp:782
+msgid "Mithril Sword"
+msgstr "Spada di mithril"
+
+#: src/content_toolitem.cpp:797
+msgid "Flint Shears"
+msgstr "Cesoie di selce"
+
+#: src/content_toolitem.cpp:810
+msgid "Copper Shears"
+msgstr ""
+
+#: src/content_toolitem.cpp:823
+msgid "Iron Shears"
+msgstr ""
+
+#: src/content_toolitem.cpp:838
+msgid "Wooden Bucket"
+msgstr "Secchio di legno"
+
+#: src/content_toolitem.cpp:856
+msgid "Tin Bucket"
+msgstr "Secchio di latta"
+
+#: src/content_toolitem.cpp:873
+msgid "Iron Bucket"
+msgstr ""
+
+#: src/content_toolitem.cpp:892
+msgid "Stone Knife"
+msgstr ""
+
+#: src/content_toolitem.cpp:905
+msgid "Copper Knife"
+msgstr ""
+
+#: src/content_toolitem.cpp:918
+msgid "Flint Knife"
+msgstr ""
+
+#: src/content_toolitem.cpp:931
+msgid "Bronze Knife"
+msgstr ""
+
+#: src/content_toolitem.cpp:944
+msgid "Iron Knife"
+msgstr ""
+
+#: src/content_toolitem.cpp:957
+msgid "Unbound Mithril Knife"
+msgstr ""
+
+#: src/content_toolitem.cpp:970
+msgid "Mithril Knife"
+msgstr ""
+
+#: src/content_toolitem.cpp:986
+msgid "Fire Starter"
+msgstr "Acciarino"
+
+#: src/content_toolitem.cpp:999
+msgid "Crowbar"
+msgstr "Piede di porco"
+
+#: src/content_toolitem.cpp:1011
+msgid "Key"
+msgstr "Chiave"
+
+#: src/content_toolitem.cpp:1023
+msgid "Mithril Key"
+msgstr "Chiave di mithril"
+
+#: src/content_toolitem.cpp:1042
+msgid "Mob Spawner"
+msgstr "Generatore di mob"
+
+#: src/game.cpp:214
+msgid "Show Crafting"
+msgstr "Mostra assemblaggio"
+
+#: src/game.cpp:215
+msgid "Clothes"
+msgstr "Abiti"
+
+#: src/game.cpp:216
+msgid "Hat/Helmet"
+msgstr "Cappello/Elmo"
+
+#: src/game.cpp:218
+msgid "Jacket"
+msgstr "Giacca"
+
+#: src/game.cpp:220
+msgid "Decorative"
+msgstr "Decorativo"
+
+#: src/game.cpp:222
+msgid "Shirt"
+msgstr "Camicia"
+
+#: src/game.cpp:224
+msgid "Belt"
+msgstr "Cintura"
+
+#: src/game.cpp:226
+msgid "Pants"
+msgstr "Pantaloni"
+
+#: src/game.cpp:228
+msgid "Boots"
+msgstr "Stivali"
+
+#: src/game.cpp:235
+msgid "Drop to Ground"
+msgstr "Lasciare a terra"
+
+#: src/game.cpp:237
+msgid "Change Clothing"
+msgstr "Cambiare gli abiti"
+
+#: src/game.cpp:610
+msgid "Loading"
+msgstr "Caricamento"
+
+#: src/game.cpp:685
+msgid "Loading..."
+msgstr "Caricamento..."
+
+#: src/game.cpp:696
+msgid "Creating server..."
+msgstr "Creazione del server..."
+
+#: src/game.cpp:708
+msgid "Creating client..."
+msgstr "Creazione del client..."
+
+#: src/game.cpp:715
+msgid "Resolving address..."
+msgstr "Determinazione dell'indirizzo..."
+
+#: src/game.cpp:731
+msgid "Couldn't resolve address"
+msgstr "Non è stato possibile determinare l'indirizzo"
+
+#: src/game.cpp:772
+#, c-format
+msgid "Connecting to server... (timeout in %d second)"
+msgid_plural "Connecting to server... (timeout in %d seconds)"
+msgstr[0] "Connessione al server... (scadenza in %d secondo)"
+msgstr[1] "Connessione al server... (scadenza in %d secondi)"
+
+#: src/game.cpp:801
+#, c-format
+msgid "Access denied. Reason: %s"
+msgstr ""
+
+#: src/game.cpp:805
+msgid "Unable to Connect (port already in use?)."
+msgstr "Impossibile connettersi (porta già in uso?)."
+
+#: src/game.cpp:808
+msgid "Connection timed out."
+msgstr "Tempo di connessione scaduto."
+
+#: src/game.cpp:962
+msgid "Access denied. Reason: "
+msgstr "Accesso negato. Motivo:"
+
+#: src/game.cpp:1194
+msgid "free_move disabled"
+msgstr "movimento_libero disabilitato"
+
+#: src/game.cpp:1198
+msgid "free_move enabled"
+msgstr "movimento_libero abilitato"
+
+#: src/game.cpp:1212
+#, c-format
+msgid "Saved screenshot to '%s'"
+msgstr "Schermata salvata in '%s'"
+
+#: src/game.cpp:1226
+msgid "HUD shown"
+msgstr "Visore visibile"
+
+#: src/game.cpp:1228
+msgid "HUD hidden"
+msgstr "Visore nascosto"
+
+#: src/game.cpp:1234
+msgid "Chat shown"
+msgstr "Messaggistica visibile"
+
+#: src/game.cpp:1236
+msgid "Chat hidden"
+msgstr "Messaggistica nascosta"
+
+#: src/game.cpp:1242
+msgid "Fog disabled"
+msgstr "Nebbia disabilitata"
+
+#: src/game.cpp:1244
+msgid "Fog enabled"
+msgstr "Nebbia abilitata"
+
+#: src/game.cpp:1250
+msgid "Camera update disabled"
+msgstr "Aggiornamento della camera disabilitato"
+
+#: src/game.cpp:1252
+msgid "Camera update enabled"
+msgstr "Aggiornamento della camera abilitato"
+
+#: src/game.cpp:1262
+msgid "Debug info shown"
+msgstr "Info. di debug visibili"
+
+#: src/game.cpp:1267
+msgid "Debug info and frametime graph hidden"
+msgstr "Info. di debug e dei fotogrammi nascoste"
+
+#: src/game.cpp:1271
+msgid "Frametime graph shown"
+msgstr "Grafico dei fotogrammi visibile"
+
+#: src/game.cpp:1283
+#, c-format
+msgid "Profiler shown (page %d of %d)"
+msgstr "Profiler visualizzato (pagina %d di %d)"
+
+#: src/game.cpp:1287
+msgid "Profiler hidden"
+msgstr "Profiler nascosto"
+
+#: src/game.cpp:1295 src/game.cpp:1305
+#, c-format
+msgid "Minimum viewing range changed to %d"
+msgstr "Raggio visivo minimo impostato a %d"
+
+#: src/game.cpp:1374
+msgid "Enabled full viewing range"
+msgstr "Raggio visivo completo abilitato"
+
+#: src/game.cpp:1378
+msgid "Disabled full viewing range"
+msgstr "Raggio visivo completo disabilitato"
+
+#: src/game.cpp:1980
+msgid "Disconnected (Network Timeout)"
+msgstr "Disconnessione (timeout di rete)"
+
+#: src/game.cpp:2422
+msgid "Shutting down..."
+msgstr "Spegnimento..."
+
+#: src/guiDeathScreen.cpp:97
+msgid "You died."
+msgstr "Siete morti."
+
+#: src/guiDeathScreen.cpp:102
+msgid "Respawn"
+msgstr "Ricomparire"
+
+#: src/guiFormSpecMenu.cpp:442
+msgid "Left click: Move all items, Right click: Move single item"
+msgstr "Click sx: muove tutti gli ogg.; Click dx: ne muove uno"
+
+#: src/guiFormSpecMenu.cpp:463
+msgid "Write It"
+msgstr "Scriverlo"
+
+#: src/guiMainMenu.cpp:118
+msgid "Character Creator"
+msgstr "Creatore del personaggio"
+
+#: src/guiMainMenu.cpp:124 src/guiSingleplayerMenu.cpp:126
+msgid "Single Player"
+msgstr "Giocatore singolo"
+
+#: src/guiMainMenu.cpp:130 src/guiMultiplayerMenu.cpp:161
+msgid "Multi Player"
+msgstr "Giocatori multipli"
+
+#: src/guiMainMenu.cpp:136 src/guiPauseMenu.cpp:158
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: src/guiMainMenu.cpp:142
+msgid "Credits"
+msgstr "Riconoscimenti"
+
+#: src/guiMainMenu.cpp:148
+msgid "Quit"
+msgstr "Uscire"
+
+#: src/guiMainMenu.cpp:189
+msgid ""
+"Voxelands\n"
+"http://www.voxelands.com/\n"
+"By Lisa 'darkrose' Milne <lisa@ltmnet.com> and contributors."
+msgstr "Voxelands\nhttp://www.voxelands.com/\nDi Lisa 'darkrose' Milne <lisa@ltmnet.com> e contributori."
+
+#: src/guiMainMenu.cpp:196
+msgid "Programmers"
+msgstr "Programmatori"
+
+#: src/guiMainMenu.cpp:199
+msgid "Artists and Modellers"
+msgstr "Artisti e modellisti"
+
+#: src/guiMainMenu.cpp:202
+msgid "Translators"
+msgstr "Traduttori"
+
+#: src/guiMainMenu.cpp:205
+msgid "Documentation Writers"
+msgstr "Scrittori della documentazione"
+
+#: src/guiMainMenu.cpp:208
+msgid "Testers, Packagers, and Builders"
+msgstr "Tester, impacchettatori, e builder"
+
+#: src/guiMainMenu.cpp:211
+msgid "Music and Sound Effects Composers"
+msgstr "Compositori di musica ed effetti sonori"
+
+#: src/guiMainMenu.cpp:214
+msgid "Other Contributers, and Special Thanks"
+msgstr "Altri contributori, e ringraziamenti speciali"
+
+#: src/guiMainMenu.cpp:217
+msgid "Patreon Supporters"
+msgstr ""
+
+#: src/guiMainMenu.cpp:221
+msgid ""
+"Based on Minetest-C55 by Perttu Ahola <celeron55@gmail.com>\n"
+"and contributors: PilzAdam, Taoki, tango_, kahrl (kaaaaaahrl?), darkrose, matttpt, erlehmann, SpeedProg, JacobF, teddydestodes, marktraceur, Jonathan Neuschafer, thexyz, VanessaE, sfan5... and tens of more random people."
+msgstr "Basato su Minetest-C55 di Perttu Ahola <celeron55@gmail.com>\ne contributori: PilzAdam, Taoki, tango_, kahrl (kaaaaaahrl?), darkrose, matttpt, erlehmann, SpeedProg, JacobF, teddydestodes, marktraceur, Jonathan Neuschafer, thexyz, VanessaE, sfan5... e decine di altre persone casuali."
+
+#: src/guiMessageMenu.cpp:114 src/guiPauseMenu.cpp:146
+msgid "Continue"
+msgstr "Proseguire"
+
+#: src/guiMultiplayerMenu.cpp:135 src/guiSettingsMenu.cpp:336
+#: src/guiSingleplayerMenu.cpp:136
+msgid "Main Menu"
+msgstr "Menu principale"
+
+#: src/guiMultiplayerMenu.cpp:142
+msgid "All Servers"
+msgstr "Tutti i server"
+
+#: src/guiMultiplayerMenu.cpp:148
+msgid "Favourite Servers"
+msgstr "Server preferiti"
+
+#: src/guiMultiplayerMenu.cpp:154
+msgid "Custom Connect"
+msgstr "Connessione a personale"
+
+#: src/guiMultiplayerMenu.cpp:169
+msgid "Custom Connection"
+msgstr "Connessione personalizzata"
+
+#: src/guiMultiplayerMenu.cpp:176
+msgid "Address/Port"
+msgstr "Indirizzo/Porta"
+
+#: src/guiMultiplayerMenu.cpp:201 src/guiMultiplayerMenu.cpp:313
+msgid "Add to Favourites"
+msgstr "Aggiungere ai preferiti"
+
+#: src/guiMultiplayerMenu.cpp:206 src/guiMultiplayerMenu.cpp:320
+msgid "Connect"
+msgstr "Connessione"
+
+#: src/guiMultiplayerMenu.cpp:213
+msgid "Name/Password"
+msgstr "Nome/Password"
+
+#: src/guiMultiplayerMenu.cpp:240
+msgid "Join Server"
+msgstr "Collegarsi al server"
+
+#: src/guiMultiplayerMenu.cpp:262
+msgid "My Favourites"
+msgstr "I miei preferiti"
+
+#: src/guiMultiplayerMenu.cpp:265
+msgid "Server List"
+msgstr "Elenco dei server"
+
+#: src/guiMultiplayerMenu.cpp:270
+msgid "Get New List"
+msgstr "Prendere un nuovo elenco"
+
+#: src/guiMultiplayerMenu.cpp:307
+msgid "Remove from Favourites"
+msgstr "Togliere dai preferiti"
+
+#: src/guiPasswordChange.cpp:107
+msgid "Old Password"
+msgstr "Vecchia pass."
+
+#: src/guiPasswordChange.cpp:125
+msgid "New Password"
+msgstr "Nuova password"
+
+#: src/guiPasswordChange.cpp:142
+msgid "Confirm Password"
+msgstr "Conf. la pass."
+
+#: src/guiPasswordChange.cpp:160
+msgid "Change"
+msgstr "Cambiare"
+
+#: src/guiPasswordChange.cpp:168
+msgid "Passwords do not match!"
+msgstr "Le password non corrispondono!"
+
+#: src/guiPauseMenu.cpp:106
+msgid "Voxelands by darkrose and contributors"
+msgstr "Voxelands di darkrose e contributori"
+
+#: src/guiPauseMenu.cpp:152
+msgid "Change Password"
+msgstr "Cambiare la password"
+
+#: src/guiPauseMenu.cpp:164
+msgid "Disconnect"
+msgstr "Disconnessione"
+
+#: src/guiSettingsMenu.cpp:74
+msgid "Forward"
+msgstr "Avanti"
+
+#: src/guiSettingsMenu.cpp:75
+msgid "Backward"
+msgstr "Indietro"
+
+#: src/guiSettingsMenu.cpp:76 src/keycode.cpp:265
+msgid "Left"
+msgstr "Sinistra"
+
+#: src/guiSettingsMenu.cpp:77 src/keycode.cpp:267
+msgid "Right"
+msgstr "Destra"
+
+#: src/guiSettingsMenu.cpp:78
+msgid "Jump"
+msgstr "Salto"
+
+#: src/guiSettingsMenu.cpp:79
+msgid "Sneak"
+msgstr "Strisciare"
+
+#: src/guiSettingsMenu.cpp:80
+msgid "Inventory"
+msgstr "Inventario"
+
+#: src/guiSettingsMenu.cpp:81
+msgid "Use Item"
+msgstr "Usare l'oggetto"
+
+#: src/guiSettingsMenu.cpp:82
+msgid "Chat"
+msgstr "Messaggistica"
+
+#: src/guiSettingsMenu.cpp:83
+msgid "Command"
+msgstr "Comando"
+
+#: src/guiSettingsMenu.cpp:84
+msgid "Range Select"
+msgstr "Selezione raggio"
+
+#: src/guiSettingsMenu.cpp:85
+msgid "Toggle Fly"
+msgstr "Volare Sì/No"
+
+#: src/guiSettingsMenu.cpp:86 src/keycode.cpp:266
+msgid "Up"
+msgstr "Su"
+
+#: src/guiSettingsMenu.cpp:87 src/keycode.cpp:268
+msgid "Down"
+msgstr "Giù"
+
+#: src/guiSettingsMenu.cpp:88
+msgid "Run"
+msgstr "Correre"
+
+#: src/guiSettingsMenu.cpp:89
+msgid "Examine/Open"
+msgstr "Esaminare/Aprire"
+
+#: src/guiSettingsMenu.cpp:90
+msgid "Take Screenshot"
+msgstr "Istantanea"
+
+#: src/guiSettingsMenu.cpp:91
+msgid "Show/Hide HUD"
+msgstr "Visore Sì/No"
+
+#: src/guiSettingsMenu.cpp:92
+msgid "Show/Hide Chat"
+msgstr "Messaggistica Sì/No"
+
+#: src/guiSettingsMenu.cpp:93
+msgid "Toggle Fog"
+msgstr "Nebbia Sì/No"
+
+#: src/guiSettingsMenu.cpp:97
+msgid "Increase Viewing Range"
+msgstr "Più raggio visivo"
+
+#: src/guiSettingsMenu.cpp:98
+msgid "Decrease Viewing Range"
+msgstr "Meno raggio visivo"
+
+#: src/guiSettingsMenu.cpp:100
+msgid "Previous Item"
+msgstr "Oggetto precedente"
+
+#: src/guiSettingsMenu.cpp:101
+msgid "Next Item"
+msgstr "Oggetto successivo"
+
+#: src/guiSettingsMenu.cpp:343 src/guiSettingsMenu.cpp:370
+msgid "Controls"
+msgstr "Controlli"
+
+#: src/guiSettingsMenu.cpp:349 src/guiSettingsMenu.cpp:401
+msgid "Graphics"
+msgstr "Grafica"
+
+#: src/guiSettingsMenu.cpp:355 src/guiSettingsMenu.cpp:500
+msgid "Video"
+msgstr "Video"
+
+#: src/guiSettingsMenu.cpp:361 src/guiSettingsMenu.cpp:548
+msgid "Sound"
+msgstr "Audio"
+
+#: src/guiSettingsMenu.cpp:407
+msgid "Terrain Mesh Detail"
+msgstr "Mesh del terreno"
+
+#: src/guiSettingsMenu.cpp:414 src/guiSettingsMenu.cpp:439
+#: src/guiSettingsMenu.cpp:464
+msgid "Low"
+msgstr "Basso"
+
+#: src/guiSettingsMenu.cpp:415 src/guiSettingsMenu.cpp:440
+#: src/guiSettingsMenu.cpp:465
+msgid "Medium"
+msgstr "Medio"
+
+#: src/guiSettingsMenu.cpp:416 src/guiSettingsMenu.cpp:441
+#: src/guiSettingsMenu.cpp:466
+msgid "High"
+msgstr "Alto"
+
+#: src/guiSettingsMenu.cpp:432
+msgid "Texture Detail"
+msgstr "Dett. texture"
+
+#: src/guiSettingsMenu.cpp:457
+msgid "Light Detail"
+msgstr "Dett. luce"
+
+#: src/guiSettingsMenu.cpp:482
+msgid "Classic HUD"
+msgstr "Visore classico"
+
+#: src/guiSettingsMenu.cpp:487
+msgid "Wieldring Index"
+msgstr "Indice ad anello ogg. imp."
+
+#: src/guiSettingsMenu.cpp:493 src/guiSettingsMenu.cpp:541
+msgid "Some settings cannot be changed in-game."
+msgstr "Alcune impostazioni non possono essere cambiate in gioco."
+
+#: src/guiSettingsMenu.cpp:506
+msgid "Fullscreen"
+msgstr "Schermo intero"
+
+#: src/guiSettingsMenu.cpp:511
+msgid "Particles"
+msgstr "Particelle"
+
+#: src/guiSettingsMenu.cpp:516
+msgid "Mip-Mapping"
+msgstr "Mip-Mapping"
+
+#: src/guiSettingsMenu.cpp:521
+msgid "Bi-Linear Filtering"
+msgstr "Filtro bilineare"
+
+#: src/guiSettingsMenu.cpp:526
+msgid "Tri-Linear Filtering"
+msgstr "Filtro trilineare"
+
+#: src/guiSettingsMenu.cpp:531
+msgid "Anisotropic Filtering"
+msgstr "Filtro anisotropico"
+
+#: src/guiSettingsMenu.cpp:536
+msgid "Enable Texture Animation"
+msgstr "Immagini animate"
+
+#: src/guiSettingsMenu.cpp:554
+msgid "Master Volume:"
+msgstr ""
+
+#: src/guiSettingsMenu.cpp:567
+msgid "Effects Volume:"
+msgstr ""
+
+#: src/guiSettingsMenu.cpp:580
+msgid "Music Volume:"
+msgstr ""
+
+#: src/guiSettingsMenu.cpp:803
+msgid "press Key"
+msgstr "premete il tasto"
+
+#: src/guiSingleplayerMenu.cpp:142 src/guiSingleplayerMenu.cpp:229
+msgid "Create New World"
+msgstr ""
+
+#: src/guiSingleplayerMenu.cpp:149 src/guiSingleplayerMenu.cpp:259
+msgid "Edit World"
+msgstr ""
+
+#: src/guiSingleplayerMenu.cpp:154
+msgid "Start Game"
+msgstr "Avvio del gioco"
+
+#: src/guiSingleplayerMenu.cpp:164
+msgid "No Worlds Found"
+msgstr ""
+
+#: src/guiSingleplayerMenu.cpp:215
+msgid "Save"
+msgstr "Salvare"
+
+#: src/guiSingleplayerMenu.cpp:242
+msgid "World Name:"
+msgstr ""
+
+#: src/guiSingleplayerMenu.cpp:290
+msgid "Survival Mode"
+msgstr "Modalità sopravvivenza"
+
+#: src/guiSingleplayerMenu.cpp:301
+msgid "Creative Mode"
+msgstr "Modalità creativa"
+
+#: src/guiSingleplayerMenu.cpp:312
+msgid "Flat Mapgen"
+msgstr ""
+
+#: src/guiSingleplayerMenu.cpp:323
+msgid "Use Random Seed"
+msgstr ""
+
+#: src/guiSingleplayerMenu.cpp:331
+msgid "World Seed:"
+msgstr ""
+
+#: src/hud.cpp:661
+msgid "Unknown"
+msgstr "Sconosciuto"
+
+#: src/hud.cpp:662
+msgid "Fall"
+msgstr "Caduta"
+
+#: src/hud.cpp:663
+msgid "Exposure"
+msgstr "Esposizione"
+
+#: src/hud.cpp:664
+msgid "Cold"
+msgstr "Freddo"
+
+#: src/hud.cpp:665
+msgid "Attack"
+msgstr "Attacco"
+
+#: src/hud.cpp:666
+msgid "Vacuum of Space"
+msgstr "Vuoto spaziale"
+
+#: src/hud.cpp:667
+msgid "Hunger"
+msgstr "Fame"
+
+#: src/hud.cpp:674
+msgid "Poison"
+msgstr "Veleno"
+
+#: src/hud.cpp:675
+msgid "Shadows"
+msgstr ""
+
+#: src/hud.cpp:911
+msgid "Summer"
+msgstr "Estate"
+
+#: src/hud.cpp:914
+msgid "Autumn"
+msgstr "Autunno"
+
+#: src/hud.cpp:917
+msgid "Winter"
+msgstr "Inverno"
+
+#: src/hud.cpp:920
+msgid "Spring"
+msgstr "Primavera"
+
+#: src/hud.cpp:930
+#, c-format
+msgid "Day %u of Year %u"
+msgstr "Giorno %u dell'anno %u"
+
+#: src/hud.cpp:954
+#, c-format
+msgid "Energy Boost: %d:%02d"
+msgstr "Incremento energetico: %d:%02d"
+
+#: src/hud.cpp:979
+#, c-format
+msgid "Cold Protection: %d:%02d"
+msgstr "Protezione dal freddo: %d:%02d"
+
+#: src/inventory.cpp:251 src/inventory.cpp:643
+msgid "Contains: "
+msgstr "Contiene: "
+
+#: src/inventory.cpp:258 src/inventory.cpp:403
+msgid "Cookable: Yes"
+msgstr "Cucinabile: sì"
+
+#: src/inventory.cpp:263 src/inventory.cpp:408 src/inventory.cpp:620
+msgid "Fuel Burn Time: "
+msgstr "Tempo di bruciatura del combustibile: "
+
+#: src/inventory.cpp:372
+msgid "Hunger: "
+msgstr "Fame: "
+
+#: src/inventory.cpp:378
+msgid "Health: "
+msgstr "Salute: "
+
+#: src/inventory.cpp:385
+msgid "Cold Protection: "
+msgstr "Protezione dal freddo: "
+
+#: src/inventory.cpp:394
+msgid "Energy Boost: "
+msgstr "Incremento energetico: "
+
+#: src/inventory.cpp:609
+msgid "Uses: "
+msgstr ""
+
+#: src/inventory.cpp:612
+msgid "Speed: "
+msgstr "Velocità: "
+
+#: src/inventory.cpp:615
+msgid "Level: "
+msgstr "Livello: "
+
+#: src/inventory.cpp:767
+msgid "Armour: "
+msgstr "Armatura: "
+
+#: src/inventory.cpp:773
+msgid "Warmth: "
+msgstr "Calore: "
+
+#: src/inventory.cpp:779
+msgid "Pressure: "
+msgstr "Pressione: "
+
+#: src/inventory.cpp:785
+msgid "Suffocation: "
+msgstr "Soffocamento: "
+
+#: src/inventory.cpp:791
+msgid "Durability: "
+msgstr "Durata: "
+
+#: src/inventory.cpp:796
+msgid "Effect Boost: "
+msgstr "Effetto di incremento: "
+
+#: src/keycode.cpp:234
+msgid "-"
+msgstr "-"
+
+#: src/keycode.cpp:236
+msgid "Left Button"
+msgstr "Pulsante sinistro"
+
+#: src/keycode.cpp:237
+msgid "Right Button"
+msgstr "Pulsante destro"
+
+#: src/keycode.cpp:239
+msgid "Middle Button"
+msgstr "Pulsante centrale"
+
+#: src/keycode.cpp:240
+msgid "X Button 1"
+msgstr "Pulsante X 1"
+
+#: src/keycode.cpp:241
+msgid "X Button 2"
+msgstr "Pulsante X 2"
+
+#: src/keycode.cpp:242
+msgid "Back"
+msgstr "Backspace"
+
+#: src/keycode.cpp:243
+msgid "Tab"
+msgstr "Tab"
+
+#: src/keycode.cpp:244
+msgid "Clear"
+msgstr "Tast. num. 5"
+
+#: src/keycode.cpp:245
+msgid "Return"
+msgstr "Invio"
+
+#: src/keycode.cpp:246
+msgid "Shift"
+msgstr "Shift"
+
+#: src/keycode.cpp:247
+msgid "Control"
+msgstr "Control"
+
+#: src/keycode.cpp:248
+msgid "Menu"
+msgstr "Menu"
+
+#: src/keycode.cpp:249
+msgid "Pause"
+msgstr "Pause"
+
+#: src/keycode.cpp:250
+msgid "Capital"
+msgstr "Bloc Maiusc"
+
+#: src/keycode.cpp:251
+msgid "Kana"
+msgstr "Kana"
+
+#: src/keycode.cpp:252
+msgid "Junja"
+msgstr "Junja"
+
+#: src/keycode.cpp:253
+msgid "Final"
+msgstr "Final"
+
+#: src/keycode.cpp:254
+msgid "Kanji"
+msgstr "Kanji"
+
+#: src/keycode.cpp:255
+msgid "Escape"
+msgstr "Esc"
+
+#: src/keycode.cpp:256
+msgid "Convert"
+msgstr "Convert"
+
+#: src/keycode.cpp:257
+msgid "Nonconvert"
+msgstr "Nonconvert"
+
+#: src/keycode.cpp:258
+msgid "Accept"
+msgstr "Accept"
+
+#: src/keycode.cpp:259
+msgid "Mode Change"
+msgstr "Mode Change"
+
+#: src/keycode.cpp:260
+msgid "Space"
+msgstr "Spazio"
+
+#: src/keycode.cpp:261
+msgid "Prior"
+msgstr "Pag su"
+
+#: src/keycode.cpp:262
+msgid "Next"
+msgstr "Pag giù"
+
+#: src/keycode.cpp:263
+msgid "End"
+msgstr "End"
+
+#: src/keycode.cpp:264
+msgid "Home"
+msgstr "Inizio"
+
+#: src/keycode.cpp:269
+msgid "Select"
+msgstr "Select"
+
+#: src/keycode.cpp:270
+msgid "Print"
+msgstr "Print"
+
+#: src/keycode.cpp:271
+msgid "Execute"
+msgstr "Execute"
+
+#: src/keycode.cpp:272
+msgid "Snapshot"
+msgstr "Snapshot"
+
+#: src/keycode.cpp:273
+msgid "Insert"
+msgstr "Ins"
+
+#: src/keycode.cpp:274
+msgid "Delete"
+msgstr "Canc"
+
+#: src/keycode.cpp:275
+msgid "Help"
+msgstr "Help"
+
+#: src/keycode.cpp:276
+msgid "0"
+msgstr "0"
+
+#: src/keycode.cpp:277
+msgid "1"
+msgstr "1"
+
+#: src/keycode.cpp:278
+msgid "2"
+msgstr "2"
+
+#: src/keycode.cpp:279
+msgid "3"
+msgstr "3"
+
+#: src/keycode.cpp:280
+msgid "4"
+msgstr "4"
+
+#: src/keycode.cpp:281
+msgid "5"
+msgstr "5"
+
+#: src/keycode.cpp:282
+msgid "6"
+msgstr "6"
+
+#: src/keycode.cpp:283
+msgid "7"
+msgstr "7"
+
+#: src/keycode.cpp:284
+msgid "8"
+msgstr "8"
+
+#: src/keycode.cpp:285
+msgid "9"
+msgstr "9"
+
+#: src/keycode.cpp:286
+msgid "A"
+msgstr "A"
+
+#: src/keycode.cpp:287
+msgid "B"
+msgstr "B"
+
+#: src/keycode.cpp:288
+msgid "C"
+msgstr "C"
+
+#: src/keycode.cpp:289
+msgid "D"
+msgstr "D"
+
+#: src/keycode.cpp:290
+msgid "E"
+msgstr "E"
+
+#: src/keycode.cpp:291
+msgid "F"
+msgstr "F"
+
+#: src/keycode.cpp:292
+msgid "G"
+msgstr "G"
+
+#: src/keycode.cpp:293
+msgid "H"
+msgstr "H"
+
+#: src/keycode.cpp:294
+msgid "I"
+msgstr "I"
+
+#: src/keycode.cpp:295
+msgid "J"
+msgstr "J"
+
+#: src/keycode.cpp:296
+msgid "K"
+msgstr "K"
+
+#: src/keycode.cpp:297
+msgid "L"
+msgstr "L"
+
+#: src/keycode.cpp:298
+msgid "M"
+msgstr "M"
+
+#: src/keycode.cpp:299
+msgid "N"
+msgstr "N"
+
+#: src/keycode.cpp:300
+msgid "O"
+msgstr "O"
+
+#: src/keycode.cpp:301
+msgid "P"
+msgstr "P"
+
+#: src/keycode.cpp:302
+msgid "Q"
+msgstr "Q"
+
+#: src/keycode.cpp:303
+msgid "R"
+msgstr "R"
+
+#: src/keycode.cpp:304
+msgid "S"
+msgstr "S"
+
+#: src/keycode.cpp:305
+msgid "T"
+msgstr "T"
+
+#: src/keycode.cpp:306
+msgid "U"
+msgstr "U"
+
+#: src/keycode.cpp:307
+msgid "V"
+msgstr "V"
+
+#: src/keycode.cpp:308
+msgid "W"
+msgstr "W"
+
+#: src/keycode.cpp:309
+msgid "X"
+msgstr "X"
+
+#: src/keycode.cpp:310
+msgid "Y"
+msgstr "Y"
+
+#: src/keycode.cpp:311
+msgid "Z"
+msgstr "Z"
+
+#: src/keycode.cpp:312
+msgid "Left Windows"
+msgstr "Windows sinistro"
+
+#: src/keycode.cpp:313
+msgid "Right Windows"
+msgstr "Windows destro"
+
+#: src/keycode.cpp:314
+msgid "Apps"
+msgstr "Applicazioni"
+
+#: src/keycode.cpp:315
+msgid "Sleep"
+msgstr "Sleep"
+
+#: src/keycode.cpp:316
+msgid "Numpad 0"
+msgstr "Tast. num. 0"
+
+#: src/keycode.cpp:317
+msgid "Numpad 1"
+msgstr "Tast. num. 1"
+
+#: src/keycode.cpp:318
+msgid "Numpad 2"
+msgstr "Tast. num. 2"
+
+#: src/keycode.cpp:319
+msgid "Numpad 3"
+msgstr "Tast. num. 3"
+
+#: src/keycode.cpp:320
+msgid "Numpad 4"
+msgstr "Tast. num. 4"
+
+#: src/keycode.cpp:321
+msgid "Numpad 5"
+msgstr "Tast. num. 5"
+
+#: src/keycode.cpp:322
+msgid "Numpad 6"
+msgstr "Tast. num. 6"
+
+#: src/keycode.cpp:323
+msgid "Numpad 7"
+msgstr "Tast. num. 7"
+
+#: src/keycode.cpp:324
+msgid "Numpad 8"
+msgstr "Tast. num. 8"
+
+#: src/keycode.cpp:325
+msgid "Numpad 9"
+msgstr "Tast. num. 9"
+
+#: src/keycode.cpp:326
+msgid "Numpad *"
+msgstr "Tast. num. *"
+
+#: src/keycode.cpp:327
+msgid "Numpad +"
+msgstr "Tast. num. +"
+
+#: src/keycode.cpp:328 src/keycode.cpp:331
+msgid "Numpad /"
+msgstr "Tast. num. /"
+
+#: src/keycode.cpp:329
+msgid "Numpad -"
+msgstr "Tast. num. -"
+
+#: src/keycode.cpp:330
+msgid "Numpad ."
+msgstr "Bloc Num"
+
+#: src/keycode.cpp:332
+msgid "F10"
+msgstr "F10"
+
+#: src/keycode.cpp:333
+msgid "F11"
+msgstr "F11"
+
+#: src/keycode.cpp:334
+msgid "F12"
+msgstr "F12"
+
+#: src/keycode.cpp:335
+msgid "F13"
+msgstr "F13"
+
+#: src/keycode.cpp:336
+msgid "F14"
+msgstr "F14"
+
+#: src/keycode.cpp:337
+msgid "F15"
+msgstr "F15"
+
+#: src/keycode.cpp:338
+msgid "F16"
+msgstr "F16"
+
+#: src/keycode.cpp:339
+msgid "F17"
+msgstr "F17"
+
+#: src/keycode.cpp:340
+msgid "F18"
+msgstr "F18"
+
+#: src/keycode.cpp:341
+msgid "F19"
+msgstr "F19"
+
+#: src/keycode.cpp:342
+msgid "F20"
+msgstr "F20"
+
+#: src/keycode.cpp:343
+msgid "F21"
+msgstr "F21"
+
+#: src/keycode.cpp:344
+msgid "F22"
+msgstr "F22"
+
+#: src/keycode.cpp:345
+msgid "F23"
+msgstr "F23"
+
+#: src/keycode.cpp:346
+msgid "F24"
+msgstr "F24"
+
+#: src/keycode.cpp:347
+msgid "Num Lock"
+msgstr "Bloc Num"
+
+#: src/keycode.cpp:348
+msgid "Scroll Lock"
+msgstr "Bloc Scorr"
+
+#: src/keycode.cpp:349
+msgid "Left Shift"
+msgstr "Maiusc sin."
+
+#: src/keycode.cpp:350
+msgid "Right Shift"
+msgstr "Maiusc des."
+
+#: src/keycode.cpp:351
+msgid "Left Control"
+msgstr "Ctrl sinistro"
+
+#: src/keycode.cpp:352
+msgid "Right Control"
+msgstr "Ctrl destro"
+
+#: src/keycode.cpp:353
+msgid "Left Menu"
+msgstr "Alt"
+
+#: src/keycode.cpp:354
+msgid "Right Menu"
+msgstr "Alt gr"
+
+#: src/keycode.cpp:355
+msgid "Plus"
+msgstr "Più"
+
+#: src/keycode.cpp:356
+msgid "Comma"
+msgstr "Virgola"
+
+#: src/keycode.cpp:357
+msgid "Minus"
+msgstr "Meno"
+
+#: src/keycode.cpp:358
+msgid "Period"
+msgstr "Punto"
+
+#: src/keycode.cpp:359
+msgid "Attn"
+msgstr "Attn"
+
+#: src/keycode.cpp:360
+msgid "CrSel"
+msgstr "CrSel"
+
+#: src/keycode.cpp:361
+msgid "ExSel"
+msgstr "ExSel"
+
+#: src/keycode.cpp:362
+msgid "Erase OEF"
+msgstr "Erase OEF"
+
+#: src/keycode.cpp:363
+msgid "Play"
+msgstr "Play"
+
+#: src/keycode.cpp:364
+msgid "Zoom"
+msgstr "Zoom"
+
+#: src/keycode.cpp:365
+msgid "PA1"
+msgstr "PA1"
+
+#: src/keycode.cpp:366
+msgid "OEM Clear"
+msgstr "OEM Clear"
+
+#: src/main.cpp:921
+msgid "Setting Up UI"
+msgstr "Impostazione dell'interfaccia utente"
+
+#: src/main.cpp:944
+msgid "Loading MapNodes"
+msgstr "Caricamento dei nodi mappa"
+
+#: src/main.cpp:946
+msgid "Loading Creatures"
+msgstr "Caricamento delle creature"
+
+#: src/main.cpp:951
+msgid "Setting Up Sound"
+msgstr "Impostazione dell'audio"
+
+#: src/mapnode.cpp:302
+msgid "Loading Base MapNodes"
+msgstr "Caricamento dei nodi mappa di base"
+
+#: src/mapnode.cpp:306
+msgid "Loading Circuit MapNodes"
+msgstr "Caricamento dei nodi mappa della circuiteria"
+
+#: src/mapnode.cpp:310
+msgid "Loading Plant MapNodes"
+msgstr "Caricamento dei nodi mappa delle piante"
+
+#: src/mapnode.cpp:314
+msgid "Loading Farming MapNodes"
+msgstr "Caricamento dei nodi mappa agricoli"
+
+#: src/mapnode.cpp:318
+msgid "Loading Decorative MapNodes"
+msgstr "Caricamento dei nodi mappa decorativi"
+
+#: src/mapnode.cpp:322
+msgid "Loading Interactive MapNodes"
+msgstr "Caricamento dei nodi mappa interattivi"
+
+#: src/mapnode.cpp:326
+msgid "Loading Special MapNodes"
+msgstr "Caricamento dei nodi mappa speciali"
+
+#: src/mineral.cpp:93
+msgid "Coal"
+msgstr "Carbone"
+
+#: src/mineral.cpp:99
+msgid "Iron"
+msgstr "Ferro"
+
+#: src/mineral.cpp:106
+msgid "Tin"
+msgstr "Latta"
+
+#: src/mineral.cpp:113
+msgid "Copper"
+msgstr "Rame"
+
+#: src/mineral.cpp:121
+msgid "Silver"
+msgstr "Argento"
+
+#: src/mineral.cpp:128
+msgid "Gold"
+msgstr "Oro"
+
+#: src/mineral.cpp:135
+msgid "Quartz"
+msgstr "Quarzo"
+
+#: src/mineral.cpp:157
+msgid "Turquoise"
+msgstr "Turchese"

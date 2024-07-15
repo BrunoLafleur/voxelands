@@ -1,0 +1,1046 @@
+Voxelands changelog
+----------------------
+This should contain all the major changes.
+For minor stuff, refer to the commit log of the repository.
+
+1709.00: (release 2017-09-24)
+ - some the_game() cleanup
+ - rename example config file
+ - new smeltery
+ - get server list working again
+ - new furnace
+ - less likely to destroy dropped stuff
+ - add desert sandstone
+ - multiworld support
+ - dig leaves, get sticks
+ - tool texture updates
+ - campfire updates
+ - clay vessel
+ - proper upgrade items
+ - biome specific player damage
+ - ui prettying up
+ - fix #45 - opening inventory negates black screen in walls
+ - update some wear values
+ - improved bucket functionality
+ - addition - sticks from every season's leaves
+ - fiddle with loading screen a bit
+ - barrels
+ - make crop drops work again
+ - goodbye steel, hello iron
+ - farm improvements + croplike drawtype
+ - make the creative pick dig anything and quickly
+ - remove NULL deref
+ - fix header includes on BSD
+ - cooking redo
+ - change - human readable server uptime format
+ - change - fuel values
+ - addition - crusher
+ - fix - scaffolding shape
+ - fix bush insta-grow
+ - fix capricornus' segfault
+ - new mapgen
+ - slightly fancier trees
+ - transform metanodeboxes with facedir nodes
+ - get per-block-type dig time working
+ - set point size for stars
+ - remove some unused textures
+ - more wood things pt1
+ - new chests
+ - split up content_nodemeta.cpp
+ - get rid of old CraftItem drop strings
+ - mobs should be able to walk through open gates
+ - new sound system
+ - commands now work
+ - new config and command system
+ - new filesystem/path code
+ - new ban manager
+ - update build-w32.sh
+ - a whole lot of refactoring
+ - w32 cross compile fixes
+
+1704.00: (release 2017-04-08)
+ - new dirt dig sound
+ - switch to unifont
+ - make server announcing work again
+ - add blueberry/raspberry bushes
+ - add campfire
+ - add node texture animation
+
+1608.00 (release ???)
+ - release was Menched
+
+1604.00: (release 2016-04-30)
+ - fix typo picked up by translators
+ - fix that water/plant meshgen bug
+ - dodgey intl fixish
+ - fix some/most? of sdzens broken textures
+ - add reverse recipe for small stone axe
+ - add missing translations to incinerator and cauldron
+ - spawnguard
+ - stop the constant digging
+ - remove hat recipe from bars
+ - some meshgen tweaks
+ - Check LANGUAGE and LC_ALL vars before LANG
+
+1602.00: (release 2016-02-27)
+ - lots of new 32x textures
+ - circuits fixes (gagapete)
+ - add desert biome
+ - tweaked armour, warmth and durability values; adjusted wear levels
+ - get rid of ghost nodes, hopefully
+ - remove the slab, or suffer my curse
+ - glass doors may not be used as fuel
+ - remove solidness and visual_solidness fields from ContentFeatures
+ - make seeds burnable
+ - increase size of selected nodes
+ - positional leaves
+ - Add XDG Base Directory Specification
+ - remove Item{S,C}ao, drop items directly to parcels
+ - compile cguittfont statically
+ - make plantlike nodes in water actually be in the water, instead of a strange hole in the water
+ - adjust plantlike tileable growth tex coords
+ - add light flare effect to light sources
+ - less gravity in space
+ - space + space dust (oerkki dust + mithril dust)
+ - a little tweak to server async step
+ - change how animations are sent to client, add die animation
+ - adjust heights for environmental damage
+ - don't take damage when dead, and reset damage indicator on respawn
+ - switch player states to true percentages
+ - add player damage zones and hud indicator of last damage
+ - mob spawning, version UINT64_MAX+1
+ - new jungle ground cover
+ - icy lake shores in winter
+ - some hardface fiddling
+ - new junglegrass/fern
+ - add Nascher's steam controller config to utils
+ - add new settings to settings menu
+ - replace random graphics setting with mesh_detail, light_detail, and texture_detail
+ - remove excess water faces
+ - new dirtlike
+
+1512.00: (release 2015-12-27)
+ - preload crack.png to reduce some HUD flicker
+ - make leaf falling work in autumn/winter
+ - fix possible bug in http_request
+ - add marble
+ - new table nodebox
+ - new chairs/benches
+ - this should have the game_mode setting working correctly on the server
+ - ensure getUser() returns a valid player name
+ - make CXX and LINKER flags use system
+ - new multiplayer menu
+ - add support for privileged crafting, add mithril key
+ - make coal block burn time equivelant to 10 coal lumps
+ - add check to ensure no tool is unwearable
+ - allow indomitus picks to dig stone + mineral
+ - allow forms to be closed with examine (q) key
+ - cobble stairs should not dig as roughstone stairs
+ - strip some unused/unneeded stuff out of networking
+ - replace TOCLIENT_OBJECTDATA with TOCLIENT_PLAYERINFO, with less data and less nested iterations
+ - generated selected/cracked nodes seperately to the rest of the mapblock
+ - remove nodemod/tempmod
+ - generate selected node data separate from mapblocks
+ - Make the electric lamp status more visible during the day
+
+1510.01: (release 2015-11-14)
+ - re-enable cactus farming
+ - vine on trellis should be plant type when digging
+ - bug fix to sleeping, ensure sleep cycle is disabled when players wake
+ - fix the flashing snow, and snow appearing inside buildings
+ - add an exception handler to mapblock meshgen
+ - make controls menu display keybinds correctly
+ - Added missing #include <algorithm> so win version compiles
+
+1510.00: (release 2015-10-24)
+ - Optimise some textures
+ - make paper craft give 3 paper
+ - add support for extra_dug_item to be restricted to certain tool levels
+ - assorted mob tweaks
+ - when digging out-of-level minerals, dig slower to warn the player
+ - give tree its own material type, prevent digging without a tool
+ - add rock as random drop from mud
+ - remove wooden tools, replace with basic wood/rock tools
+ - add mutex to metadata get/set
+ - remove some legacy nodes
+ - allow affected node metadata to disable removal of selected node
+ - allow opening a form from the node next to the selected node, if onact_also_affects points to it
+ - sleep in beds + camp beds
+ - Add new sheep model and texture
+ - adding kitty mobs
+ - mob spawners
+ - improved mob spawning
+ - propagate energy through limestone
+ - remove potential divide by zero in hud
+ - add death drops inventory to gui
+ - lose inventory on death in survival mode
+ - new furnace and incinerator code
+ - moving sun and moon, plus seasons, and moon phases
+
+1508.01: (release 2015-08-24)
+- fix enchantments not getting initialised in some cases
+
+1508.00: (release 2015-08-24)
+ - some helpers for converting mese to mithril
+ - add new controls to readme file
+ - a possible improvement to the key settings menu
+ - fix darkened screen with old style HUD
+ - wolves drop meat
+ - make far mobs less likely to move, and thus send less data
+ - add warning about settings not working from the pause menu
+ - credits screen reorganising
+ - add ability to disable mobs from gui
+ - sand should randomly drop saltpeter, rarely
+ - add all background images in empty inventory slots
+ - add effects times to HUD
+ - limestone stairs, slabs, and walls
+ - allow fast swimming
+ - different fences and bookshelves for different wood types
+ - allow farm dirt further from water
+ - some lighting tweaks
+ - bookshelves should not disappear when dug
+ - make it work on bsd again
+ - make images fit in inventory grids better
+ - forge and enchantments
+ - remove MESE
+ - add levels to tools, randomise mineral drop quantity with max based on tool level
+ - add extended info to inventory tooltips
+ - revert C++11
+
+1507.00: (release 2015-07-27)
+ - Removed some depricated utility classes (VargaD)
+ - Added C++11 support
+ - fiddling with energy usage and hunger
+ - don't suffocate in CONTENT_IGNORE
+ - reduce run speed some more
+ - fix low energy sound being played multiple times
+ - pseudorandomise position of wild plantlike nodes
+ - new doe and stag models
+ - make door/hatch/gate open/close code more reusable, and have paired nodes also show as selected
+ - add dangerous fire option
+ - fix wieldring index not showing for empty slots
+ - add wieldindex to settings menu
+ - add settings menu button to pause menu
+ - add puma_rc to credits
+ - add tea/coffee to craft guide
+ - remove forcesingle from meta tiles of selected nodes
+ - fiddling with collision detection
+ - add overlays to hot drinks textures
+ - add a reverse crafting guide (hdastwb)
+ - fix typo in black cotton hat texture name
+ - add limestone
+ - simplify fertilizer code a bit
+ - get fertilizer working again
+ - remove an unused function
+ - improved semitrans blit, optimised crack
+ - enable partial alpha blits in texture creation
+ - make it compile with mingw
+ - add trimmed leaves back in
+ - fix ondig_also_removes having wierd rotations
+
+1506.00: (release 2015-06-20)
+ - add optional index/shortcuts to wieldring
+ - add low air post render effect
+ - leaves aren't cubelike, so shouldn't show a cube in inventory
+ - fancy tree trunk bases
+ - use red crosshair instead of selection box when pointing at mobs
+ - fix a couple of segfaults
+ - adjust some tree shapes
+ - new creeping grass growth
+ - darken world behind menus/forms
+ - fix that old ungrabbed mouse bug when inventory is closed
+ - add a slight gap in player inventory between the wield row and everything else
+ - fix deleting map/world data on Windows
+ - remove energy effect when damage is disabled
+ - remove some path trickery from posix_guess_path
+ - some path fixes to get map deletion working
+ - reduce active object network data
+ - update bundled sqlite
+ - add some things to .gitignore
+ - fix FreeBSD and (perhaps) MacOS relative paths
+ - make space assignable as a key
+ - eat and drink sounds for player
+ - new eyes, special hair, t-shirts, the start of a long days walk.
+ - player hurt sounds
+ - panting sound when player is low on energy
+ - fast block ack
+ - add cauldron, make tea and coffee craftable
+ - tea & coffee
+ - add apple juice, make hud colours change when a boost is in effect
+ - fix bug with some consumable items not being consumed
+ - energy hard limit
+ - food/drink can affect energy and cold protection
+ - sponges are a little too rare
+ - add bottles and drink support
+ - fix some craft item inventory bugs
+ - streamline dig/place code
+ - new grape plantgrowth
+ - new farming code and draw types
+ - fix players walking through fences
+ - new flag drawtype
+ - face interpolation biases in lighting
+ - new style farmesh
+ - optimise out unseen face, and optimise the code for removing them
+ - remove farmesh
+ - improved ambient occlusion shadows
+ - new smooth lighting
+ - fix some things that should propogate light
+ - don't regenerate a mesh just to update lighting
+ - new meshgen
+
+1505.01: (release 2015-05-30)
+ - fix dig miss sound not working
+ - fix sunlight propogation
+ - fix tree growth breaking lighting
+ - add hack to unbreak already broken lighting
+ - fix compiling problem with dynamic array
+
+1505.00: (release 2015-05-25)
+ - make wearing a jacket without a shirt also safe from exposure damage
+ - change some crowbar behaviour
+ - fix random fence/wall posts appearing in client
+ - add support for multiple teleport points with coloured oerkki dust
+ - fix multi-recipe support in the craft guide
+ - adjust run speed, slower on the ground, faster in the air
+ - settings menu rewrite
+ - remove fast_move, and make free_move no longer a setting
+ - add use key to eat without dropping food on the ground
+ - new controls
+ - add energy and tool wear progress rings to HUD
+ - 16 bit node id's
+
+1504.01: (release 2015-05-01)
+ - fix standalone server not compiling
+ - fix windows utf8-multibyte conversion crashing the client
+ - support out-of-tree builds
+ - add deb and rpm package building support
+
+1504.00: (release 2015-04-25)
+ - new crosshair
+ - send node type with animation updates, so remote player dig sound is correct
+ - fix loading not centring when resized
+ - remove some old sectors junk
+ - remove some warnings
+ - reduce mob client initialisation data
+ - reduce mob send data slightly
+ - some mob sounds
+ - little bit of cleanup to particles
+ - remove dangerous optimizations, add some checks
+ - swords should kill mobs faster than spears
+ - give grass its own walk sound, add new dirt walk sound
+ - new readme file
+ - better utf-8 support for windows
+ - gettext without gettext
+ - add ambient sounds
+ - add sounds for other players walking and digging, and mobs walking
+ - make volume control actually control the volume
+ - allow per-sound gain settings
+ - split walk sounds into left and right steps
+ - replace rm -rf fork/exec with nftw callbacks
+ - keep the players directory clean
+ - new character creator background music
+ - new main menu music
+ - give sound a step, make music fade out
+ - actually delete the soundManager
+ - print chat to stdout on client, cheap copy/paste
+ - fix shovel not being craftable from jungle wood
+ - flip key texture
+ - updated brick textures
+ - always show health/hunger icons when enabled
+ - leaves falling on grass become either saplings or wild grass
+ - prefill username in main menu with system user name
+ - add some query api urls to http server
+
+1503.01: (release 2015-03-23)
+ - some improvements to http server
+ - fix tool wear not being sent to client
+ - fix pistons leaving nodes behind when contracting
+
+1503.00: (release 2015-03-22)
+ - add some mob sounds
+ - add classic hotbar option to settings menu
+ - get text rotating correctly, and add text to books
+ - detect network timeouts, show error message, autoquit
+ - add an inventory status indicator
+ - add background to wieldring
+ - add buttons to rebind next/previous item in change keys menu
+ - fix junglegrass having wrong material
+ - fix border in key change menu
+ - add old_hotbar setting
+ - add prev/next wield item keys
+ - new HUD with wieldring instead of hotbar
+ - fix the rest of clang's default warnings
+ - fix more warnings, mostly unused variables
+ - stop MainMenuData throwing a compiler warning
+ - add volume control to settings menu
+ - all slabs can now use CDT_SLABLIKE to include face culling
+ - get new stairs lighting right, add face culling
+ - players shouldn't be able to walk through tree trunks
+ - have the address field default to servers.voxelands.com in the multiplayer menu
+ - inventory should only be updated when digging/placing, don't send the whole thing
+ - adjust item fall speed, parcel dig speed, and ensure items don't fall through the ground
+ - no on-punch events with a mese pick, it just digs
+ - remove junglegrass to cotton recipe
+ - remove junglegrass growing on sand
+ - fix object duplication and mob over-spawning
+ - remove ambient sounds from the network, these can be done in the client, later
+ - add a teleport sound when a player is force moved
+ - log an error when trying to play stereo sounds as positional, as that won't work
+ - ensure reference distance is set on positional sounds
+ - add a bunch of environmental sounds
+ - add open book sound file
+ - add book sound when right clicking an open book
+ - add sound when formspec is shown, and when item is wielded
+ - replace some sound files, add water dig/place sounds, and  make footsteps faster when running
+ - some setup for sound additions
+ - reduce serialization size of inventory
+ - don't free and reallocate inventory items for no reason
+ - make wood roof tiles, actually wood material
+ - small change to grass side
+ - have saplings auto-plant when dropped on mud or grass
+ - have dropped items become parcels when they touch ground, or add themselves to a nearby parcel
+ - make ItemCAO use SmoothTranslator for less jumpy movement
+ - reduce vertices on glasslike drawtype
+ - stone tiles and parquetry
+ - upside down stair updates
+ - new look stairs and slabs
+ - add .gitignore
+ - fix some compiler warnings
+ - update project sqlite, untrack files that don't need tracking
+ - use hard tabs
+ - remove some commented out code
+ - update brick texture
+ - some fertilizer changes
+ - some (more) piston tweaks
+ - turn grass into mud if there's some non-airlike above it
+ - improve flower pot, and make plants sit in it, not on it
+ - allow rotated nodeboxes to centre rotation anywhere in the node
+
+1501.00: (release 2015-01-26)
+ - fix trees growing at night breaking lighting
+ - make paged things flip to first page when pressing next on the last page
+ - some mob spawner optimisations
+ - optimise inventory a little bit, remove an assert
+ - tweak fire timing a bit
+ - add support for writting text on nodes
+ - add text to signs
+ - Make leaves climbable (Wayward_One)
+ - update translations, add japanese
+ - fix mesh index overflows
+ - make this build on FreeBSD (Menche)
+ - actually disable audio when audio is disabled (Menche)
+ - make leaves and apple blossoms use CDT_ROOFLIKE
+ - lighting tweaks
+ - add stormchaser safe mode
+ - adjust active furnace glow a bit
+ - give steel bars a working recipe
+ - make safes safe
+
+1412.01: (release 2014-12-22)
+ - fix array index overflow in content_features()
+
+1412.00: (release 2014-12-21)
+ - some changes that might make irrlicht 1.7.3 work again
+ - wrap gettext around some player formspecs
+ - Add CMT_GLASS, and update glass nodes (JHeaton)
+ - and add glass sounds
+ - add support for objects damaging other objects
+ - fix segfault when picking up items, check for NULL pointer deref
+ - fix CAO yaw not being set when initialised
+ - add a safe, and make some nodes safe from destructive mobs
+ - don't reset creative inventory, unless player has no creative chest
+ - add support for tools that throw objects, add bow and arrow
+ - add support for throwing objects, add snowball mob
+ - get timeout message working with gettext again
+ - cotton block should be decraftable to string
+ - add steel fences and bars
+ - more piston tweaks
+ - update GPL headers to new style
+ - fix delete key in editbox (sol_invictus)
+ - default to freetype enabled
+ - fix text alignment in pause menu
+ - arbitrary nodebox rotation - wield item support
+ - add support for arbitrary rotation of nodeboxes
+ - fix 7 on french keyboard (sol_invictus - freeminer)
+ - fix utf-8 and numpad in editboxes
+ - add some names to credits
+ - slight path change in cguittfont to support non-standard build path
+
+1411.03: (release 2014-11-16)
+ - fix some internationalization bugs
+ - fix font path finding
+ - fix skin path finding
+ - include skins in install
+
+1411.01: (release 2014-11-16)
+ - for to enable compiling if gettext is disabled
+ - give the player some pants
+
+1411.00: (release 2014-11-16)
+ - make pine tile better
+ - modify guiTextInputMenu
+ - switch conifers to standard cube shape
+ - a bunch of translation improvements
+ - add plurals to some translated strings
+ - add freetype2 support and make special characters actually work
+ - fix sprite extruded not extruding correctly
+ - some map speedups
+ - pretty up menu background a little
+ - rebalance tools for attacking creatures
+ - make some ItemCAO's 'die' after a few minutes
+ - add miss sound for digging while pointing at air
+ - add mob punch sound effect
+ - stop menu text duplicating on window resize
+ - create up2date.sh
+ - make ItemCAO 3D
+ - make mush cookable to ash
+ - reduce mob spawn lag more
+ - fix bug with small mobs trying to fly in stone
+ - slight optimisation of server and client data processing
+ - merge IFormSource and TextDest into FormIO
+ - servers give player their default clothes on first joining
+ - add more clothes items
+ - implement character creator working
+ - widen main menu so longer translations fit
+ - expand clothing system to also support layers
+ - allow skins to be fetched as parts
+ - fix infotext being written over top of forms
+
+1410.00: (release 2014-10-25)
+- a couple of pistons bugfixes
+- install the html files needed by the server properly
+- rework player damage system
+- wrap gettext around various forgotten strings
+- make player wield arm show correct clothing appearance
+- stop wield items glowing in the dark
+- move coldzone to 60-1024, add space above 1024
+- implement active furnaces/incinerators
+- use misc/freedesktop/ and add more icon sizes
+- add space suit
+- add cotton/canvas/leather/fur sheet materials for clothes system
+- add life support system for creating air in space
+- add space to mapgen
+- add multiple mapgen types
+- stop objects disappearing, reimplement object activation/deactivation
+- add clothes system
+- add spear tools
+- stop objects freezing
+- updatepo.sh should update only the pot file by default
+- fix bug in client searchNear
+- fix compile failing with older openal libs
+- fix empty strings in inventory deserialization crashing the server
+- fix debug info hiding player position
+- remove a lot of randomness from the env loop
+- stop eating damaging players
+- implement MobCAO
+ - add sheep - punch with shears to get string -> cotton
+ - add deer
+  - add doe
+   - kill to get fur
+  - add stag
+   - attacks when punched
+   - kill to get meat
+   - feed to tame
+ - add wolves
+  - hunts player
+  - feed to tame
+ - add fish
+  - catchable with spear
+  - cook to make edible
+ - add sharks
+  - hunts player, kill to get meat
+ - reimplement dungeon master convert old mob to new
+  - kill to get gunpowder
+ - reimplement rat convert old mob to new
+  - catchable with punch
+  - cook to make edible
+ - reimplement oerkki convert old mob to new
+  - kill to get oerkki dust to teleport home
+
+1409.00: (release 2014-09-27)
+- make compiling work on OSX
+- update some nodeboxes
+- limit sponge growth
+- fix craft guide dug_item
+- add tree growth stages
+- new firelike drawtype
+- add loading screen
+- fix broken player files crashing the server
+- add home flags for per-player respawn points
+- remove some leftover minetest.conf references
+- give oerrkis a drop - used to teleport home
+- add ability to drop items
+- implement game modes, remove old creative_mode setting
+- rework singleplayer menu to give better game and map options
+- optimise pistons
+- translation updates, new spanish, polish, and german translations
+- have the server send some settings to the client
+- add hunger, enable for survival mode
+- add suffocation and drowning, enable for survival mode
+- fix lava not hurting player when it only touches their head
+- make wielded item visible to other players
+- fix item swapping not working in inventory
+- fix clicking not changing focus in formspecs
+- add key for unlocking locked things
+- new logos
+- add 3d wires
+- use transifex for translations
+- make standing on a damaging node damage the player
+- decrease circuit step time, and optimise the active block code a bit
+
+1408.00: (release 2014-08-29)
+- highlight the selected node instead of showing a selection box
+- implement circuits:
+ - add wirelike drawtype
+ - add energy propagation to environment
+ - add mesewire
+ - add copperwire
+ - add reactor
+ - add solarpanel
+ - add waterwheel
+ - add switch
+ - add button
+ - add NOT gate
+ - add wood/stone pressure plates
+ - add repeater
+ - add lamp
+ - add piston
+ - add sticky piston
+- add a clock
+- optimise mesh gen a little
+- set give_initial_stuff to default as true
+- implement sound
+- add quartz to lava cooling
+
+1407.00: (release 2014-07-26)
+- name changed from Minetest Classic to Voxelands
+- new menu logo (sdzen)
+- add roughstone brick/block to stone brick/block cook recipes
+- add CDT_NODEBOX_META for dynamic nodeboxes
+- simplify bookshelf recipe, add inventory, have books in inventory show
+ on shelves
+- add customisable inventory list rulesets
+- add couches
+- add decorative stone/wood knobs (Menche)
+- make onpunch_replace_node not work when wielding a crowbar
+- move mesh.cpp to client srcs - fixes server build on Arch (Menche)
+- make cotton plant weild more string
+- make some farm plants grow faster
+- fix some conflicting recipes
+- change some leftover mushed_food drops to mush
+- add method to slowly delete objects
+
+1405.01: (release 2014-05-26)
+- fix hatch recipes not working
+- fix tool wearbars not working
+
+1405.00: (release 2014-05-25)
+- new thatch, glass, and coloured glass rooftiles
+- add new texture to sides of glass slabs
+- allow trees to grow through apple blossoms and on footsteps
+- add flint tools
+- make selection boxes fit nodeboxes better
+- show multiple recipes for items in craft guide
+- allow material items in inventory to convert to newer nodeids
+- add converters for craftitems and toolitems
+- optimize craftitem and toolitem (de)serialization a bit
+- allow grass footsteps to be ploughed to farm dirt
+- make rooflike nodes climbable without jumping
+- add endcaps and topcaps to rooflike drawtype
+- fix /setpassword crashing server when player doesn't exist
+- merge rotten fruit + mushed food and scorched stuff + ash (Menche)
+- add pumpkins to creative inventory (Menche)
+- add plank to wood recipes, and lessen the hay recipe
+- fix texture rotation on rooflike nodes
+- make crowbar work on CPT_FACEDIR_WALLMOUNT nodes
+- remove CDT_SIGNLIKE use nodeboxes for signs
+- notify banned player of banning
+- fix water buckets not working in creative mode
+- fix slabs turning fences into wood
+- add cutouts in jack o lanterns
+
+1404.00: (release 2014-04-19)
+- fixes to rooflike lighting
+- fixes to rooflike rendering
+- some hud tweaks (sdzen)
+- add digging cracks to nodeboxes and special draw types
+- make fences and walls connect to their base block type
+- 3d ladders
+- make cobble wall non-jumpable
+- fix servers requiring empty passwords
+- add disallow_empty_passwords setting
+- replace locking doors with spring closing doors
+- fix rendering glitches when far from origin
+- ContentFeatures cleanup
+- redo some inventory things, add borderstone to initial inventories
+ (Menche)
+- make fireflies spawn in jungles at night
+- make glasslight recipe use firefly instead of torch
+- remove CDT_WALLMOUNT and ContentFeatures wall_mounted - better to use
+ nodeboxes and CPT_FACEDIR_WALLMOUNT
+- 3d rails
+
+1403.00: (release 2014-03-23)
+- fix deadvine on trellis causing abort when dug
+- tweaks to rooflike lighting
+- implement formspec
+- new fromspec-based craft guide
+- add a creative chest
+- some noise tweaks
+- add new books system (craft/cooking/decrafting guides, writtable book)
+- make the texture atlas bigger, again
+- Added paintings (Pentium44)
+- fix infinite grapes
+- Piearesquare! - square slicable pies (Menche)
+- backporting HUD hiding (sdzen)
+- Icon in .desktop file (MavJS)
+- add starch texture
+- fix hatches losing their facedir
+- some fiddling with initial and creative inventory items
+
+1402.00: (release 2014-02-16)
+- new textures, skyboxes, and fog (sdzen)
+- new chest and furnace textures (Menche)
+- farm expansion: add pumpkin, cotton, wheat, carrot, beetroot, melon,
+ grapes
+- add rotten fruit, and fertilizer
+- add trellis node, let vines only grow on them
+- add Jack O' Lanterns (sdzen)
+- add apple and pumpkin pies, bread, dough, carrot cake
+- make craft guide into a book (Menche)
+- make sponge less rare and junglegrass growth more rare
+- make cactus grow flowers and fruit
+- fix texture coords on wielded nodeboxes
+- replace only_peace_mobs with max_mob_level
+- .desktop file for app launching (tiemay)
+- new digging properties calculation
+- make special tools not dig in client either
+- add ToolType to ToolItemFeatures, streamline some code
+- add /setpassword command
+
+1401.01: (release 2014-01-13)
+- add models to install files
+- add furnace back into craft guide
+
+1401.00: (release 2014-01-12)
+- add particle effects
+- add mipmaps and bilinear/trilinear/anisotropic filters
+- some tweaks to the texture atlas
+- optimise meshgen a little
+- fix models sharing lighting values
+- add 3d mobs
+- digging tree with an axe yields 6 wood
+- add tnt stick, change tnt recipe
+- make fire drop ash, add ash block
+- make apple trees grow apple blossoms and apples (Menche)
+- add grass footsteps
+- make /setting command show the current value if no value given
+- improved /help command
+- enable lavabuckets and tnt by default
+- when digging apples, make leaves grow back in their place
+- make apple blossoms randomly drop a blossom craft item
+- turn a bug into a feature, some minerals should drop to when dug
+- add sloped rails
+- add a rooflike drawtype, and several roof tiles
+- get default_password working
+- fix node owner being lost with crowbar rotation
+- stop incinerators eating the buck when fueled with lava
+- add diagonal fences and walls
+- some rendering fixes to walls
+- optimise environment loop a bit (Menche)
+- improve farming a bit, make it require more work, allow flower farms
+- add some random drops to dirt/mud nodes
+- add locking signs and furnaces
+- make a couple of special tools unable to dig anything
+
+1312.01: (release 2013-12-06)
+- fix craft recipes for doors, hatches, incinerators
+- add some missing nodes to the craft guide
+
+1312.00: (release 2013-12-04)
+- added http transfer of player skins (buggy, but easier to debug in use)
+- add snow biome at y = 60-200, damage player in cold unless near fire
+- add conifer trees in snow biome
+- allow facedir nodes to also propogate light - no more dark doorways
+- add lava cooling to roughstone and ores when near water (Menche)
+- add dig animation to player
+- fix some wield items
+- add tables, chairs, and beds
+- fix upside down stair/slab placement
+- water freezes to ice in the cold band, melts back to water down low
+- add a basic in-game craft guide
+- add crowbar tool to rotate nodes without losing metadata
+- make 0.3.x show a warning when connecting to classic servers
+- enable smooth lighting for nodeboxes and some special draw types
+- add incinerator for disposing of inventory items
+- increase infotext length slightly
+- complete rewrite of crafting, craftitems, and toolitems
+- make fences and walls not jumpable
+- assorted code cleanups
+- make mese glow slightly when digging
+- pretty up tool progress bars
+- some fixes to new style water
+- give apple trees their own wood and leaves
+- make regular and large trees bigger
+- make trimmed leaves for all 4 leaf types (conifer,regular,apple,jungle)
+- add plank craftitem, replace sticks/wood with plank on most recipes
+- craft sticks from leaves
+- some meshgen improvements
+- let firestarter start fire on lava
+- make nodeboxes align with texture pixels
+- make cobble grow moss when underwater
+
+1311.01: (release 2013-11-14)
+- prevent water being placed inside doors
+- stop fire only burning half of doors
+- fix infinite everything bug
+- stop stacked large plantlike nodes depth buffer fighting (jungle grass)
+
+1311.00: (release 2013-11-13)
+- replace cobble with rough stone
+- make cobble craftable from rough stone
+- add rough stone slabs, stairs, and walls
+- make all default crafting recipes use rough stone instead of cobble
+- switch sign inventory item to floor mounted nodebox
+- give jungle trees their own jungle leaves that drop jungle saplings
+- make jungle saplings grow into jungle trees
+- move cook result to ContentFeatures
+- change project name and paths to minetest-classic
+- make server MINETEST ascii art message into MINETEST CLASSIC
+- try to fix the water digging bug
+- backport a serialization fix
+- make single player not abort when port is already in use
+- fix node box selection box
+- make /ban work on players that aren't connected
+- add glass doors and slabs
+- fix ladders and some plantlike node being back face culled
+- add hay from 9 deadgrass, make it burnable
+- add stained clay and glass
+- add terracotta + block, brick and tile
+- add sandstone block and brick
+- add silver, gold, copper, and tin ores
+- add quartz
+- add cobble, mossy cobble, sandstone, and stone walls
+- add gates
+- add flint as random drop from gravel
+- make cooked wood create charcoal instead of coal
+- make cooked mese create saltpeter
+- add coal and charcoal blocks
+- add firestarter, fire, and fire spread
+- add gunpowder, tnt and tnt 'flash' explosion
+- make fire, fire spread, and tnt honour borderstone
+- add sponges
+- tweak plant growth a bit
+
+1310.01: (release 2013-10-22)
+- fix water flooding with sources growing upwards
+
+1310.00: (release 2013-10-20)
+- Update jthread to 1.3.1
+- Implement buckets
+- Implement wildgrass, flowers, dyes, coloured cotton, flower pots
+- Implement shears, trimmed leaves (no leaf decay)
+- Added some alternate craft recipes
+- Remember main menu tab when exiting game
+- Add wieldnode for nodeboxes, and player arm when nothing wielded
+- Fix nodebox lighting
+- Implement doors and hatches
+- Implement inventory images for nodeboxes
+- Move texture definitions to content features and clean up content_mapblock.cpp
+- Fix collision + sneak + sneak elevators
+- Make some 3d things 3d (torches, signs)
+- Added dependencies example for RedHat/Fedora/CentOS. (MavJS)
+- Correct text position on guiMessageMenu
+
+1309.00: (release 2013-09-01)
+- a wide assortment of bugfixes to just about everything
+- update license to GPLv3
+- kill rats in lava
+- add farming and farm dirt
+- fix sandstone only dropping 1 sand
+- add static_spawnpoint setting
+- fix various compiler errors
+- add mouse_sensitivity option by EXio4 and kahrl
+- fix player getting thrown underground after connecting
+- 3D player models -> Stu's improved model -> b3d models
+- png shrinkage
+- stop too many mobs spawning
+- let trees grow through apples
+- allow planting of jungle tree
+- add random large trees
+- borderstone
+- implement nodeboxes -> implement stairs and slabs
+- ui redesign and new main menu
+- switch to new versions that don't conflict with minetest-engine
+
+Classic: (initial fork April 2013)
+- Leaf and apple decay, +junglegrass and papyrus now grow
+- Fixed inventory cube rendering
+- Added support for irrlicht 1.8
+- remove CONTENT_CLOUD, replace with CONTENT_COTTON - crafted from
+ junglegrass
+
+========================================================================
+
+0.3.1: (released on 2011-11-09)
+- Fix frustum culling (previous versions have rendered too much stuff
+ that is not actually visible (about 180 degrees, while should have been
+ more like 100.))
+- Add occlusion culling (improves performance a lot)
+- Add “3d clouds” on/off checkbox in main menu
+- Add “opaque water” on/off checkbox
+- Fix some random minor stuff
+- Turn mipmapping off (This makes far-away textures a bit noisier but
+ better looking)
+- Add Command-line signal handler for Windows (contributed by SpeedProg)
+- Fix network layer segmentation fault introduced in 0.3.dev-20111021
+- Fix water-glass and water-lava and lava-glass surfaces
+
+0.3.0: (released on 2011-11-01)
+- Some small fixes
+0.3.dev-20111021:
+- Modify dungeon masters to only try to shoot players
+- Fix object duplication bug at block load/unload bug
+- Improve network layer
+0.3.dev-20111016:
+- Locked chest (contributed)
+- Server user limit setting (max_users)
+- Wielded tool is shown in HUD (contributed)
+- View bobbing (contributed)
+- Saplings that drop from leaf blocks and when placed on ground will
+ grow to trees (contributed)
+- Optimized map saving (does not re-save everything all the time)
+- New mob system and new mob: dungeon master
+- Death/respawn screen
+
+0.2.20110922_3:
+- Fix the build for MSVC2010; also released for windows using MSVC2010.
+
+0.2.20110922_1:
+- Make client report a newer version number to the server than
+ 2011-07-31 does and make server disallow old clients
+
+0.2.20110922:
+- Map is saved in an SQLite database file (by Queatz)
+- Ladders (MarkTraceur)
+- Lava
+- Apple trees (sfan5)
+- Slightly better looking inventory with transparency
+- /me chat command (Oblomov)
+- Using chosen map seed possible through fixed_map_seed configuration
+ option (kahrl)
+- Fix the long-existed PeerNotFound loop bug
+- Some translations and localization-related fixes
+- Lots of small fixes
+
+2011-07-31_3:
+- Fixes a bug that made the server to deny non-empty passwords from
+ players connecting the first time
+
+2011-07-31_2:
+- Fixes a bug that caused the server to always read an empty password
+ from the client when a client connected.
+
+2011-07-31:
+- A number of small fixes, build system stuff and such (refer to version
+ control log)
+- Map generator no longer crashes at generation limit
+- Fixed mapgen producing lots of cut-down trees
+- Some minor tweaks in map generator (some contributed)
+- Volumetric clouds (contributed)
+- Icon added (graphic contributed)
+- Key configuration menu (contributed)
+- Decorative blocks and items: bookshelf, sandstone, cactus, clay,
+ brick, papyrus, rail, paper, book (contributed)
+- Jungles!
+- Hotbar is a bit smaller
+- Health is now enabled by default; You can now eat cooked rats to heal
+ yourself.
+- Finally added sword textures, altough sword is still of no use
+- Creative mode now preserves normal mode inventory
+
+2011-07-04:
+- Many small fixes
+- Code reorganizing to aid further development
+- Renewed map generator
+
+2011-06-02:
+- Password crash on windows fixed
+- Optimized server CPU usage a lot
+- Furnaces now work also while players are not near to them
+
+2011-05-29:
+- Optimized smooth lighting
+- A number of small fixes
+- Added clouds and simple skyboxes
+- The glass block added
+- Added key configuration to config file
+- Player privileges on server
+- Slightly updated map format
+- Player passwords
+- All textures first searched from texture_path
+- Map directory ("map") has been renamed to "world" (just rename it to
+ load an old world)
+- Mouse inversion (invert_mouse)
+- Grass doesn't grow immediately anymore
+- Fence added
+
+2011-04-24:
+- Smooth lighting with simple ambient occlusion
+- Updated main menu
+
+2011-04-23_0_test:
+- Small bug fixes
+- Item drop multiplication fixed
+- HP added
+- Added A simple monster which spawns to dark places at map generation
+ time
+- Some code refactoring and cleaning (possibly new bugs)
+
+2011-04-11:
+- Fixed crafting a bit
+
+2011-04-10_0:
+- Asynchronous map generation
+- New object system
+
+2011-04-06:
+- Mesh update of node addition/removal is now done asynchronously on
+ client, removing frametime spike
+- Node addition/removal is sent directly only to clients that are closer
+ than 100 nodes to the modification. For the others, the modified blocks
+ are set unsent. (and are re-sent when applicable)
+
+2011-04-05:
+- Made furnace usable
+- Added cobblestone
+- Added wood, stone and steel tools: pickaxes, shovels and axes
+- Incremented to version 0.0.2
+
+2011-04-04:
+- Cleaned client to be completely synchronous, except for the mesh
+ calculation, which is now done with queues in a separate thread.
+- Added node metadata support
+- Added chests
+
+2011-02-17:
+- Added better handling of textures. Now many file extensions are
+ searched. Also too large textures are not put on the texture atlas,
+ and the construction of the texture atlas is stopped when it is full.
+
+2011-02-16:
+- Better handling of Ctrl-C on POSIX systems
+
+2011-02-15:
+- Fixed a problem of not saving and loading the "lighting expired" value
+ of MapBlocks properly. This caused high server CPU usage.
+- Ctrl-C handling on POSIX systems
+- Added simple command support to server
+- Added settings enable_texture_atlas and texture_path
+
+2011-02-14:
+- Created changelog.txt
+- Added sneaking/crouching
+- Modified the looks of the hotbar and cleaned code
+- Added code to allow generating 3D cube images for inventory
+

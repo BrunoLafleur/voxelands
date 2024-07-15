@@ -1,0 +1,28 @@
+# Package finder for gettext libs and include files
+
+SET(CUSTOM_GETTEXT_PATH "${PROJECT_SOURCE_DIR}/../../gettext"
+	CACHE FILEPATH "path to custom gettext")
+
+# by default
+SET(GETTEXT_FOUND FALSE)
+
+FIND_PROGRAM(GETTEXT_MSGFMT
+	NAMES msgfmt
+	PATHS "${CUSTOM_GETTEXT_PATH}/bin"
+	DOC "path to msgfmt")
+
+IF(GETTEXT_MSGFMT)
+	SET(GETTEXT_FOUND TRUE)
+	SET(GETTEXT_PO_PATH ${CMAKE_SOURCE_DIR}/po)
+	SET(GETTEXT_MO_BUILD_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../data/locale/<locale>)
+	SET(GETTEXT_MO_DEST_PATH ${SHAREDIR}/locale/<locale>)
+	FILE(GLOB GETTEXT_AVAILABLE_LOCALES RELATIVE ${GETTEXT_PO_PATH} "${GETTEXT_PO_PATH}/*")
+	LIST(REMOVE_ITEM GETTEXT_AVAILABLE_LOCALES voxelands.pot)
+	MACRO(SET_MO_PATHS _buildvar _destvar _locale)
+		STRING(REPLACE "<locale>" ${_locale} ${_buildvar} ${GETTEXT_MO_BUILD_PATH})
+		STRING(REPLACE "<locale>" ${_locale} ${_destvar} ${GETTEXT_MO_DEST_PATH})
+	ENDMACRO(SET_MO_PATHS)
+ELSE()
+	SET(GETTEXT_INCLUDE_DIR "")
+	SET(GETTEXT_LIBRARY "")
+ENDIF()

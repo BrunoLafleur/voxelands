@@ -1,0 +1,124 @@
+"controller_mappings"
+{
+	"version"		"2"
+	"title"		"Voxelands Binding"
+	"description"		"#SettingsController_AutosaveDescription"
+	"creator"		"76561198024708184"
+	"group"
+	{
+		"id"		"0"
+		"mode"		"four_buttons"
+		"bindings"
+		{
+			"button_a"		"key_press SPACE"
+			"button_B"		"key_press E"
+			"button_X"		"key_press H"
+			"button_y"		"key_press I"
+		}
+	}
+	"group"
+	{
+		"id"		"1"
+		"mode"		"dpad"
+		"bindings"
+		{
+			"dpad_north"		"key_press W"
+			"dpad_south"		"key_press S"
+			"dpad_east"		"key_press D"
+			"dpad_west"		"key_press A"
+		}
+		"settings"
+		{
+			"requires_click"		"0"
+		}
+	}
+	"group"
+	{
+		"id"		"2"
+		"mode"		"dpad"
+		"bindings"
+		{
+			"dpad_north"		"key_press R"
+			"dpad_south"		"key_press F"
+			"dpad_east"		"mouse_wheel SCROLL_DOWN"
+			"dpad_west"		"mouse_wheel SCROLL_UP"
+		}
+		"settings"
+		{
+			"requires_click"		"0"
+		}
+	}
+	"group"
+	{
+		"id"		"3"
+		"mode"		"absolute_mouse"
+	}
+	"group"
+	{
+		"id"		"4"
+		"mode"		"trigger"
+		"bindings"
+		{
+			"click"		"mouse_button LEFT"
+			"edge"		"mouse_button LEFT"
+		}
+		"settings"
+		{
+			"output_trigger"		"1"
+		}
+	}
+	"group"
+	{
+		"id"		"5"
+		"mode"		"trigger"
+		"bindings"
+		{
+			"click"		"mouse_button RIGHT"
+			"edge"		"mouse_button RIGHT"
+		}
+		"settings"
+		{
+			"output_trigger"		"2"
+		}
+	}
+	"group"
+	{
+		"id"		"6"
+		"mode"		"absolute_mouse"
+		"settings"
+		{
+			"sensitivity"		"99"
+			"acceleration"		"1"
+		}
+	}
+	"preset"
+	{
+		"id"		"0"
+		"name"		"default"
+		"group_source_bindings"
+		{
+			"0"		"button_diamond active"
+			"1"		"joystick active"
+			"2"		"left_trackpad active"
+			"3"		"right_trackpad active"
+			"4"		"left_trigger active"
+			"5"		"right_trigger active"
+			"6"		"gyro active"
+		}
+		"switch_bindings"
+		{
+			"bindings"
+			{
+				"button_back_right"		"key_press LEFT_CONTROL, Left Control"
+				"button_escape"		"key_press ESCAPE, Menu"
+				"button_menu"		"key_press TAB, Tab"
+				"button_back_left"		"mouse_button MIDDLE, Middle Mouse"
+				"left_bumper"		"key_press Q"
+				"right_bumper"		"key_press H"
+			}
+		}
+		"settings"
+		{
+		}
+	}
+}
