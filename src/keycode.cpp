@@ -502,7 +502,7 @@ static bool key_setting_cache_init = false;
 
 KeyPress getKeySetting(KeyCode code)
 {
-	char* v;
+	const char* v;
 	if (!key_setting_cache_init)
 		clearKeyCache();
 	if (g_key_setting_cache[code])

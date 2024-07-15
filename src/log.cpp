@@ -31,6 +31,8 @@
 #include "threads.h"
 #include "debug.h"
 #include "gettime.h"
+#include "jmutex.h"
+#include "jmutexautolock.h"
 
 std::list<ILogOutput*> log_outputs[LMT_NUM_VALUES];
 std::map<threadid_t, std::string> log_threadnames;
@@ -75,13 +77,17 @@ static std::string get_lev_string(enum LogMessageLevel lev)
 	return "(unknown level)";
 }
 
-void log_printline(enum LogMessageLevel lev, const std::string &text)
+static void log_printline(enum LogMessageLevel lev, const std::string &text)
 {
 	std::string threadname = "(unknown thread)";
 	std::map<threadid_t, std::string>::const_iterator i;
+	
+	log_mutex.Lock();
 	i = log_threadnames.find(get_current_thread_id());
 	if(i != log_threadnames.end())
 		threadname = i->second;
+	log_mutex.Unlock();
+
 	std::string levelname = get_lev_string(lev);
 	std::ostringstream os(std::ios_base::binary);
 	os<<getTimestamp()<<": "<<levelname<<"["<<threadname<<"]: "<<text;
@@ -97,8 +103,10 @@ class Logbuf : public std::streambuf
 {
 public:
 	Logbuf(enum LogMessageLevel lev):
-		m_lev(lev)
+			m_lev(lev),m_buf(),m_mutex()
 	{
+		m_mutex.Init();
+		assert(m_mutex.IsInitialized());
 	}
 
 	~Logbuf()
@@ -117,16 +125,12 @@ public:
 		return n;
 	}
 
-	void printbuf()
-	{
-		log_printline(m_lev, m_buf);
-	}
-
 	void bufchar(char c)
 	{
+	    	JMutexAutoLock lock(m_mutex);
 		if(c == '\n' || c == '\r'){
 			if(m_buf != "")
-				printbuf();
+			    log_printline(m_lev, m_buf);
 			m_buf = "";
 			return;
 		}
@@ -136,8 +140,10 @@ public:
 private:
 	enum LogMessageLevel m_lev;
 	std::string m_buf;
+	JMutex m_mutex;
 };
 
+JMutex log_mutex;
 Logbuf errorbuf(LMT_ERROR);
 Logbuf actionbuf(LMT_ACTION);
 Logbuf infobuf(LMT_INFO);

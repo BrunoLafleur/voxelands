@@ -186,7 +186,7 @@ size_t base64_ldecode(const char* source, char *target, size_t targetlen)
 		tmplen = s_base64_decode_triple((unsigned char*)quadruple, (unsigned char*)tmpresult);
 
 		/* check if the fit in the result buffer */
-		if (targetlen < tmplen) {
+		if (targetlen < (size_t) tmplen) {
 			free(src);
 			return -1;
 		}

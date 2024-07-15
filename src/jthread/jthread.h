@@ -45,7 +45,11 @@ class JTHREAD_IMPORTEXPORT JThread
 {
 public:
 	JThread();
+	JThread(const JThread& jt);
 	virtual ~JThread();
+	
+	JThread& operator=(const JThread& jt);
+
 	int Start();
 	int Kill();
 	virtual void *Thread() = 0;
@@ -56,13 +60,13 @@ protected:
 private:
 
 #ifdef JTHREAD_CONFIG_WIN32THREADS
-#ifdef _WIN32_WCE
+# ifdef _WIN32_WCE
 	DWORD threadid;
 	static DWORD WINAPI TheThread(void *param);
-#else
+# else
 	static UINT __stdcall TheThread(void *param);
 	UINT threadid;
-#endif // _WIN32_WCE
+# endif // _WIN32_WCE
 	HANDLE threadhandle;
 #else // pthread type threads
 	static void *TheThread(void *param);

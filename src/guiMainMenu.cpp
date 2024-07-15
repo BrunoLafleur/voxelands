@@ -159,7 +159,7 @@ void GUIMainMenu::regenerateGui(v2u32 screensize)
 	/*
 		Client section
 	*/
-	char* selected_tab = config_get("client.ui.mainmenu.tab");
+	const char* selected_tab = config_get("client.ui.mainmenu.tab");
 	if (!selected_tab) {
 		m_data->selected_tab = TAB_SINGLEPLAYER;
 	}else if (!strcmp(selected_tab,"multiplayer")) {
@@ -173,10 +173,10 @@ void GUIMainMenu::regenerateGui(v2u32 screensize)
 	}
 
 	if (m_data->selected_tab == TAB_MULTIPLAYER) {
-		GUIMultiplayerMenu *mmenu = new GUIMultiplayerMenu(env, parent, -1,m_data,menumgr,m_gamecallback);
+		GUIMultiplayerMenu* const mmenu = new GUIMultiplayerMenu(env, parent, -1,m_data,menumgr,m_gamecallback);
 		mmenu->drop();
 	}else if (m_data->selected_tab == TAB_SINGLEPLAYER) {
-		GUISingleplayerMenu *mmenu = new GUISingleplayerMenu(env, parent, -1,menumgr,m_gamecallback);
+		GUISingleplayerMenu* const mmenu = new GUISingleplayerMenu(env, parent, -1,menumgr,m_gamecallback);
 		mmenu->drop();
 	}else if (m_data->selected_tab == TAB_CREDITS) {
 		// CREDITS
@@ -314,7 +314,8 @@ bool GUIMainMenu::OnEvent(const SEvent& event)
 			{
 				if (m_data->selected_tab == TAB_SETTINGS)
 					acceptInput();
-				GUISingleplayerMenu *mmenu = new GUISingleplayerMenu(env, parent, -1,menumgr,m_gamecallback);
+				GUISingleplayerMenu* const mmenu =
+				    new GUISingleplayerMenu(env, parent, -1,menumgr,m_gamecallback);
 				mmenu->drop();
 				m_data->selected_tab = TAB_SINGLEPLAYER;
 				config_set("client.ui.mainmenu.tab","singleplayer");
@@ -324,7 +325,8 @@ bool GUIMainMenu::OnEvent(const SEvent& event)
 			{
 				if (m_data->selected_tab == TAB_SETTINGS)
 					acceptInput();
-				GUIMultiplayerMenu *mmenu = new GUIMultiplayerMenu(env, parent, -1,m_data,menumgr,m_gamecallback);
+				GUIMultiplayerMenu* const mmenu =
+				    new GUIMultiplayerMenu(env, parent, -1,m_data,menumgr,m_gamecallback);
 				mmenu->drop();
 				m_data->selected_tab = TAB_MULTIPLAYER;
 				config_set("client.ui.mainmenu.tab","multiplayer");
@@ -332,7 +334,8 @@ bool GUIMainMenu::OnEvent(const SEvent& event)
 			}
 			case GUI_ID_TAB_SETTINGS:
 			{
-				GUISettingsMenu *smenu = new GUISettingsMenu(env, parent, -1,menumgr, false);
+				GUISettingsMenu* const smenu =
+				    new GUISettingsMenu(env, parent, -1,menumgr, false);
 				smenu->drop();
 				return true;
 			}

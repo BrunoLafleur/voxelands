@@ -120,7 +120,7 @@ GUICharDefMenu::GUICharDefMenu(
 	m_cameranode->setTarget(v3f(0,0,0));
 
 	// get a unique mesh so that the player model has it's own lighting
-	scene::IAnimatedMesh* mesh = createModelMesh(smgr,"character.b3d",true);
+	scene::IAnimatedMesh* const mesh = createModelMesh(smgr,"character.b3d",true);
 	if (!mesh)
 		return;
 
@@ -811,7 +811,7 @@ void GUICharDefMenu::fetchPlayerSkin()
 {
 	char buff[1024];
 	char buf[256];
-	char* v;
+	const char* v;
 	std::string chardef = std::string(PLAYER_DEFAULT_CHARDEF);
 	v = config_get("client.character");
 	if (v)

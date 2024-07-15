@@ -320,14 +320,14 @@ void SelectionMesh::generate(MeshMakeData *data)
 		// Create meshbuffer
 		// This is a "Standard MeshBuffer",
 		// it's a typedeffed CMeshBuffer<video::S3DVertex>
-		scene::SMeshBuffer *buf = new scene::SMeshBuffer();
+		scene::SMeshBuffer* const buf = new scene::SMeshBuffer();
+		
 		// Set material
 		buf->Material = d.tile.getMaterial();
 		// Add to mesh
 		mesh->addMeshBuffer(buf);
 		// Mesh grabbed it
 		buf->drop();
-
 		buf->append(d.vertices.data(), d.vertices.size(), d.indices.data(), d.indices.size());
 	}
 

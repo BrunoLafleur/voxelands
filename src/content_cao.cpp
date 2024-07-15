@@ -76,7 +76,8 @@ void MobCAO::addToScene(scene::ISceneManager *smgr)
 		return;
 
 	video::IVideoDriver* driver = smgr->getVideoDriver();
-	MobFeatures m = content_mob_features(m_content);
+	MobFeatures& m = content_mob_features(m_content);
+	
 	if (m.texture_display == MDT_EXTRUDED) {
 		ExtrudedSpriteSceneNode *node = new ExtrudedSpriteSceneNode(smgr->getRootSceneNode(),smgr,-1,v3f(0,0,0),v3f(0,0,0),v3f(5,5,5));
 		node->setVisible(true);
@@ -85,11 +86,11 @@ void MobCAO::addToScene(scene::ISceneManager *smgr)
 		m_draw_type = MDT_EXTRUDED;
 		updateNodePos();
 	}else if (m.model != "") {
-		scene::IAnimatedMesh* mesh = createModelMesh(smgr,m.model.c_str(),true);
+		scene::IAnimatedMesh* const mesh = createModelMesh(smgr,m.model.c_str(),true);
 		if (!mesh)
 			return;
 
-		scene::IAnimatedMeshSceneNode* node = smgr->addAnimatedMeshSceneNode(mesh);
+		scene::IAnimatedMeshSceneNode* const node = smgr->addAnimatedMeshSceneNode(mesh);
 
 		if (node) {
 			int s;
@@ -157,7 +158,8 @@ void MobCAO::removeFromScene()
 }
 void MobCAO::updateLight(u8 light_at_pos)
 {
-	MobFeatures m = content_mob_features(m_content);
+	const MobFeatures& m = content_mob_features(m_content);
+	
 	if (m.glow_light)
 		light_at_pos = m.glow_light;
 	if (m_shooting && m.attack_glow_light)
@@ -208,7 +210,7 @@ void MobCAO::step(float dtime, ClientEnvironment *env)
 	if (!m_node)
 		return;
 
-	MobFeatures m = content_mob_features(m_content);
+	const MobFeatures& m = content_mob_features(m_content);
 
 	pos_translator.translate(dtime);
 
@@ -272,7 +274,9 @@ void MobCAO::step(float dtime, ClientEnvironment *env)
 		/* roughly sort of when a step sound should probably be heard, maybe */
 		if (m_last_step > 0.5) {
 			m_last_step -= 0.5;
+#if USE_AUDIO == 1
 			sound_play_step(&env->getMap(),m_position,m_next_foot, 0.3);
+#endif
 			m_next_foot = !m_next_foot;
 		}
 	}
@@ -359,7 +363,7 @@ void MobCAO::initialize(const std::string &data)
 }
 bool MobCAO::directReportPunch(content_t punch_item, v3f dir)
 {
-	MobFeatures m = content_mob_features(m_content);
+	const MobFeatures& m = content_mob_features(m_content);
 	if (m.punch_action == MPA_IGNORE)
 		return false;
 

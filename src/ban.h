@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 /* defined in ban.c */
-int ban_init(char* file);
+int ban_init(const char* file);
 void ban_exit(void);
 void ban_load(void);
 void ban_save(void);

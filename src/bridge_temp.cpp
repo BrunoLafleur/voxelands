@@ -126,7 +126,7 @@ int bridge_server_get_player_ip_or_name(command_context_t *ctx, char* name, char
 		if (ip_string.size() >= (uint32_t)size)
 			return -1;
 		strcpy(buff,ip_string.c_str());
-	} catch(con::PeerNotFoundException) {
+	} catch(con::PeerNotFoundException&) {
 		std::string ip_string = ((ServerRemotePlayer*)player)->getAddress();
 		if (ip_string == "")
 			return -1;
@@ -250,9 +250,9 @@ unsigned char* bridge_sha1(char *str)
 	return sha1.getDigest();
 }
 
-std::string bridge_config_get(char* name)
+std::string bridge_config_get(const char* name)
 {
-	char* v = config_get(name);
+	const char* v = config_get(name);
 	if (!v)
 		return "";
 

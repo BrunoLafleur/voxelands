@@ -70,8 +70,9 @@ static std::string http_player_interface(Player *player, HTTPServer *server, boo
 void * HTTPServerThread::Thread()
 {
 	ThreadStarted();
-
+	log_mutex.Lock();
 	log_register_thread("HTTPServerThread");
+	log_mutex.Unlock();
 
 	DSTACK(__FUNCTION_NAME);
 
@@ -293,7 +294,7 @@ int HTTPRemoteClient::handleMap()
 /* handle /api/xxx url's */
 int HTTPRemoteClient::handleAPI()
 {
-	char* v;
+	const char* v;
 
 	std::string u1 = m_recv_headers.getUrl(1);
 
@@ -345,7 +346,7 @@ int HTTPRemoteClient::handleAPI()
 		txt += "\n";
 
 		txt += "summary,motd,mode,name,players,public,version,privs,features";
-		send((char*)txt.c_str());
+		send(txt.c_str());
 		return 1;
 	}else if (u1 == "motd") {
 		v = config_get("world.game.motd");
@@ -393,7 +394,7 @@ int HTTPRemoteClient::handleAPI()
 			txt += player->getName();
 		}
 		array_free(players,1);
-		send((char*)txt.c_str());
+		send(txt.c_str());
 		return 1;
 	}else if (u1 == "public") {
 		v = config_get("world.server.client.default.password");
@@ -413,7 +414,7 @@ int HTTPRemoteClient::handleAPI()
 /* handle / url's */
 int HTTPRemoteClient::handleIndex()
 {
-	char* v;
+	const char* v;
 	int c = 0;
 
 	std::string html("<div class=\"panel\"><h2>");
@@ -455,7 +456,7 @@ int HTTPRemoteClient::handleSpecial(const char* response, std::string content)
 }
 
 /* send text data to a remote http client */
-void HTTPRemoteClient::send(char* data)
+void HTTPRemoteClient::send(const char* data)
 {
 	int l = strlen(data);
 	m_send_headers.setHeader("Content-Type","text/plain");
@@ -573,7 +574,7 @@ void HTTPRemoteClient::sendHeaders()
  * HTTP request
  */
 
-std::string http_request(char* host, char* url, char* post, int port)
+std::string http_request(const char* host, char* url, char* post, int port)
 {
 	Address addr;
 	TCPSocket *sock;

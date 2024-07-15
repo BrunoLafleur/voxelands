@@ -57,6 +57,8 @@ public:
 	{
 	}
 
+	virtual ~ActiveObject() {};
+	
 	u16 getId()
 	{
 		return m_id;

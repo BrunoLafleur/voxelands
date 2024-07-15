@@ -416,20 +416,20 @@ u8 getSmoothLight(v3s16 p, v3s16 corner, VoxelManipulator &vmanip)
 	if (corner.Z == 1)
 		p.Z += 1;
 
-		for (u8 i = 0; i < 8; i++) {
-		MapNode n = vmanip.getNodeRO(p - dirs8[i]);
-		ContentFeatures &f = content_features(n);
-		if (f.param_type == CPT_LIGHT) {
-			dl += n.getLight(LIGHTBANK_DAY);
-			nl += n.getLight(LIGHTBANK_NIGHT);
-			light_count++;
-			if (f.light_source > 0)
-				ambient_occlusion -= 1.0;
-		} else if (f.draw_type == CDT_CUBELIKE || f.draw_type == CDT_DIRTLIKE) {
-			ambient_occlusion += 0.5;
-		} else if (n.getContent() != CONTENT_IGNORE) {
-			ambient_occlusion += 0.25;
-		}
+	for (u8 i = 0; i < 8; i++) {
+	    MapNode n = vmanip.getNodeRO(p - dirs8[i]);
+	    ContentFeatures &f = content_features(n);
+	    if (f.param_type == CPT_LIGHT) {
+		dl += n.getLight(LIGHTBANK_DAY);
+		nl += n.getLight(LIGHTBANK_NIGHT);
+		light_count++;
+		if (f.light_source > 0)
+		    ambient_occlusion -= 1.0;
+	    } else if (f.draw_type == CDT_CUBELIKE || f.draw_type == CDT_DIRTLIKE) {
+		ambient_occlusion += 0.5;
+	    } else if (n.getContent() != CONTENT_IGNORE) {
+		ambient_occlusion += 0.25;
+	    }
 	}
 
 	if (light_count == 0)
@@ -471,6 +471,7 @@ MapBlockMesh::~MapBlockMesh()
 	m_mesh = NULL;
 	m_farmesh->drop();
 	m_farmesh = NULL;
+	
 	if (!m_animation_data.empty())
 		m_animation_data.clear();
 }
@@ -686,6 +687,10 @@ void MapBlockMesh::generate(MeshMakeData *data, v3s16 camera_offset, JMutex *mut
 
 	scene::SMesh *mesh = new scene::SMesh();
 	scene::SMesh *fmesh = new scene::SMesh();
+	
+	if (mutex != NULL)
+		mutex->Lock();
+
 	for (u32 i=0; i<data->m_meshdata.size(); i++) {
 		MeshData &d = data->m_meshdata[i];
 
@@ -701,31 +706,38 @@ void MapBlockMesh::generate(MeshMakeData *data, v3s16 camera_offset, JMutex *mut
 		// Create meshbuffer
 		// This is a "Standard MeshBuffer",
 		// it's a typedeffed CMeshBuffer<video::S3DVertex>
-		scene::SMeshBuffer *buf = new scene::SMeshBuffer();
-		// Set material
-		buf->Material = d.tile.getMaterial();
-		// Add to mesh
-		mesh->addMeshBuffer(buf);
-		// Mesh grabbed it
-		buf->drop();
+		scene::SMeshBuffer* const buf = new scene::SMeshBuffer();
 
-		buf->append(d.vertices.data(), d.vertices.size(), d.indices.data(), d.indices.size());
+		if(buf) {
+		// Set material
+		    buf->Material = d.tile.getMaterial();
+		// Add to mesh
+		    mesh->addMeshBuffer(buf);
+		// Mesh grabbed it
+		    buf->drop();
+		    buf->append(d.vertices.data(), d.vertices.size(), d.indices.data(), d.indices.size());
+		}
 	}
 	for (u32 i=0; i<data->m_fardata.size(); i++) {
 		MeshData &d = data->m_fardata[i];
 		// Create meshbuffer
 		// This is a "Standard MeshBuffer",
 		// it's a typedeffed CMeshBuffer<video::S3DVertex>
-		scene::SMeshBuffer *buf = new scene::SMeshBuffer();
-		// Set material
-		buf->Material = d.tile.getMaterial();
-		// Add to mesh
-		fmesh->addMeshBuffer(buf);
-		// Mesh grabbed it
-		buf->drop();
+		scene::SMeshBuffer* const buf = new scene::SMeshBuffer();
 
-		buf->append(d.vertices.data(), d.vertices.size(), d.indices.data(), d.indices.size());
+		if(buf) {
+		// Set material
+		    buf->Material = d.tile.getMaterial();
+		// Add to mesh
+		    fmesh->addMeshBuffer(buf);
+		// Mesh grabbed it
+		    buf->drop();
+		    buf->append(d.vertices.data(), d.vertices.size(), d.indices.data(), d.indices.size());
+		}
 	}
+
+	if (mutex != NULL)
+		mutex->Unlock();
 
 	translateMesh(mesh, intToFloat(data->m_blockpos * MAP_BLOCKSIZE - camera_offset, BS));
 	translateMesh(fmesh, intToFloat(data->m_blockpos * MAP_BLOCKSIZE - camera_offset, BS));
@@ -735,10 +747,12 @@ void MapBlockMesh::generate(MeshMakeData *data, v3s16 camera_offset, JMutex *mut
 
 	if (m_mesh != NULL)
 		m_mesh->drop();
+	m_mesh = mesh;
+	
 	if (m_farmesh != NULL)
 		m_farmesh->drop();
-	m_mesh = mesh;
 	m_farmesh = fmesh;
+	
 	m_meshdata.swap(data->m_meshdata);
 	m_fardata.swap(data->m_fardata);
 	refresh(data->m_daynight_ratio);

@@ -43,7 +43,7 @@ static struct {
 };
 
 /* init ban system for the given file */
-int ban_init(char* file)
+int ban_init(const char* file)
 {
 	char* path;
 	if (!ban.mutex) {

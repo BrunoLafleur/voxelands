@@ -551,7 +551,7 @@ void TextureSource::buildMainAtlas()
 		img->drop();*/
 
 		// Generate image by name
-		video::IImage *img2 = generate_image_from_scratch(name, m_device);
+		video::IImage* const img2 = generate_image_from_scratch(name, m_device);
 		if(img2 == NULL)
 		{
 			infostream<<"TextureSource::buildMainAtlas(): Couldn't generate texture atlas: Couldn't generate image \""<<name<<"\""<<std::endl;
@@ -1159,7 +1159,6 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 				float src[4] = {0.,(s*progression),1.,(s*progression)+s};
 
 				alpha_blit(device,baseimg,img_crack,dst,src,part_of_name);
-
 				img_crack->drop();
 			}
 		}
@@ -1186,13 +1185,13 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 						<<std::endl;
 
 				if (path_get((char*)"texture",const_cast<char*>(filename.c_str()),1,buff,1024)) {
-					video::IImage *img = driver->createImageFromFile(buff);
+					video::IImage* const img = driver->createImageFromFile(buff);
 					if (img) {
 						core::dimension2d<u32> dim = img->getDimension();
 						infostream<<"Size "<<dim.Width
 								<<"x"<<dim.Height<<std::endl;
 						core::position2d<s32> pos_base(x, y);
-						video::IImage *img2 =
+						video::IImage* const img2 =
 								driver->createImage(video::ECF_A8R8G8B8, dim);
 						img->copyTo(img2);
 						img->drop();
@@ -1248,7 +1247,7 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 				infostream<<"generate_image(): Loading path \""<<buff
 						<<"\""<<std::endl;
 
-				video::IImage *image = driver->createImageFromFile(buff);
+				video::IImage* const image = driver->createImageFromFile(buff);
 
 				if (image == NULL) {
 					infostream<<"generate_image(): Loading path \""
@@ -1267,7 +1266,6 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 					}
 					// Blit
 					image->copyTo(baseimg);
-
 					image->drop();
 				}
 			}
@@ -1296,7 +1294,7 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 
 				infostream<<"generate_image(): Loading path \""<<buff<<"\""<<std::endl;
 
-				video::IImage *image = driver->createImageFromFile(buff);
+				video::IImage* const image = driver->createImageFromFile(buff);
 
 				if (image == NULL) {
 					infostream<<"generate_image(): Loading path \""
@@ -1307,7 +1305,6 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 
 					// Blit
 					image->copyTo(baseimg);
-
 					image->drop();
 
 					for(u32 y=0; y<dim.Height; y++)
@@ -1352,7 +1349,7 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 
 				infostream<<"generate_image(): Loading path \""<<buff<<"\""<<std::endl;
 
-				video::IImage *image = driver->createImageFromFile(buff);
+				video::IImage* const image = driver->createImageFromFile(buff);
 
 				if (image == NULL) {
 					infostream<<"generate_image(): Loading path \""
@@ -1363,7 +1360,6 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 
 					// Blit
 					image->copyTo(baseimg);
-
 					image->drop();
 
 					for(u32 y=0; y<dim.Height; y++)
@@ -1415,7 +1411,7 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 			u32 transform = parseImageTransform(part_of_name.substr(10));
 			core::dimension2d<u32> dim = imageTransformDimension(
 					transform, baseimg->getDimension());
-			video::IImage *image = driver->createImage(
+			video::IImage* const image = driver->createImage(
 					baseimg->getColorFormat(), dim);
 			assert(image);
 			imageTransform(transform, baseimg, image);
@@ -1524,7 +1520,7 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 			}
 
 			// Create image of render target
-			video::IImage *image = driver->createImage(rtt, v2s32(0,0), dim);
+			video::IImage* const image = driver->createImage(rtt, v2s32(0,0), dim);
 			assert(image);
 
 			baseimg = driver->createImage(video::ECF_A8R8G8B8, dim);
@@ -1644,7 +1640,7 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 			}
 
 			// Create image of render target
-			video::IImage *image = driver->createImage(rtt, v2s32(0,0), dim);
+			video::IImage* const image = driver->createImage(rtt, v2s32(0,0), dim);
 			assert(image);
 
 			baseimg = driver->createImage(video::ECF_A8R8G8B8, dim);
@@ -1677,7 +1673,7 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 				return false;
 
 			core::dimension2d<u32> dim = baseimg->getDimension();
-			video::IImage *img = driver->createImage(video::ECF_A8R8G8B8, dim);
+			video::IImage* const img = driver->createImage(video::ECF_A8R8G8B8, dim);
 
 			if (!img) {
 				errorstream << "generateImagePart(): Could not create image "
@@ -1713,7 +1709,7 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 			v2u32 frame_size = baseimg->getDimension();
 			frame_size.Y /= frame_count;
 
-			video::IImage *img = driver->createImage(video::ECF_A8R8G8B8,
+			video::IImage* const img = driver->createImage(video::ECF_A8R8G8B8,
 					frame_size);
 			if (!img) {
 				errorstream <<"generate_image(): Could not create image "
@@ -1848,10 +1844,11 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 			skin->setFont(std_font);
 
 			// Create image of render target
-			video::IImage *image = driver->createImage(rtt, v2s32(0,0), rtt_dim);
+			video::IImage* const image = driver->createImage(rtt, v2s32(0,0), rtt_dim);
 			assert(image);
 
-			video::IImage *new_baseimg = driver->createImage(video::ECF_A8R8G8B8, rtt_dim);
+			video::IImage* const new_baseimg =
+			    driver->createImage(video::ECF_A8R8G8B8, rtt_dim);
 			if (new_baseimg) {
 				baseimg->copyToScaling(new_baseimg);
 				baseimg->drop();
@@ -1878,7 +1875,7 @@ bool generate_image(std::string part_of_name, video::IImage *& baseimg,
 			float Y = mystof(sf.next(","));
 			std::string path = sf.end();
 			if (path_get((char*)"texture",const_cast<char*>(path.c_str()),1,buff,1024)) {
-				video::IImage *image = driver->createImageFromFile(buff);
+			    video::IImage* const image = driver->createImageFromFile(buff);
 
 				if (baseimg == NULL) {
 					errorstream << "generateImagePart(): baseimg == NULL "

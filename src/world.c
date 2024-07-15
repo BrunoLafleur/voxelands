@@ -23,7 +23,7 @@
 
 #include <string.h>
 
-static int world_exists(char* name)
+static int world_exists(const char* name)
 {
 	char buff[2048];
 	char nbuff[256];
@@ -40,11 +40,11 @@ static int world_exists(char* name)
 	return 1;
 }
 
-int world_create(char* name)
+int world_create(const char* name)
 {
 	char buff[2048];
 	char nbuff[256];
-	char nbuff1[256];
+	char nbuff1[512];
 	int i;
 
 	if (!name || !name[0])
@@ -65,7 +65,7 @@ int world_create(char* name)
 	}
 
 	for (i=1; i<100; i++) {
-		snprintf(nbuff1,256,"%s_%d",nbuff,i);
+		snprintf(nbuff1,512,"%s_%d",nbuff,i);
 		if (!path_get("worlds",nbuff1,1,buff,2048)) {
 			if (!path_get("worlds",nbuff1,0,buff,2048))
 				return 1;
@@ -82,12 +82,12 @@ int world_create(char* name)
 	return 1;
 }
 
-int world_load(char* name)
+int world_load(const char* name)
 {
 	char buff[2048];
 	char buff1[2048];
 	char nbuff[256];
-	char* v;
+	const char* v;
 
 	config_clear("world");
 
@@ -132,7 +132,7 @@ int world_import(char* path)
 	char pbuff[2048];
 	char newp[256];
 	char id[256];
-	char* v;
+	const char* v;
 
 	if (!path_exists(path))
 		return 1;
@@ -144,12 +144,10 @@ int world_import(char* path)
 	if (!v)
 		return 1;
 
-	*v = 0;
-
 	config_set("world.path",buff);
 	config_load("world","world.cfg");
-
 	v = config_get("world.path");
+	
 	if (!v || !strcmp(v,buff) || !config_get("world.name")) {
 		config_clear("world");
 		return 1;
@@ -189,9 +187,9 @@ void world_unload()
 }
 
 /* initialise and/or create a world */
-int world_init(char* name)
+int world_init(const char* name)
 {
-	char *v;
+	const char *v;
 
 	if (!name) {
 #ifdef SERVER
@@ -246,9 +244,9 @@ worldlist_t *world_list_get()
 	dirlist_t *e;
 	worldlist_t *l = NULL;
 	worldlist_t *w;
-	char* n;
-	char* v;
-	char* m;
+	const char* n;
+	const char* v;
+	const char* m;
 
 	d = path_dirlist("worlds",NULL);
 

@@ -468,7 +468,7 @@ void sound_free_music(char* token)
 }
 
 /* play sound effect */
-uint32_t sound_play_effect(char* token, float volume, uint8_t loop, v3_t *pos)
+uint32_t sound_play_effect(const char* token, float volume, uint8_t loop, v3_t *pos)
 {
 	sound_instance_t *i;
 	sound_t *e = sound_data.effects.sounds;
@@ -524,7 +524,7 @@ uint32_t sound_play_effect(char* token, float volume, uint8_t loop, v3_t *pos)
 }
 
 /* play music */
-uint32_t sound_play_music(char* token, float volume, uint8_t loop)
+uint32_t sound_play_music(const char* token, float volume, uint8_t loop)
 {
 	sound_t *e = sound_data.music.sounds;
 	if (!sound_data.init || !e)
@@ -637,7 +637,7 @@ void sound_stop(int fade)
 }
 
 /* command setter for sound effects volume */
-int sound_effects_setter(char* value)
+int sound_effects_setter(const char* value)
 {
 	float vf;
 	int v = strtol(value,NULL,10);
@@ -648,7 +648,7 @@ int sound_effects_setter(char* value)
 }
 
 /* command setter for music volume */
-int sound_music_setter(char* value)
+int sound_music_setter(const char* value)
 {
 	float vf;
 	int v = strtol(value,NULL,10);
@@ -659,7 +659,7 @@ int sound_music_setter(char* value)
 }
 
 /* command setter for master volume */
-int sound_master_setter(char* value)
+int sound_master_setter(const char* value)
 {
 	int v = strtol(value,NULL,10);
 	if (v < 0)

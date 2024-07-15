@@ -55,7 +55,7 @@ public:
 	{
 		clear();
 	}
-	~HTTPHeaders() {};
+	virtual ~HTTPHeaders() {};
 	void clear()
 	{
 		m_contentLength = 0;
@@ -86,6 +86,7 @@ private:
 class HTTPRequestHeaders : public HTTPHeaders
 {
 public:
+	virtual ~HTTPRequestHeaders() {};
 	virtual int read(TCPSocket *sock);
 private:
 };
@@ -93,6 +94,7 @@ private:
 class HTTPResponseHeaders : public HTTPHeaders
 {
 public:
+	virtual ~HTTPResponseHeaders() {};
 	virtual int read(TCPSocket *sock);
 	void setResponse(int r) {m_response = r;}
 	int getResponse() {return m_response;}
@@ -124,8 +126,8 @@ private:
 	int handleSpecial(const char* response, std::string content);
 	int handleSpecial(const char* response) {return handleSpecial(response,"");}
 
-	void send(char* data);
-	void send(std::string &data) {send((char*)data.c_str());}
+	void send(const char* data);
+	void send(std::string &data) {send(data.c_str());}
 	void sendHTML(char* data);
 	void sendHTML(std::string &data) {sendHTML((char*)data.c_str());}
 	void sendFile(std::string &file);
@@ -160,7 +162,7 @@ private:
 	Server *m_server;
 };
 
-std::string http_request(char* host, char* url, char* post=NULL, int port=80);
+std::string http_request(const char* host, char* url, char* post=NULL, int port=80);
 std::string http_url_encode(std::string &str);
 
 #endif

@@ -122,7 +122,8 @@ scene::IAnimatedMesh* createNodeBoxMesh(std::vector<NodeBox> nodeboxes, v3f scal
 
 		u16 indices[6] = {0,1,2,2,3,0};
 		for (u32 i=0; i<6; ++i) {
-			scene::IMeshBuffer *buf = new scene::SMeshBuffer();
+			scene::IMeshBuffer* const buf = new scene::SMeshBuffer();
+			
 			buf->append(vertices + 4 * i, 4, indices, 6);
 			// Set default material
 			buf->getMaterial().setFlag(video::EMF_LIGHTING, false);
@@ -134,7 +135,8 @@ scene::IAnimatedMesh* createNodeBoxMesh(std::vector<NodeBox> nodeboxes, v3f scal
 		}
 	}
 
-	scene::SAnimatedMesh *anim_mesh = new scene::SAnimatedMesh(mesh);
+	scene::SAnimatedMesh* const anim_mesh = new scene::SAnimatedMesh(mesh);
+	
 	mesh->drop();
 	scaleMesh(anim_mesh, scale);  // also recalculates bounding box
 	return anim_mesh;
@@ -169,7 +171,8 @@ scene::IAnimatedMesh* createModelMesh(scene::ISceneManager* smgr, std::string mo
 	// irrlicht 1.8+ we just manually load the mesh
 	scene::IMeshLoader *loader;
 	u32 lc = smgr->getMeshLoaderCount();
-	io::IReadFile* file = smgr->getFileSystem()->createAndOpenFile(buff);
+	io::IReadFile* const file = smgr->getFileSystem()->createAndOpenFile(buff);
+	
 	if (!file)
 		return 0;
 	for (u32 i=0; i<lc; i++) {
@@ -346,11 +349,13 @@ static scene::IAnimatedMesh* extrudeARGB(u32 twidth, u32 theight, u8 *data)
 	delete[] solidity;
 
 	// Add to mesh
-	scene::SMesh *mesh = new scene::SMesh();
+	scene::SMesh* const mesh = new scene::SMesh();
 	mesh->addMeshBuffer(buf);
 	buf->drop();
-	scene::SAnimatedMesh *anim_mesh = new scene::SAnimatedMesh(mesh);
+	
+	scene::SAnimatedMesh* const anim_mesh = new scene::SAnimatedMesh(mesh);
 	mesh->drop();
+	
 	return anim_mesh;
 }
 
@@ -369,12 +374,12 @@ scene::IAnimatedMesh* createExtrudedMesh(video::ITexture *texture,
 		mesh = extrudeARGB(size.Width, size.Height, (u8*) data);
 		texture->unlock();
 	}else{
-		video::IImage *img1 = driver->createImageFromData(format, size, texture->lock(MY_ETLM_READ_ONLY));
+		video::IImage* const img1 = driver->createImageFromData(format, size, texture->lock(MY_ETLM_READ_ONLY));
 		if (img1 == NULL)
 			return NULL;
 
 		// img1 is in the texture's color format, convert to 8-bit ARGB
-		video::IImage *img2 = driver->createImage(video::ECF_A8R8G8B8, size);
+		video::IImage* const img2 = driver->createImage(video::ECF_A8R8G8B8, size);
 		if (img2 != NULL) {
 			img1->copyTo(img2);
 
@@ -563,12 +568,13 @@ video::ITexture *generateTextureFromMesh(scene::IMesh *mesh,
 	driver->setRenderTarget(rtt, false, true, video::SColor(0,0,0,0));
 
 	// Get a scene manager
-	scene::ISceneManager *smgr_main = device->getSceneManager();
+	scene::ISceneManager* const smgr_main = device->getSceneManager();
 	assert(smgr_main);
-	scene::ISceneManager *smgr = smgr_main->createNewSceneManager();
+	scene::ISceneManager* const smgr = smgr_main->createNewSceneManager();
 	assert(smgr);
 
-	scene::IMeshSceneNode* meshnode = smgr->addMeshSceneNode(mesh, NULL, -1, v3f(0,0,0), v3f(0,0,0), v3f(1,1,1), true);
+	scene::IMeshSceneNode* const meshnode =
+	    smgr->addMeshSceneNode(mesh, NULL, -1, v3f(0,0,0), v3f(0,0,0), v3f(1,1,1), true);
 	meshnode->setMaterialFlag(video::EMF_LIGHTING, true);
 	meshnode->setMaterialFlag(video::EMF_ANTI_ALIASING, true);
 	meshnode->setMaterialFlag(video::EMF_BILINEAR_FILTER, true);

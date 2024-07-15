@@ -332,9 +332,8 @@ class ToolItem : public InventoryItem
 {
 public:
 	ToolItem(content_t content, u16 wear, u16 data):
-		InventoryItem(1,data)
+			InventoryItem(1,data),m_wear(wear)
 	{
-		m_wear = wear;
 		m_content = content_toolitem_features(content).content;
 	}
 	/*
@@ -700,7 +699,7 @@ public:
 
 private:
 	// -1 if not found
-	const s32 getListIndex(const std::string &name) const;
+	s32 getListIndex(const std::string &name) const;
 
 	core::array<InventoryList*> m_lists;
 	InventoryDiff m_diff;

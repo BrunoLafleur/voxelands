@@ -84,7 +84,7 @@ int auth_privs2str(uint64_t privs, char* buff, int size)
 }
 
 /* convert a string to privs */
-uint64_t auth_str2privs(char* str)
+uint64_t auth_str2privs(const char* str)
 {
 	uint64_t privs = 0;
 	char buff[256];
@@ -120,7 +120,7 @@ uint64_t auth_str2privs(char* str)
 }
 
 /* init auth system for the given file */
-int auth_init(char* file)
+int auth_init(const char* file)
 {
 	char* path;
 	if (!auth.mutex) {

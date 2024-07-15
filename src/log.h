@@ -27,6 +27,7 @@
 #define LOG_HEADER
 
 #include <string>
+#include "jmutex.h"
 
 /*
 	Use this for logging everything.
@@ -45,6 +46,8 @@ enum LogMessageLevel {
 class ILogOutput
 {
 public:
+	virtual ~ILogOutput() {};
+	
 	/* line: Full line with timestamp, level and thread */
 	virtual void printLog(const std::string &line){};
 	/* line: Only actual printed text */
@@ -57,19 +60,11 @@ void log_add_output_all_levs(ILogOutput *out);
 
 void log_register_thread(const std::string &name);
 
-void log_printline(enum LogMessageLevel lev, const std::string &text);
-
-#define LOGLINEF(lev, ...)\
-{\
-	char buf[10000];\
-	snprintf(buf, 10000, __VA_ARGS__);\
-	log_printline(lev, buf);\
-}
-
 extern std::ostream errorstream;
 extern std::ostream actionstream;
 extern std::ostream infostream;
 extern std::ostream verbosestream;
+extern jthread::JMutex log_mutex;
 
 #endif
 

@@ -100,50 +100,50 @@ typedef struct worldlist_s {
 /* defined in string.c */
 char* trim(char* str);
 /*char* strdup(const char* str);*/
-int str_sanitise(char* dest, int size, char* str);
+int str_sanitise(char* dest, int size,const char* str);
 int strappend(char* dest, int size, char* str);
-int parse_bool(char* str);
-int str_tov3t(char* str, v3_t *v);
+int parse_bool(const char* str);
+int str_tov3t(const char* str, v3_t *v);
 int str_topwd(char* name, char* pass, char* buff, int size);
 
 /* defined in config.c */
-char* config_get(char* name);
-int config_get_int(char* name);
-int64_t config_get_int64(char* name);
-float config_get_float(char* name);
-int config_get_bool(char* name);
-int config_get_v3t(char* name, v3_t *value);
-void config_set(char* name, char* value);
+const char* config_get(const char* name);
+int config_get_int(const char* name);
+int64_t config_get_int64(const char* name);
+float config_get_float(const char* name);
+int config_get_bool(const char* name);
+int config_get_v3t(const char* name, v3_t *value);
+void config_set(const char* name,const char* value);
 int config_set_command(command_context_t *ctx, array_t *args);
-void config_set_int(char* name, int value);
-void config_set_int64(char* name, int64_t value);
-void config_set_float(char* name, float value);
-void config_set_default(char* name, char* value, int (*setter)(char* v));
-void config_set_default_int(char* name, int value, int (*setter)(char* v));
-void config_set_default_float(char* name, float value, int (*setter)(char* v));
-void config_load(char* type, char* file);
+void config_set_int(const char* name, int value);
+void config_set_int64(const char* name, int64_t value);
+void config_set_float(const char* name, float value);
+void config_set_default(const char* name,const char* value, int (*setter)(const char* v));
+void config_set_default_int(const char* name, int value, int (*setter)(const char* v));
+void config_set_default_float(const char* name, float value, int (*setter)(const char* v));
+void config_load(const char* type,const char* file);
 int config_load_command(command_context_t *ctx, array_t *args);
 int config_ignore_command(command_context_t *ctx, array_t *args);
 void config_init(int argc, char** argv);
-void config_save(char* section, char* type, char* file);
-void config_clear(char* section);
+void config_save(const char* section,const char* type,const char* file);
+void config_clear(const char* section);
 
 /* defined in config_default.c */
 void config_default_init(void);
 void config_default_creative(void);
 void config_default_survival(void);
-int config_default_gamemode(char* mode);
+int config_default_gamemode(const char* mode);
 
 /* defined in log.c */
-int log_minlevel_setter(char* v);
-int log_maxlevel_setter(char* v);
-int log_sminlevel_setter(char* v);
-int log_smaxlevel_setter(char* v);
-int log_cminlevel_setter(char* v);
-int log_cmaxlevel_setter(char* v);
-int log_file_setter(char* v);
-void vlprint(uint8_t type, char* str);
-void vlprintf(uint8_t type, char* fmt,...);
+int log_minlevel_setter(const char* v);
+int log_maxlevel_setter(const char* v);
+int log_sminlevel_setter(const char* v);
+int log_smaxlevel_setter(const char* v);
+int log_cminlevel_setter(const char* v);
+int log_cmaxlevel_setter(const char* v);
+int log_file_setter(const char* v);
+void vlprint(uint8_t type,const char* str);
+void vlprintf(uint8_t type,const char* fmt,...);
 
 /* defined in utf8.c */
 int utf8_seqlen(char* str);
@@ -198,11 +198,11 @@ int command_clearobjects(command_context_t *ctx, array_t *args);
 int command_setpassword(command_context_t *ctx, array_t *args);
 
 /* defined in world.c */
-int world_create(char* name);
-int world_load(char* name);
+int world_create(const char* name);
+int world_load(const char* name);
 int world_import(char* path);
 void world_unload(void);
-int world_init(char* name);
+int world_init(const char* name);
 void world_exit(void);
 worldlist_t *world_list_get(void);
 void world_list_free(worldlist_t *l);
@@ -212,7 +212,7 @@ void world_list_free(worldlist_t *l);
 #include <string>
 class Client;
 void bridge_register_client(Client *c);
-std::string bridge_config_get(char* name);
+std::string bridge_config_get(const char* name);
 #endif
 
 /* bridge stuff TODO: remove */

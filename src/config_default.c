@@ -55,13 +55,23 @@ void config_default_init()
 	config_set_default("client.video.size.height","600",NULL);
 	config_set_default("client.video.driver","opengl",NULL);
 	config_set_default("client.video.hpfpu","true",NULL);
-
+	
+#if USE_AUDIO == 1
 	config_set_default("client.sound.volume","50",sound_master_setter);
 	config_set_default("client.sound.volume.effects","50",sound_effects_setter);
 	config_set_default("client.sound.volume.music","50",sound_music_setter);
+#else
+	config_set_default("client.sound.volume","50",NULL);
+	config_set_default("client.sound.volume.effects","50",NULL);
+	config_set_default("client.sound.volume.music","50",NULL);
+#endif
 	config_set_default("client.sound.mumble","true",NULL);
 #if USE_MUMBLE == 0
+# if USE_AUDIO == 1
 	config_set_default("client.name",NULL,sound_mumble_set_ident);
+# else
+	config_set_default("client.name",NULL,NULL);
+# endif
 #endif
 
 	config_set_default("client.graphics.mesh.lod","3",NULL);
@@ -230,7 +240,7 @@ void config_default_survival()
 	config_set_default("world.game.mob.spawn.level","destructive",NULL);
 }
 
-int config_default_gamemode(char* mode)
+int config_default_gamemode(const char* mode)
 {
 	if (mode && !strcmp(mode,"creative")) {
 		config_default_creative();

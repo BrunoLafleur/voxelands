@@ -123,6 +123,8 @@ struct MapEditEvent
 class MapEventReceiver
 {
 public:
+	virtual ~MapEventReceiver() {};
+	
 	// event shall be deleted by caller after the call.
 	virtual void onMapEditEvent(MapEditEvent *event) = 0;
 };
@@ -321,6 +323,7 @@ protected:
 	core::map<MapEventReceiver*, bool> m_event_receivers;
 
 	core::map<v2s16, MapSector*> m_sectors;
+	JMutex m_sectors_mutex;
 
 	// Be sure to set this to NULL when the cached sector is deleted
 	MapSector *m_sector_cache;
@@ -483,7 +486,7 @@ public:
 			s32 id
 	);
 
-	~ClientMap();
+	virtual ~ClientMap();
 
 	s32 mapType() const
 	{
@@ -549,7 +552,7 @@ public:
 private:
 	Client *m_client;
 
-	core::aabbox3d<f32> m_box;
+	const core::aabbox3d<f32> m_box;
 
 	// This is the master heightmap mesh
 	//scene::SMesh *mesh;
@@ -563,9 +566,9 @@ private:
 	v3s16 m_camera_offset;
 	JMutex m_camera_mutex;
 
-	bool m_render_trilinear;
-	bool m_render_bilinear;
-	bool m_render_anisotropic;
+	const bool m_render_trilinear;
+	const bool m_render_bilinear;
+	const bool m_render_anisotropic;
 
 	core::map<v2s16, bool> m_last_drawn_sectors;
 };

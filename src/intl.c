@@ -567,7 +567,7 @@ char* intl_nlookup(intl_t *intl, char* s1, char* s2, int n)
 /* initialise an intl_t by loading in an mo file */
 int intl_load(intl_t *intl, char* file)
 {
-	char fbuff[2048];
+	char fbuff[2049];
 	char lbuff[128];
 	file_t *f;
 	uint32_t magic;
@@ -649,7 +649,7 @@ int intl_load(intl_t *intl, char* file)
 	if (e)
 		*e = 0;
 
-	strncpy(fbuff,head+13,2048);
+	strncpy(fbuff,head+13,2048);fbuff[2048] = '\0';
 	if (e)
 		*e = '\n';
 	head = fbuff;

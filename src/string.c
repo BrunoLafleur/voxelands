@@ -83,7 +83,7 @@ int strappend(char* dest, int size, char* str)
 }
 
 /* makes a string safe for use as a file or directory name */
-int str_sanitise(char* dest, int size, char* str)
+int str_sanitise(char* dest, int size,const char* str)
 {
 	int o = 0;
 	int i = 0;
@@ -107,7 +107,7 @@ int str_sanitise(char* dest, int size, char* str)
 }
 
 /* parse a string into a bool true/false 1/0 */
-int parse_bool(char* str)
+int parse_bool(const char* str)
 {
 	if (str) {
 		if (!strcmp(str,"true"))
@@ -128,9 +128,9 @@ int parse_bool(char* str)
 }
 
 /* parse a string to a v3_t */
-int str_tov3t(char* str, v3_t *v)
+int str_tov3t(const char* str, v3_t *v)
 {
-	char buff[256];
+	char buff[257];
 	char* b;
 	char* s1;
 	char* s2;
@@ -139,7 +139,7 @@ int str_tov3t(char* str, v3_t *v)
 	if (!str)
 		return 1;
 
-	strncpy(buff,str,256);
+	strncpy(buff,str,256);buff[256] = '\0';
 
 	b = strchr(buff,'(');
 	if (!b)

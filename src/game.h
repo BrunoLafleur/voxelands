@@ -39,7 +39,7 @@ class KeyList : protected core::list<KeyPress>
 	typedef core::list<KeyPress> super;
 	typedef super::Iterator Iterator;
 	typedef super::ConstIterator ConstIterator;
-
+	
 	virtual ConstIterator find(const KeyPress &key) const
 	{
 		ConstIterator f(begin());
@@ -65,6 +65,8 @@ class KeyList : protected core::list<KeyPress>
 	}
 
 public:
+	virtual ~KeyList() {};
+
 	void clear() { super::clear(); }
 
 	void set(const KeyPress &key)

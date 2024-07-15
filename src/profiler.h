@@ -39,7 +39,7 @@
 class Profiler
 {
 public:
-	Profiler()
+	Profiler() : m_mutex(),m_data(),m_avgcounts()
 	{
 		m_mutex.Init();
 	}

@@ -57,7 +57,7 @@ void nvp_free(nvp_t **list, int data)
 }
 
 /* get a name/value pair */
-nvp_t *nvp_get(nvp_t **list, char* name)
+nvp_t *nvp_get(nvp_t **list,const char* name)
 {
 	nvp_t *c = *list;
 	unsigned int h = hash(name);
@@ -72,7 +72,7 @@ nvp_t *nvp_get(nvp_t **list, char* name)
 }
 
 /* get the value of a name/value pair */
-char* nvp_get_str(nvp_t **list, char* name)
+char* nvp_get_str(nvp_t **list,const char* name)
 {
 	nvp_t *c = nvp_get(list,name);
 	if (c)
@@ -81,7 +81,7 @@ char* nvp_get_str(nvp_t **list, char* name)
 }
 
 /* get the value of a name/value pair as an int value */
-int nvp_get_int(nvp_t **list, char* name)
+int nvp_get_int(nvp_t **list,const char* name)
 {
 	nvp_t *c = nvp_get(list,name);
 	if (c)
@@ -90,7 +90,7 @@ int nvp_get_int(nvp_t **list, char* name)
 }
 
 /* get the value of a name/value pair as a float value */
-float nvp_get_float(nvp_t **list, char* name)
+float nvp_get_float(nvp_t **list,const char* name)
 {
 	nvp_t *c = nvp_get(list,name);
 	if (c)
@@ -99,7 +99,7 @@ float nvp_get_float(nvp_t **list, char* name)
 }
 
 /* get the value of a name/value pair as a boolean value */
-int nvp_get_bool(nvp_t **list, char* name)
+int nvp_get_bool(nvp_t **list,const char* name)
 {
 	nvp_t *c = nvp_get(list,name);
 	if (c && (!strcmp(c->value,"1") || !strcmp(c->value,"true")))
@@ -108,7 +108,7 @@ int nvp_get_bool(nvp_t **list, char* name)
 }
 
 /* get a name/value pair's data value */
-void *nvp_get_data(nvp_t **list, char* name)
+void *nvp_get_data(nvp_t **list,const char* name)
 {
 	nvp_t *c = nvp_get(list,name);
 	if (c)
@@ -117,7 +117,7 @@ void *nvp_get_data(nvp_t **list, char* name)
 }
 
 /* set the value of a name/value pair */
-void nvp_set(nvp_t **list, char* name, char* value, void *data)
+void nvp_set(nvp_t **list,const char* name,const char* value, void *data)
 {
 	nvp_t *c = *list;
 	unsigned int h = hash(name);
@@ -156,7 +156,7 @@ void nvp_set(nvp_t **list, char* name, char* value, void *data)
 }
 
 /* set a name/value pair to an int value */
-void nvp_set_int(nvp_t **list, char* name, int value)
+void nvp_set_int(nvp_t **list,const char* name, int value)
 {
 	char str[20];
 	sprintf(str,"%d",value);
@@ -164,7 +164,7 @@ void nvp_set_int(nvp_t **list, char* name, int value)
 }
 
 /* set a name/value pair to a float value */
-void nvp_set_float(nvp_t **list, char* name, float value)
+void nvp_set_float(nvp_t **list,const char* name, float value)
 {
 	char str[20];
 	sprintf(str,"%f",value);
@@ -172,7 +172,7 @@ void nvp_set_float(nvp_t **list, char* name, float value)
 }
 
 /* set a name/value pair to a float value */
-void nvp_set_v3t(nvp_t **list, char* name, v3_t *value)
+void nvp_set_v3t(nvp_t **list,const char* name, v3_t *value)
 {
 	char str[128];
 	sprintf(str,"(%f,%f,%f)",value->x,value->y,value->z);
@@ -180,7 +180,7 @@ void nvp_set_v3t(nvp_t **list, char* name, v3_t *value)
 }
 
 /* parse a name=value string to an nvp list */
-void nvp_from_str(nvp_t **list, char* str)
+void nvp_from_str(nvp_t **list,const char* str)
 {
 	char name[512];
 	char value[512];

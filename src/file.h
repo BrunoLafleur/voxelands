@@ -24,8 +24,8 @@ typedef struct file_s {
 #endif
 
 /* defined in file.c */
-file_t *file_load(char* type, char *name);
-file_t *file_create(char* type, char *name);
+file_t *file_load(const char* type,const char *name);
+file_t *file_create(const char* type,const char *name);
 void file_free(file_t *file);
 void file_flush(file_t *file);
 int file_find(file_t *file, int offset, unsigned char value);
@@ -40,8 +40,8 @@ float file_read_float(file_t *file);
 int file_seek(file_t *file, int offset, int origin);
 int file_tell(file_t *file);
 void *file_get(file_t *file);
-int file_write(file_t *file, void *buff, int size);
-int file_writef(file_t *file, char* fmt, ...);
+int file_write(file_t *file,const  void *buff, int size);
+int file_writef(file_t *file,const char* fmt, ...);
 
 #ifdef __cplusplus
 }

@@ -145,15 +145,16 @@ QueuedMeshUpdate * MeshUpdateQueue::pop()
 void * MeshUpdateThread::Thread()
 {
 	ThreadStarted();
-
+	log_mutex.Lock();
 	log_register_thread("MeshUpdateThread");
+	log_mutex.Unlock();
 
 	DSTACK(__FUNCTION_NAME);
 
 	BEGIN_DEBUG_EXCEPTION_HANDLER
 
 	while (getRun()) {
-		QueuedMeshUpdate *q = m_queue_in.pop();
+		QueuedMeshUpdate* const q = m_queue_in.pop();
 		if (q == NULL) {
 			sleep_ms(3);
 			continue;
@@ -162,7 +163,7 @@ void * MeshUpdateThread::Thread()
 		ScopeProfiler sp(g_profiler, "Client: Mesh making");
 
 		if (q->data && q->data->m_refresh_only) {
-			MapBlock *block = m_env->getMap().getBlockNoCreateNoEx(q->p);
+			MapBlock* const block = m_env->getMap().getBlockNoCreateNoEx(q->p);
 			if (block && block->mesh) {
 				{
 					JMutexAutoLock lock(block->mesh_mutex);
@@ -170,7 +171,7 @@ void * MeshUpdateThread::Thread()
 				}
 			}
 		}else{
-			MapBlock *block = m_env->getMap().getBlockNoCreateNoEx(q->p);
+			MapBlock* const block = m_env->getMap().getBlockNoCreateNoEx(q->p);
 			if (block && block->mesh) {
 				block->mesh->generate(q->data, m_camera_offset, &block->mesh_mutex);
 				if (q->ack_block_to_server) {
@@ -181,7 +182,7 @@ void * MeshUpdateThread::Thread()
 					m_queue_out.push_back(r);
 				}
 			}else if (block) {
-				MapBlockMesh *mesh_new = new MapBlockMesh(q->data, m_camera_offset);
+				MapBlockMesh* const mesh_new = new MapBlockMesh(q->data, m_camera_offset);
 				MeshUpdateResult r;
 				r.p = q->p;
 				r.mesh = mesh_new;
@@ -252,9 +253,9 @@ Client::Client(
 	{
 		//JMutexAutoLock envlock(m_env_mutex); //bulk comment-out
 
-		Player *player = new LocalPlayer();
+		Player* const player = new LocalPlayer();
 
-		char* v = config_get("client.name");
+		const char* v = config_get("client.name");
 		if (v) {
 			player->updateName(v);
 		}else{
@@ -373,7 +374,7 @@ void Client::step(float dtime)
 
 			//JMutexAutoLock envlock(m_env_mutex); //bulk comment-out
 
-			Player *myplayer = m_env.getLocalPlayer();
+			Player* const myplayer = m_env.getLocalPlayer();
 			assert(myplayer != NULL);
 
 			// Send TOSERVER_INIT
@@ -475,7 +476,7 @@ void Client::step(float dtime)
 		//JMutexAutoLock lock(m_env_mutex); //bulk comment-out
 
 		// Control local player (0ms)
-		LocalPlayer *player = m_env.getLocalPlayer();
+		LocalPlayer* const player = m_env.getLocalPlayer();
 		assert(player != NULL);
 		player->applyControl(dtime);
 
@@ -583,7 +584,7 @@ void Client::step(float dtime)
 
 		while (m_mesh_update_thread.m_queue_out.size() > 0) {
 			MeshUpdateResult r = m_mesh_update_thread.m_queue_out.pop_front();
-			MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(r.p);
+			MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(r.p);
 			if (block) {
 				if (r.mesh != NULL) {
 					JMutexAutoLock lock(block->mesh_mutex);
@@ -734,7 +735,7 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 			//JMutexAutoLock envlock(m_env_mutex); //bulk comment-out
 
 			// Set player position
-			Player *player = m_env.getLocalPlayer();
+			Player* const player = m_env.getLocalPlayer();
 			assert(player != NULL);
 			player->setPosition(playerpos_f);
 		}
@@ -754,7 +755,7 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 
 		{
 			// Reply to server
-			char *v;
+			const char *v;
 			std::string chardef = std::string(PLAYER_DEFAULT_CHARDEF);
 			v = config_get("client.character");
 			if (v)
@@ -949,7 +950,7 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 				if (peer_id == our_peer_id)
 					continue;
 
-				Player *player = m_env.getPlayer(peer_id);
+				Player* player = m_env.getPlayer(peer_id);
 
 				// Create a player if it doesn't exist
 				if (player == NULL) {
@@ -971,7 +972,7 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 				Remove those players from the environment that
 				weren't listed by the server.
 			*/
-			array_t *players = m_env.getPlayers();
+			array_t* const players = m_env.getPlayers();
 			Player *player;
 			uint32_t i;
 			for (i=0; i<players->length; i++) {
@@ -998,7 +999,7 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 	{
 		std::string datastring((char*)&data[2], datasize-2);
 		std::istringstream is(datastring, std::ios_base::binary);
-		LocalPlayer *player = m_env.getLocalPlayer();
+		LocalPlayer* const player = m_env.getLocalPlayer();
 		assert(player != NULL);
 		u8 hp = readU8(is);
 		u8 air = readU8(is);
@@ -1029,7 +1030,7 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 			std::string datastring((char*)&data[2], datasize-2);
 			std::istringstream is(datastring, std::ios_base::binary);
 
-			Player *player = m_env.getLocalPlayer();
+			Player* const player = m_env.getLocalPlayer();
 			assert(player != NULL);
 
 			player->inventory.deSerialize(is);
@@ -1046,7 +1047,7 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 			std::string datastring((char*)&data[2], datasize-2);
 			std::istringstream is(datastring, std::ios_base::binary);
 
-			Player *player = m_env.getLocalPlayer();
+			Player* const player = m_env.getLocalPlayer();
 			assert(player != NULL);
 
 			u16 list_count = readU16(is);
@@ -1090,7 +1091,7 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 			u8 anim_id = readU8(is);
 			content_t pointed = readU16(is);
 
-			Player *player = m_env.getPlayer(peer_id);
+			Player* const player = m_env.getPlayer(peer_id);
 
 			// Skip if player doesn't exist
 			if (player == NULL)
@@ -1136,7 +1137,7 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 			is.read((char*)buf, 4);
 			s32 yaw_i = readS32(buf);
 
-			Player *player = m_env.getPlayer(peer_id);
+			Player* const player = m_env.getPlayer(peer_id);
 
 			// Skip if player doesn't exist
 			if (player == NULL)
@@ -1329,7 +1330,7 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 	{
 		std::string datastring((char*)&data[2], datasize-2);
 		std::istringstream is(datastring, std::ios_base::binary);
-		Player *player = m_env.getLocalPlayer();
+		Player* const player = m_env.getLocalPlayer();
 		assert(player != NULL);
 		v3f pos = readV3F1000(is);
 		f32 pitch = readF1000(is);
@@ -1372,7 +1373,7 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 
 		for (u16 i = 0; i < count; ++i) {
 			u16 peer_id = readU16(is);
-			Player *player = m_env.getPlayer(peer_id);
+			Player* const player = m_env.getPlayer(peer_id);
 
 			if (player == NULL) {
 				for (int j=0; j<icount; j++) {
@@ -1432,9 +1433,9 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 				// for 1409 servers, this stops players appearing naked
 				if (icount == 5) {
 					{
-						InventoryList *inv = player->inventory.getList("shirt");
+						InventoryList* const inv = player->inventory.getList("shirt");
 						if (!inv->getItem(0)) {
-							InventoryItem *item = inv->changeItem(
+							InventoryItem* const item = inv->changeItem(
 								0,
 								InventoryItem::create(CONTENT_CLOTHESITEM_COTTON_TSHIRT_GREEN,1)
 							);
@@ -1443,9 +1444,9 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 						}
 					}
 					{
-						InventoryList *inv = player->inventory.getList("pants");
+						InventoryList* const inv = player->inventory.getList("pants");
 						if (!inv->getItem(0)) {
-							InventoryItem *item = inv->changeItem(
+							InventoryItem* const item = inv->changeItem(
 								0,
 								InventoryItem::create(CONTENT_CLOTHESITEM_CANVAS_PANTS_BLUE,1)
 							);
@@ -1454,9 +1455,9 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 						}
 					}
 					{
-						InventoryList *inv = player->inventory.getList("boots");
+						InventoryList* const inv = player->inventory.getList("boots");
 						if (!inv->getItem(0)) {
-							InventoryItem *item = inv->changeItem(
+							InventoryItem* const item = inv->changeItem(
 								0,
 								InventoryItem::create(CONTENT_CLOTHESITEM_LEATHER_SHOES,1)
 							);
@@ -1584,7 +1585,7 @@ void Client::throwItem(v3f dir, u16 item)
 	std::ostringstream os(std::ios_base::binary);
 	u8 buf[15];
 
-	LocalPlayer* player = m_env.getLocalPlayer();
+	LocalPlayer* const player = m_env.getLocalPlayer();
 
 	// Write command
 	writeU16(buf, TOSERVER_THROWITEM);
@@ -1624,7 +1625,7 @@ void Client::useItem()
 
 #if USE_AUDIO == 1
 	{
-		InventoryItem *item = (InventoryItem*)m_env.getLocalPlayer()->getWieldItem();
+		InventoryItem* const item = (InventoryItem*)m_env.getLocalPlayer()->getWieldItem();
 		if (!item)
 			return;
 		std::string snd("");
@@ -1646,16 +1647,16 @@ void Client::clickActiveObject(u8 button, u16 id, u16 item_i)
 		return;
 	}
 
-	Player *player = m_env.getLocalPlayer();
+	Player* const player = m_env.getLocalPlayer();
 	if (player == NULL)
 		return;
 
-	ClientActiveObject *obj = m_env.getActiveObject(id);
+	ClientActiveObject* const obj = m_env.getActiveObject(id);
 	if (obj) {
 		if (button == 0) {
 			content_t punch_item = CONTENT_IGNORE;
 
-			InventoryList *mlist = player->inventory.getList("main");
+			InventoryList* const mlist = player->inventory.getList("main");
 			if (mlist != NULL) {
 				InventoryItem *item = mlist->getItem(item_i);
 				if (item)
@@ -1765,7 +1766,7 @@ void Client::sendChatMessage(const std::wstring &msg)
 void Client::sendChangePassword(const std::wstring oldpassword,
 		const std::wstring newpassword)
 {
-	Player *player = m_env.getLocalPlayer();
+	Player* const player = m_env.getLocalPlayer();
 	if(player == NULL)
 		return;
 
@@ -1846,7 +1847,7 @@ void Client::sendRespawn()
 
 void Client::sendPlayerPos()
 {
-	LocalPlayer *myplayer = m_env.getLocalPlayer();
+	LocalPlayer* const myplayer = m_env.getLocalPlayer();
 	if (myplayer == NULL)
 		return;
 
@@ -1901,7 +1902,7 @@ void Client::sendPlayerPos()
 
 void Client::sendPlayerItem(u16 item)
 {
-	Player *myplayer = m_env.getLocalPlayer();
+	Player* const myplayer = m_env.getLocalPlayer();
 	if(myplayer == NULL)
 		return;
 
@@ -2011,14 +2012,14 @@ LocalPlayer* Client::getLocalPlayer()
 void Client::setPlayerControl(PlayerControl &control)
 {
 	//JMutexAutoLock envlock(m_env_mutex); //bulk comment-out
-	LocalPlayer *player = m_env.getLocalPlayer();
+	LocalPlayer* const player = m_env.getLocalPlayer();
 	assert(player != NULL);
 	player->control = control;
 }
 
 void Client::selectPlayerItem(u16 item)
 {
-	LocalPlayer *player = m_env.getLocalPlayer();
+	LocalPlayer* const player = m_env.getLocalPlayer();
 	assert(player != NULL);
 
 	player->wieldItem(item);
@@ -2041,7 +2042,7 @@ bool Client::getLocalInventoryUpdated()
 void Client::getLocalInventory(Inventory &dst)
 {
 	//JMutexAutoLock envlock(m_env_mutex); //bulk comment-out
-	Player *player = m_env.getLocalPlayer();
+	Player* const player = m_env.getLocalPlayer();
 	assert(player != NULL);
 	dst = player->inventory;
 }
@@ -2088,14 +2089,14 @@ Inventory* Client::getInventory(const InventoryLocation *loc)
 	break;
 	case InventoryLocation::CURRENT_PLAYER:
 	{
-		Player *player = m_env.getLocalPlayer();
+		Player* const player = m_env.getLocalPlayer();
 		assert(player != NULL);
 		return &player->inventory;
 	}
 	break;
 	case InventoryLocation::PLAYER:
 	{
-		Player *player = m_env.getPlayer(loc->name.c_str());
+		Player* const player = m_env.getPlayer(loc->name.c_str());
 		if(!player)
 			return NULL;
 		return &player->inventory;
@@ -2103,7 +2104,7 @@ Inventory* Client::getInventory(const InventoryLocation *loc)
 	break;
 	case InventoryLocation::NODEMETA:
 	{
-		NodeMetadata *meta = m_env.getMap().getNodeMetadata(loc->p);
+		NodeMetadata* const meta = m_env.getMap().getNodeMetadata(loc->p);
 		if(!meta)
 			return NULL;
 		return meta->getInventory();
@@ -2160,7 +2161,7 @@ void Client::printDebugInfo(std::ostream &os)
 
 u16 Client::getHP()
 {
-	Player *player = m_env.getLocalPlayer();
+	Player* const player = m_env.getLocalPlayer();
 	if (!player)
 		return 0;
 	return player->health;
@@ -2168,7 +2169,7 @@ u16 Client::getHP()
 
 u16 Client::getAir()
 {
-	Player *player = m_env.getLocalPlayer();
+	Player* const player = m_env.getLocalPlayer();
 	if (!player)
 		return 0;
 	return player->air;
@@ -2176,7 +2177,7 @@ u16 Client::getAir()
 
 u16 Client::getHunger()
 {
-	Player *player = m_env.getLocalPlayer();
+	Player* const player = m_env.getLocalPlayer();
 	if (!player)
 		return 0;
 	return player->hunger;
@@ -2184,7 +2185,7 @@ u16 Client::getHunger()
 
 float Client::getEnergy()
 {
-	LocalPlayer *player = m_env.getLocalPlayer();
+	LocalPlayer* const player = m_env.getLocalPlayer();
 	if (!player)
 		return 0.0;
 	return player->getEnergy();
@@ -2287,7 +2288,9 @@ float Client::getRTT(void)
 // foot: 0 = left, 1 = right
 void Client::playStepSound(int foot)
 {
+#if USE_AUDIO == 1
 	sound_play_step(&m_env.getMap(),m_env.getLocalPlayer()->getPosition(),foot,1.0);
+#endif
 }
 
 void Client::playDigSound(content_t c)
@@ -2299,8 +2302,10 @@ void Client::playDigSound(content_t c)
 	}
 	if (c == CONTENT_IGNORE)
 		c = CONTENT_AIR;
-
+	
+#if USE_AUDIO == 1
 	sound_play_dig(c,m_env.getLocalPlayer()->getPosition());
+#endif
 }
 
 void Client::playPlaceSound(content_t c)
@@ -2308,6 +2313,7 @@ void Client::playPlaceSound(content_t c)
 	if (c == CONTENT_IGNORE)
 		c = getPointedContent();
 
+#if USE_AUDIO == 1
 	ContentFeatures *f = &content_features(c);
 	if (f->sound_place != "") {
 		sound_play_effect((char*)f->sound_place.c_str(),1.0,0,NULL);
@@ -2320,15 +2326,20 @@ void Client::playPlaceSound(content_t c)
 	default:
 		sound_play_effect("place",1.0,0,NULL);
 	}
+#endif
 }
 
 void Client::playSound(std::string &name, bool loop)
 {
+#if USE_AUDIO == 1
 	sound_play_effect((char*)name.c_str(),1.0,loop,NULL);
+#endif
 }
 
 void Client::playSoundAt(std::string &name, v3f pos, bool loop)
 {
+#if USE_AUDIO == 1
 	v3_t p = {pos.X,pos.Y,pos.Z};
 	sound_play_effect((char*)name.c_str(),1.0,loop,&p);
+#endif
 }

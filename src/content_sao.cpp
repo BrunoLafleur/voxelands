@@ -96,6 +96,7 @@ MobSAO::MobSAO(ServerEnvironment *env, u16 id, v3f pos, content_t type):
 	m_special_count(0),
 	m_tamed_chance(0),
 	m_disturb_timer(100000),
+	m_disturbing_player(),
 	m_random_disturb_timer(0),
 	m_walk_around(false),
 	m_walk_around_timer(0),
@@ -127,6 +128,7 @@ MobSAO::MobSAO(ServerEnvironment *env, u16 id, v3f pos, v3f speed, content_t typ
 	m_special_count(0),
 	m_tamed_chance(0),
 	m_disturb_timer(100000),
+	m_disturbing_player(),
 	m_random_disturb_timer(0),
 	m_walk_around(false),
 	m_walk_around_timer(0),
@@ -207,7 +209,7 @@ std::string MobSAO::getClientInitializationData()
 }
 void MobSAO::step(float dtime, bool send_recommended)
 {
-	MobFeatures m = content_mob_features(m_content);
+	const MobFeatures& m = content_mob_features(m_content);
 	Player *disturbing_player = NULL;
 	v3f disturbing_player_off = v3f(0,1,0);
 	v3f disturbing_player_norm = v3f(0,1,0);
@@ -542,7 +544,7 @@ void MobSAO::step(float dtime, bool send_recommended)
 }
 void MobSAO::stepMotionWander(float dtime)
 {
-	MobFeatures m = content_mob_features(m_content);
+	const MobFeatures& m = content_mob_features(m_content);
 	v3s16 pos_i = floatToInt(m_base_position, BS);
 	v3s16 pos_size_off(0,0,0);
 
@@ -706,7 +708,7 @@ void MobSAO::stepMotionWander(float dtime)
 }
 void MobSAO::stepMotionSeeker(float dtime, float offset)
 {
-	MobFeatures m = content_mob_features(m_content);
+	const MobFeatures& m = content_mob_features(m_content);
 	v3s16 pos_i = floatToInt(m_base_position, BS);
 	Player *disturbing_player = m_env->getPlayer(m_disturbing_player.c_str());
 	if (!disturbing_player) {
@@ -902,7 +904,7 @@ void MobSAO::stepMotionSeeker(float dtime, float offset)
 }
 void MobSAO::stepMotionFlee(float dtime)
 {
-	MobFeatures m = content_mob_features(m_content);
+	const MobFeatures& m = content_mob_features(m_content);
 	v3s16 pos_i = floatToInt(m_base_position, BS);
 	Player *disturbing_player = m_env->getPlayer(m_disturbing_player.c_str());
 	if (!disturbing_player) {
@@ -1075,7 +1077,7 @@ void MobSAO::stepMotionFlee(float dtime)
 }
 void MobSAO::stepMotionSentry(float dtime)
 {
-	MobFeatures m = content_mob_features(m_content);
+	const MobFeatures& m = content_mob_features(m_content);
 	v3s16 pos_i = floatToInt(m_base_position, BS);
 
 	if (m.motion_type == MMT_WALK) {
@@ -1214,7 +1216,7 @@ void MobSAO::stepMotionSentry(float dtime)
 }
 void MobSAO::stepMotionThrown(float dtime)
 {
-	MobFeatures m = content_mob_features(m_content);
+	const MobFeatures& m = content_mob_features(m_content);
 	m_base_position += m_speed * dtime;
 	m_speed.Y -= 10.0*BS*dtime;
 
@@ -1241,7 +1243,8 @@ void MobSAO::stepMotionThrown(float dtime)
 }
 void MobSAO::stepMotionConstant(float dtime)
 {
-	MobFeatures m = content_mob_features(m_content);
+	const MobFeatures& m = content_mob_features(m_content);
+	
 	m_base_position += m_speed * dtime;
 
 	m_yaw = wrapDegrees_180(180./PI*atan2(m_speed.Z, m_speed.X));
@@ -1343,8 +1346,9 @@ void MobSAO::explodeSquare(v3s16 p0, v3s16 size)
 }
 InventoryItem* MobSAO::createPickedUpItem(content_t punch_item)
 {
-	MobFeatures m = content_mob_features(m_content);
+	const MobFeatures& m = content_mob_features(m_content);
 	ToolItemFeatures f = content_toolitem_features(punch_item);
+	
 	if (m.punch_action != MPA_PICKUP) {
 		if (!m_removed) {
 			if (m.special_dropped_item != CONTENT_IGNORE && (m.special_punch_item == TT_NONE || f.type == m.special_punch_item)) {
@@ -1374,7 +1378,8 @@ InventoryItem* MobSAO::createPickedUpItem(content_t punch_item)
 }
 u16 MobSAO::punch(content_t punch_item, v3f dir, const std::string &playername)
 {
-	MobFeatures m = content_mob_features(m_content);
+	const MobFeatures& m = content_mob_features(m_content);
+	
 	if (m.sound_punch != "")
 		m_env->addEnvEvent(ENV_EVENT_SOUND,m_base_position,m.sound_punch);
 	if (m.punch_action == MPA_IGNORE)
@@ -1439,7 +1444,7 @@ bool MobSAO::rightClick(Player *player)
 	if (!player)
 		return false;
 	// see if mob is tamable
-	MobFeatures m = content_mob_features(m_content);
+	const MobFeatures& m = content_mob_features(m_content);
 	if (m.tamed_mob == CONTENT_IGNORE)
 		return false;
 	// get the wielded item

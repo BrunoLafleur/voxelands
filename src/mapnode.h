@@ -279,13 +279,12 @@ enum FaceTextType {
 class FaceText
 {
 public:
-	FaceText():
-		m_hastext(false)
+	FaceText() :
+			m_type(FTT_INFO),m_hastext(false)
 	{
 	}
-	FaceText(f32 tlx, f32 tly, f32 brx, f32 bry):
-		m_type(FTT_INFO),
-		m_hastext(true)
+	FaceText(f32 tlx, f32 tly, f32 brx, f32 bry) :
+			m_type(FTT_INFO),m_hastext(true)
 	{
 #ifndef SERVER
 		m_pos = core::rect<f32>(tlx,tly,brx,bry);
@@ -550,14 +549,8 @@ struct ContentFeatures
 		wield_nodebox = true;
 		description = (char*)"";
 		nodeboxes.clear();
-		nodeboxes.push_back(NodeBox(
-			-0.5*BS,
-			-0.5*BS,
-			-0.5*BS,
-			0.5*BS,
-			0.5*BS,
-			0.5*BS
-		));
+		nodeboxes.push_back(NodeBox(-0.5*BS,-0.5*BS,-0.5*BS,
+						0.5*BS,0.5*BS,0.5*BS));
 		wield_nodeboxes.clear();
 		setAllFaceTexts(FaceText());
 		param_type = CPT_NONE;
@@ -835,12 +828,9 @@ struct SelectedNode
 	bool is_coloured;
 	content_t content;
 
-	SelectedNode()
+	SelectedNode() : pos(0,0,0),crack(0),has_crack(false),is_coloured(false),
+			 content(CONTENT_IGNORE)	 
 	{
-		pos = v3s16(0,0,0);
-		has_crack = false;
-		is_coloured = false;
-		content = CONTENT_IGNORE;
 	}
 
 	SelectedNode(v3s16 p, u16 c, bool h, content_t cnt)
@@ -964,19 +954,25 @@ struct MapNode
 
 	u32 envticks;
 
-	MapNode(const MapNode & n)
+	MapNode(const MapNode & n) :
+			content(n.content),param1(n.param1),param2(n.param2),
+			envticks(n.envticks)
 	{
-		*this = n;
 	}
 
-	MapNode(content_t a_content=CONTENT_AIR, u8 a_param1=0, u8 a_param2=0)
+	MapNode(content_t a_content=CONTENT_AIR, u8 a_param1=0, u8 a_param2=0) :
+			content(a_content),param1(a_param1),param2(a_param2),
+			envticks(0)
 	{
-		content = a_content;
-		param1 = a_param1;
-		param2 = a_param2;
-		envticks = 0;
 	}
 
+	MapNode& operator=(const MapNode& n)
+	{
+		content = n.content;param1 = n.param1;param2 = n.param2;
+		envticks = n.envticks;
+		return *this;
+	}
+	
 	bool operator==(const MapNode &other)
 	{
 		return (content == other.content
@@ -1090,7 +1086,6 @@ struct MapNode
 	static u32 serializedLength(u8 version);
 	void serialize(u8 *dest, u8 version);
 	void deSerialize(u8 *source, u8 version);
-
 };
 
 /*

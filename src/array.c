@@ -61,7 +61,7 @@ array_t *array_copy(array_t *a)
 	array_t *r = array_create(ARRAY_TYPE_STRING);
 
 	if (a) {
-		int i;
+		uint32_t i;
 		r->type = a->type;
 		switch (a->type) {
 		case ARRAY_TYPE_STRING:
@@ -94,7 +94,7 @@ array_t *array_copy(array_t *a)
 /* compare two arrays */
 int array_cmp(array_t *a1, array_t *a2)
 {
-	int i;
+	uint32_t i;
 	char** c1;
 	char** c2;
 	int *i1;
@@ -184,7 +184,7 @@ int array_cmp(array_t *a1, array_t *a2)
 /* destroy an array */
 void array_free(array_t *a, int freestruct)
 {
-	int i;
+	uint32_t i;
 	if (!a)
 		return;
 	if (a->type == ARRAY_TYPE_STRING) {
@@ -368,6 +368,10 @@ int array_push_v2t(array_t *a, v2_t *v)
 * set the value of array index i to an int value */
 int array_set_int(array_t *a, uint32_t v, int i)
 {
+
+	if(i < 0)
+	    return 1;
+	
 	uint32_t *p = a->data;
 	if (a->type == ARRAY_TYPE_STRING) {
 		char sv[20];
@@ -379,7 +383,7 @@ int array_set_int(array_t *a, uint32_t v, int i)
 		return 1;
 	}
 
-	if (a->size <= i) {
+	if ((int) a->size <= i) {
 		int k;
 		int l = array_next_size(i+1);
 
@@ -393,7 +397,7 @@ int array_set_int(array_t *a, uint32_t v, int i)
 		a->size = l;
 	}
 
-	if (a->length <= i)
+	if ((int) a->length <= i)
 		a->length = i+1;
 
 	p[i] = v;
@@ -404,6 +408,10 @@ int array_set_int(array_t *a, uint32_t v, int i)
 /* set the value of array index i to a float value */
 int array_set_float(array_t *a, float v, int i)
 {
+	
+	if(i < 0)
+	    return 1;
+	
 	float *p = a->data;
 	if (a->type == ARRAY_TYPE_STRING) {
 		char sv[20];
@@ -415,7 +423,7 @@ int array_set_float(array_t *a, float v, int i)
 		return 1;
 	}
 
-	if (a->size <= i) {
+	if ((int) a->size <= i) {
 		int k;
 		int l = array_next_size(i+1);
 
@@ -428,7 +436,7 @@ int array_set_float(array_t *a, float v, int i)
 		a->data = p;
 		a->size = l;
 	}
-	if (a->length <= i)
+	if ((int) a->length <= i)
 		a->length = i+1;
 
 	p[i] = v;
@@ -439,11 +447,15 @@ int array_set_float(array_t *a, float v, int i)
 /* set the value of array index i to a string value */
 int array_set_string(array_t *a, char* v, int i)
 {
+	
+	if(i < 0)
+	    return 1;
+	
 	char** p = a->data;
 	if (a->type != ARRAY_TYPE_STRING)
 		return 1;
 
-	if (a->size <= i) {
+	if ((int) a->size <= i) {
 		int k;
 		int l = array_next_size(i+1);
 
@@ -456,7 +468,7 @@ int array_set_string(array_t *a, char* v, int i)
 		a->data = p;
 		a->size = l;
 	}
-	if (a->length <= i)
+	if ((int) a->length <= i)
 		a->length = i+1;
 
 	if (p[i])
@@ -474,11 +486,15 @@ int array_set_string(array_t *a, char* v, int i)
 /* set the value of array index i to a ponter value */
 int array_set_ptr(array_t *a, void* v, int i)
 {
+		
+	if(i < 0)
+	    return 1;
+
 	char** p = a->data;
 	if (a->type != ARRAY_TYPE_PTR)
 		return 1;
 
-	if (a->size <= i) {
+	if ((int) a->size <= i) {
 		int k;
 		int l = array_next_size(i+1);
 
@@ -491,7 +507,7 @@ int array_set_ptr(array_t *a, void* v, int i)
 		a->data = p;
 		a->size = l;
 	}
-	if (a->length <= i)
+	if ((int) a->length <= i)
 		a->length = i+1;
 
 	p[i] = v;
@@ -502,7 +518,7 @@ int array_set_ptr(array_t *a, void* v, int i)
 /* insert a pointer onto the first NULL index of an array */
 int array_insert_ptr(array_t *a, void *v)
 {
-	int i;
+	uint32_t i;
 	uint8_t** p;
 
 	if (a->type != ARRAY_TYPE_PTR)
@@ -601,8 +617,12 @@ void *array_pop_ptr(array_t *a)
 /* get an int value from an array */
 uint32_t array_get_int(array_t *a, int i)
 {
+
+	if(i < 0)
+	    return 0;
+	
 	if (a->type == ARRAY_TYPE_INT) {
-		if (a->length <= i)
+	    if ((int) a->length <= i)
 			return 0;
 		return ((uint32_t*)(a->data))[i];
 	}else if (a->type == ARRAY_TYPE_FLOAT) {
@@ -621,8 +641,12 @@ uint32_t array_get_int(array_t *a, int i)
 /* get a float value from an array */
 float array_get_float(array_t *a, int i)
 {
+	
+	if(i < 0)
+	    return 0.0;
+	
 	if (a->type == ARRAY_TYPE_FLOAT) {
-		if (a->length <= i)
+	    if ((int) a->length <= i)
 			return 0.0;
 		return ((float*)(a->data))[i];
 	}else if (a->type == ARRAY_TYPE_INT) {
@@ -641,6 +665,10 @@ float array_get_float(array_t *a, int i)
 /* get a string value from an array */
 char* array_get_string(array_t *a, int i)
 {
+
+	if(i < 0)
+	    return NULL;
+	
 	if (a->type == ARRAY_TYPE_FLOAT) {
 		float v = array_get_float(a,i);
 		char sv[20];
@@ -652,7 +680,7 @@ char* array_get_string(array_t *a, int i)
 		sprintf(sv,"%u",v);
 		return strdup(sv);
 	}else if (a->type == ARRAY_TYPE_STRING) {
-		if (a->length <= i)
+	    if ((int) a->length <= i)
 			return NULL;
 		return ((char**)(a->data))[i];
 	}
@@ -662,7 +690,11 @@ char* array_get_string(array_t *a, int i)
 /* get a pointer from an array */
 void *array_get_ptr(array_t *a, int i)
 {
-	if (a->type == ARRAY_TYPE_PTR && a->length > i) {
+
+	if(i < 0)
+	    return NULL;
+	
+	if (a->type == ARRAY_TYPE_PTR && (int) a->length > i) {
 		return ((char**)(a->data))[i];
 	}
 	return NULL;
@@ -672,7 +704,7 @@ void *array_get_ptr(array_t *a, int i)
 int array_find_int(array_t *a, uint32_t v)
 {
 	if (a->type == ARRAY_TYPE_INT) {
-		int i;
+		uint32_t i;
 		uint32_t *p = a->data;
 		for (i=0; i<a->length; i++) {
 			if (p[i] == v)
@@ -686,7 +718,7 @@ int array_find_int(array_t *a, uint32_t v)
 int array_find_float(array_t *a, float v)
 {
 	if (a->type == ARRAY_TYPE_FLOAT) {
-		int i;
+		uint32_t i;
 		float *p = a->data;
 		for (i=0; i<a->length; i++) {
 			if (p[i] == v)
@@ -700,7 +732,7 @@ int array_find_float(array_t *a, float v)
 int array_find_string(array_t *a, char* v)
 {
 	if (a->type == ARRAY_TYPE_STRING) {
-		int i;
+		uint32_t i;
 		char** p = a->data;
 		for (i=0; i<a->length; i++) {
 			if (!strcmp(p[i],v))
@@ -714,7 +746,7 @@ int array_find_string(array_t *a, char* v)
 int array_find_ptr(array_t *a, void *v)
 {
 	if (a->type == ARRAY_TYPE_PTR) {
-		int i;
+		uint32_t i;
 		uint8_t* cv = v;
 		uint8_t** p = a->data;
 		for (i=0; i<a->length; i++) {
@@ -729,7 +761,7 @@ int array_find_ptr(array_t *a, void *v)
 int array_remove_string(array_t *a, char* v)
 {
 	if (a->type == ARRAY_TYPE_STRING) {
-		int i;
+		uint32_t i;
 		char** p = a->data;
 		for (i=0; i<a->length; i++) {
 			if (!strcmp(p[i],v)) {
@@ -751,18 +783,15 @@ int array_remove_string(array_t *a, char* v)
 /* TODO: utf8 support */
 array_t *array_split(char* str, char* s, int strings)
 {
+	
+	if (!str || !s)
+	    return NULL;
+
 	char buff[1024];
 	int i;
 	int o = 0;
-	int l;
-	array_t *r;
-
-	if (!str)
-		return NULL;
-
-	r = array_create(ARRAY_TYPE_STRING);
-
-	l = strlen(s);
+	array_t* const r = array_create(ARRAY_TYPE_STRING);
+	const int l = strlen(s);
 
 	for (i=0; str[i]; i++) {
 		if (!strncmp(str+i,s,l)) {
@@ -783,23 +812,26 @@ array_t *array_split(char* str, char* s, int strings)
 /* join an array into a string, using a glue character */
 char* array_join(array_t *a, char* glue, int start)
 {
+	const uint32_t ustart = start < 0 ? 0 : start;	
 	char* str = NULL;
 	int l = 0;
+	
 	if (!glue)
 		glue = " ";
+	
 	if (a->type == ARRAY_TYPE_STRING) {
-		int i;
-		int gl = strlen(glue);
-		for (i=start; i<a->length; i++) {
-			l += strlen(((char**)(a->data))[i])+gl;
+		uint32_t i;
+		const int gl = strlen(glue);
+		for (i=ustart; i<a->length; i++) {
+		    l += strlen(((char**)(a->data))[i]) + gl;
 		}
 		if (l) {
-			str = malloc(l+1);
+			str = malloc(l + 1);
 			str[0] = 0;
-			for (i=start; i<a->length; i++) {
-				if (i > start)
-					strcat(str,glue);
-				strcat(str,((char**)(a->data))[i]);
+			for (i=ustart; i<a->length; i++) {
+			    if (i > ustart)
+				strcat(str,glue);
+			    strcat(str,((char**)(a->data))[i]);
 			}
 		}
 	}

@@ -61,7 +61,7 @@ static struct {
 	NULL
 };
 
-int path_check(char* base, char* rel)
+static int path_check(char* base,const char* rel)
 {
 	int l;
 	char path[2048];
@@ -105,7 +105,7 @@ int path_check(char* base, char* rel)
 	return 0;
 }
 
-static char* path_set(char* base, char* rel, char* buff, int size)
+static char* path_set(char* base,const char* rel, char* buff, int size)
 {
 	int l;
 	char path[2048];
@@ -344,7 +344,7 @@ void path_exit()
 }
 
 /* sets path.data_custom */
-int path_custom_setter(char* p)
+int path_custom_setter(const char* p)
 {
 	if (path.data_custom)
 		free(path.data_custom);
@@ -357,7 +357,7 @@ int path_custom_setter(char* p)
 }
 
 /* sets path.screenshot */
-int path_screenshot_setter(char* p)
+int path_screenshot_setter(const char* p)
 {
 	if (path.screenshot)
 		free(path.screenshot);
@@ -370,7 +370,7 @@ int path_screenshot_setter(char* p)
 }
 
 /* sets the world path to user_data + /worlds/ + p, creates the path if necessary */
-int path_world_setter(char* p)
+int path_world_setter(const char* p)
 {
 	int c;
 	char buff[2048];
@@ -421,7 +421,7 @@ int path_world_setter(char* p)
  *	must_exist is non-zero and the path doesn't exist
  *	buff is not NULL and too small to hold the full path
  */
-char* path_get(char* type, char* file, int must_exist, char* buff, int size)
+char* path_get(const char* type,const char* file, int must_exist, char* buff, int size)
 {
 	char rel_path[1024];
 
@@ -503,7 +503,7 @@ char* path_get(char* type, char* file, int must_exist, char* buff, int size)
 	}else if (!strcmp(type,"font")) {
 		snprintf(rel_path,1024,"fonts/%s",file);
 	}else if (!strncmp(type,"translation-",12)) {
-		char* lang = type+12;
+		const char* lang = type+12;
 		type = "translation";
 		snprintf(rel_path,1024,"locale/%s/%s",lang,file);
 	}else{

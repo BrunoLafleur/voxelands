@@ -189,7 +189,7 @@ public:
 	virtual void wieldItem(u16 item);
 	virtual const InventoryItem *getWieldItem() const
 	{
-		const InventoryList *list = inventory.getList("main");
+		const InventoryList* const list = inventory.getList("main");
 		if (list)
 			return list->getItem(m_selected_item);
 		return NULL;

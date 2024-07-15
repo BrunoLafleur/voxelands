@@ -805,10 +805,10 @@ std::wstring ClothesItem::getGuiText()
 	Inventory
 */
 
-InventoryList::InventoryList(std::string name, u32 size)
+InventoryList::InventoryList(std::string name, u32 size) :
+		m_items(),m_size(size),m_name(name),m_allowed(),
+		m_denied(),m_stackable(false),m_diff()
 {
-	m_name = name;
-	m_size = size;
 	clearItems();
 	clearAllowed();
 	clearDenied();
@@ -993,7 +993,10 @@ void InventoryList::deSerialize(std::istream &is)
 	}
 }
 
-InventoryList::InventoryList(const InventoryList &other)
+InventoryList::InventoryList(const InventoryList &other) :
+		m_items(),m_size(other.m_size),m_name(other.m_name),
+		m_allowed(other.m_allowed),m_denied(other.m_denied),
+		m_stackable(other.m_stackable),m_diff()
 {
 	/*
 		Do this so that the items get cloned. Otherwise the pointers
@@ -1007,15 +1010,13 @@ InventoryList & InventoryList::operator = (const InventoryList &other)
 	m_name = other.m_name;
 	m_size = other.m_size;
 	clearItems();
+
 	for (u32 i=0; i<other.m_items.size(); i++) {
 		InventoryItem *item = other.m_items[i];
 		if (item != NULL)
 			m_items[i] = item->clone();
 	}
-	m_stackable = other.m_stackable;
-	m_allowed = other.m_allowed;
-	m_denied = other.m_denied;
-
+	
 	return *this;
 }
 
@@ -1447,7 +1448,7 @@ const InventoryList * Inventory::getList(const std::string &name) const
 	return m_lists[i];
 }
 
-const s32 Inventory::getListIndex(const std::string &name) const
+s32 Inventory::getListIndex(const std::string &name) const
 {
 	for (u32 i=0; i<m_lists.size(); i++) {
 		if (m_lists[i]->getName() == name)

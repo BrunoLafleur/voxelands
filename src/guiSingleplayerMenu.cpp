@@ -533,7 +533,7 @@ void GUISingleplayerMenu::saveWorld(bool create)
 }
 void GUISingleplayerMenu::loadWorld(bool create)
 {
-	char* v;
+	const char* v;
 	config_clear("world");
 
 	survival_mode = true;

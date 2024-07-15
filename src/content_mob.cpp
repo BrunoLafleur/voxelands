@@ -33,13 +33,14 @@
 
 MobFeatures g_content_mob_features[CONTENT_MOB_COUNT];
 
-MobFeatures & content_mob_features(content_t c)
+MobFeatures& content_mob_features(content_t c)
 {
 	static MobFeatures ignore = MobFeatures();
-	if ((c&CONTENT_MOB_MASK) != CONTENT_MOB_MASK)
+	
+	if ((c & CONTENT_MOB_MASK) != CONTENT_MOB_MASK)
 		return ignore;
 
-	u16 i = (c&~CONTENT_MOB_MASK);
+	u16 i = (c & ~CONTENT_MOB_MASK) - 1;
 
 	if (i >= CONTENT_MOB_COUNT)
 		return ignore;
@@ -62,6 +63,7 @@ void MobFeatures::setBoxTexture(u16 i, std::string name, u8 alpha)
 	}
 }
 #endif
+
 void MobFeatures::getAnimationFrames(MobAnimation type, int *start, int *end)
 {
 	*start = 0;
@@ -133,12 +135,12 @@ bool content_mob_spawn(ServerEnvironment *env, v3s16 pos, u32 active_object_coun
 		return false;
 
 	for (u16 i=0; i<CONTENT_MOB_COUNT; i++) {
-		MobFeatures m = g_content_mob_features[i];
+		const MobFeatures& m = g_content_mob_features[i];
 		if (m.spawn_min_height > pos.Y)
 			continue;
 		if (m.spawn_max_height < pos.Y)
 			continue;
-		if (m.spawn_chance > 1 && rand%m.spawn_chance != 0)
+		if (m.spawn_chance > 1 && rand % m.spawn_chance != 0)
 			continue;
 		can.push_back(i);
 	}
@@ -146,13 +148,12 @@ bool content_mob_spawn(ServerEnvironment *env, v3s16 pos, u32 active_object_coun
 	if (can.size() == 0)
 		return false;
 
-	MobFeatures m;
 	u32 index = 0;
 
 	if (can.size() > 1)
 		index = myrand_range(0,can.size()-1);
 
-	m = g_content_mob_features[can[index]];
+	const MobFeatures& m = g_content_mob_features[can[index]];
 
 	if (m.content == CONTENT_IGNORE)
 		return false;
@@ -174,8 +175,7 @@ bool content_mob_spawn(ServerEnvironment *env, v3s16 pos, u32 active_object_coun
 
 void mob_spawn(v3s16 pos, content_t mob, ServerEnvironment *env)
 {
-
-	MobFeatures &m = content_mob_features(mob);
+	const MobFeatures& m = content_mob_features(mob);
 
 	if (m.content == CONTENT_IGNORE)
 		return;
@@ -200,7 +200,7 @@ void mob_spawn_passive(v3s16 pos, bool water, ServerEnvironment *env)
 	std::vector<content_t> can;
 	int rand = myrand();
 	for (u16 i=0; i<CONTENT_MOB_COUNT; i++) {
-		MobFeatures m = g_content_mob_features[i];
+		const MobFeatures& m = g_content_mob_features[i];
 		if (!m.spawn_naturally)
 			continue;
 		if (m.level > MOB_PASSIVE)
@@ -215,13 +215,12 @@ void mob_spawn_passive(v3s16 pos, bool water, ServerEnvironment *env)
 	if (can.size() == 0)
 		return;
 
-	MobFeatures m;
 	u32 index = 0;
 
 	if (can.size() > 1)
 		index = myrand_range(0,can.size()-1);
 
-	m = g_content_mob_features[can[index]];
+	const MobFeatures& m = g_content_mob_features[can[index]];
 
 	if (m.content == CONTENT_IGNORE)
 		return;
@@ -279,7 +278,7 @@ void mob_spawn_hostile(v3s16 pos, bool water, ServerEnvironment *env)
 	if (level < MOB_AGGRESSIVE)
 		return;
 	for (u16 i=0; i<CONTENT_MOB_COUNT; i++) {
-		MobFeatures m = g_content_mob_features[i];
+		const MobFeatures& m = g_content_mob_features[i];
 		if (!m.spawn_naturally)
 			continue;
 		if (m.level < MOB_AGGRESSIVE)
@@ -294,13 +293,12 @@ void mob_spawn_hostile(v3s16 pos, bool water, ServerEnvironment *env)
 	if (can.size() == 0)
 		return;
 
-	MobFeatures m;
 	u32 index = 0;
 
 	if (can.size() > 1)
 		index = myrand_range(0,can.size()-1);
 
-	m = g_content_mob_features[can[index]];
+	const MobFeatures& m = g_content_mob_features[can[index]];
 
 	if (m.content == CONTENT_IGNORE)
 		return;
@@ -358,7 +356,8 @@ void content_mob_init()
 	MobFeatures *f = NULL;
 
 	i = CONTENT_MOB_RAT;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Rat");
 	f->level = MOB_PASSIVE;
@@ -377,7 +376,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_FIREFLY;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Firefly");
 	f->level = MOB_PASSIVE;
@@ -396,7 +396,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_OERKKI;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Oerkki");
 	f->level = MOB_AGGRESSIVE;
@@ -417,7 +418,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_DUNGEON_MASTER;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Dungeon Master");
 	f->level = MOB_DESTRUCTIVE;
@@ -438,7 +440,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_FIREBALL;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Fireball");
 	f->level = MOB_DESTRUCTIVE;
@@ -455,7 +458,8 @@ void content_mob_init()
 	f->setCollisionBox(aabb3f(-BS/3.,0.0,-BS/3., BS/3.,BS/2.,BS/3.));
 
 	i = CONTENT_MOB_DOE;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Doe");
 	f->level = MOB_PASSIVE;
@@ -482,7 +486,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_STAG;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Stag");
 	f->level = MOB_AGGRESSIVE;
@@ -511,7 +516,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_TAMESTAG;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Stag");
 	f->level = MOB_PASSIVE;
@@ -534,7 +540,8 @@ void content_mob_init()
 	f->setCollisionBox(aabb3f(-0.7*BS, 0., -0.7*BS, 0.7*BS, 1.5*BS, 0.7*BS));
 
 	i = CONTENT_MOB_FISH;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Fish");
 	f->level = MOB_PASSIVE;
@@ -560,7 +567,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_SHARK;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Shark");
 	f->level = MOB_AGGRESSIVE;
@@ -585,7 +593,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_WOLF;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Wolf");
 	f->level = MOB_AGGRESSIVE;
@@ -613,7 +622,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_TAMEWOLF;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Tame Wolf");
 	f->level = MOB_PASSIVE;
@@ -639,7 +649,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_SHEEP;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Sheep");
 	f->level = MOB_PASSIVE;
@@ -671,7 +682,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_SHEARED_SHEEP;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Sheared Sheep");
 	f->level = MOB_PASSIVE;
@@ -696,7 +708,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_SNOWBALL;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Snowball");
 	f->level = MOB_AGGRESSIVE;
@@ -714,7 +727,8 @@ void content_mob_init()
 	f->setCollisionBox(aabb3f(-BS/3.,0.0,-BS/3., BS/3.,BS/2.,BS/3.));
 
 	i = CONTENT_MOB_ARROW;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Arrow");
 	f->level = MOB_AGGRESSIVE;
@@ -732,7 +746,8 @@ void content_mob_init()
 	f->setCollisionBox(aabb3f(-BS/3.,0.0,-BS/3., BS/3.,BS/2.,BS/3.));
 
 	i = CONTENT_MOB_GREY_KITTY;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Grey Kitten");
 	f->level = MOB_AGGRESSIVE;
@@ -759,7 +774,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_WHITE_KITTY;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("White Kitten");
 	f->level = MOB_AGGRESSIVE;
@@ -786,7 +802,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_SIAMESE_KITTY;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Siamese Kitten");
 	f->level = MOB_AGGRESSIVE;
@@ -813,7 +830,8 @@ void content_mob_init()
 	content_list_add("creative",CONTENT_TOOLITEM_MOB_SPAWNER,1,i);
 
 	i = CONTENT_MOB_GINGER_KITTY;
-	f = &g_content_mob_features[i&~CONTENT_MOB_MASK];
+	f = &g_content_mob_features[(i & ~CONTENT_MOB_MASK) - 1];
+	new(f) MobFeatures;
 	f->content = i;
 	f->description = gettext("Ginger Kitten");
 	f->level = MOB_AGGRESSIVE;

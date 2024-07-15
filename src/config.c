@@ -40,11 +40,11 @@ static struct {
 
 typedef struct config_s {
 	char* default_value;
-	int (*setter)(char* v);
+	int (*setter)(const char* v);
 } config_t;
 
 /* get the value of a config setting */
-char* config_get(char* name)
+const char* config_get(const char* name)
 {
 	nvp_t *n = nvp_get(&config.items,name);
 	if (!n)
@@ -57,9 +57,9 @@ char* config_get(char* name)
 }
 
 /* get a config setting as an int value */
-int config_get_int(char* name)
+int config_get_int(const char* name)
 {
-	char* v = config_get(name);
+	const char* v = config_get(name);
 	if (v)
 		return strtol(v,NULL,10);
 
@@ -67,9 +67,9 @@ int config_get_int(char* name)
 }
 
 /* get a config setting as an int value */
-int64_t config_get_int64(char* name)
+int64_t config_get_int64(const char* name)
 {
-	char* v = config_get(name);
+	const char* v = config_get(name);
 	if (v)
 		return strtoll(v,NULL,10);
 
@@ -77,9 +77,9 @@ int64_t config_get_int64(char* name)
 }
 
 /* get a config setting as a float value */
-float config_get_float(char* name)
+float config_get_float(const char* name)
 {
-	char* v = config_get(name);
+	const char* v = config_get(name);
 	if (v)
 		return strtof(v,NULL);
 
@@ -87,16 +87,16 @@ float config_get_float(char* name)
 }
 
 /* get a config setting as a boolean value */
-int config_get_bool(char* name)
+int config_get_bool(const char* name)
 {
-	char* v = config_get(name);
+	const char* v = config_get(name);
 	return parse_bool(v);
 }
 
 /* get a config setting as a v3_t value */
-int config_get_v3t(char* name, v3_t *value)
+int config_get_v3t(const char* name, v3_t *value)
 {
-	char* v = config_get(name);
+	const char* v = config_get(name);
 	if (!v)
 		return 1;
 
@@ -104,7 +104,7 @@ int config_get_v3t(char* name, v3_t *value)
 }
 
 /* set the value of a config setting */
-void config_set(char* name, char* value)
+void config_set(const char* name,const char* value)
 {
 	config_t *c;
 	nvp_t *n;
@@ -165,7 +165,7 @@ int config_set_command(command_context_t *ctx, array_t *args)
 }
 
 /* set a config setting to an int value */
-void config_set_int(char* name, int value)
+void config_set_int(const char* name, int value)
 {
 	char str[20];
 	sprintf(str,"%d",value);
@@ -173,7 +173,7 @@ void config_set_int(char* name, int value)
 }
 
 /* set a config setting to a 64bit int value */
-void config_set_int64(char* name, int64_t value)
+void config_set_int64(const char* name, int64_t value)
 {
 	char str[50];
 	sprintf(str,"%ld",value);
@@ -181,7 +181,7 @@ void config_set_int64(char* name, int64_t value)
 }
 
 /* set a config setting to a float value */
-void config_set_float(char* name, float value)
+void config_set_float(const char* name, float value)
 {
 	char str[50];
 	sprintf(str,"%f",value);
@@ -189,7 +189,7 @@ void config_set_float(char* name, float value)
 }
 
 /* set the default value of a config setting */
-void config_set_default(char* name, char* value, int (*setter)(char* v))
+void config_set_default(const char* name,const char* value, int (*setter)(const char* v))
 {
 	config_t *c;
 	nvp_t *n = nvp_get(&config.items,name);
@@ -225,7 +225,7 @@ void config_set_default(char* name, char* value, int (*setter)(char* v))
 }
 
 /* set the default of a config setting to an int value */
-void config_set_default_int(char* name, int value, int (*setter)(char* v))
+void config_set_default_int(const char* name, int value, int (*setter)(const char* v))
 {
 	char str[20];
 	sprintf(str,"%d",value);
@@ -233,7 +233,7 @@ void config_set_default_int(char* name, int value, int (*setter)(char* v))
 }
 
 /* set the default of a config setting to a float value */
-void config_set_default_float(char* name, float value, int (*setter)(char* v))
+void config_set_default_float(const char* name, float value, int (*setter)(const char* v))
 {
 	char str[50];
 	sprintf(str,"%f",value);
@@ -241,7 +241,7 @@ void config_set_default_float(char* name, float value, int (*setter)(char* v))
 }
 
 /* load a config file */
-void config_load(char* type, char* file)
+void config_load(const char* type,const char* file)
 {
 	char buff[2048];
 	int s;
@@ -358,7 +358,7 @@ void config_init(int argc, char** argv)
 }
 
 /* save the current config */
-void config_save(char* section, char* type, char* file)
+void config_save(const char* section,const char* type,const char* file)
 {
 	file_t *f;
 	nvp_t *n;
@@ -410,7 +410,7 @@ void config_save(char* section, char* type, char* file)
 }
 
 /* clears all config values for section (i.e. "world.*") to defaults */
-void config_clear(char* section)
+void config_clear(const char* section)
 {
 	nvp_t *n;
 	int l;

@@ -87,8 +87,9 @@ private:
 void * ServerThread::Thread()
 {
 	ThreadStarted();
-
+	log_mutex.Lock();
 	log_register_thread("ServerThread");
+	log_mutex.Unlock();
 
 	DSTACK(__FUNCTION_NAME);
 
@@ -124,8 +125,9 @@ void * ServerThread::Thread()
 void * EmergeThread::Thread()
 {
 	ThreadStarted();
-
+	log_mutex.Lock();
 	log_register_thread("EmergeThread");
+	log_mutex.Unlock();
 
 	DSTACK(__FUNCTION_NAME);
 
@@ -194,7 +196,8 @@ void * EmergeThread::Thread()
 		}
 
 		//vlprintf(CN_DEBUG,"EmergeThread: p=(%d,%d,%d) only_from_disk = %d",p.X,p.Y,p.Z,only_from_disk);
-
+		
+		JMutexAutoLock envlock(m_server->m_env_mutex);
 		ServerMap &map = ((ServerMap&)m_server->m_env.getMap());
 
 		//core::map<v3s16, MapBlock*> changed_blocks;
@@ -208,8 +211,6 @@ void * EmergeThread::Thread()
 			Fetch block from map or generate a single block
 		*/
 		{
-			JMutexAutoLock envlock(m_server->m_env_mutex);
-
 			// Load sector if it isn't loaded
 			map.getSectorNoGenerateNoEx(p2d);
 
@@ -350,6 +351,8 @@ void RemoteClient::GetNextBlocks(Server *server, float dtime,
 {
 	DSTACK(__FUNCTION_NAME);
 
+    // Protected by mutexs in the caller.
+	
 	/*u32 timer_result;
 	TimeTaker timer("RemoteClient::GetNextBlocks", &timer_result);*/
 
@@ -1444,6 +1447,8 @@ void Server::AsyncRunStep()
 	{
 		// Don't send too many at a time
 		//u32 count = 0;
+		JMutexAutoLock envlock(m_env_mutex);
+		JMutexAutoLock conlock(m_con_mutex);
 
 		// Single change sending is disabled if queue size is not small
 		bool disable_single_change_sending = false;
@@ -1563,13 +1568,9 @@ void Server::AsyncRunStep()
 		float &counter = m_objectdata_timer;
 		counter += dtime;
 		if (counter >= config_get_float("server.net.client.object.interval")) {
-			JMutexAutoLock lock1(m_env_mutex);
-			JMutexAutoLock lock2(m_con_mutex);
-
 			//ScopeProfiler sp(g_profiler, "Server: sending player positions");
 
 			SendPlayerInfo(counter);
-
 			counter = 0.0;
 		}
 	}
@@ -1821,7 +1822,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 			if (auth_getpwd(playername,checkpwd))
 				checkpwd[0] = 0;
 		}else{
-			char* default_pwd = config_get("world.server.client.default.password");
+			const char* default_pwd = config_get("world.server.client.default.password");
 			if (default_pwd && default_pwd[0]) {
 				std::string defaultpwd = translatePassword(playername,narrow_to_wide(defaultpwd));
 				strcpy(checkpwd,defaultpwd.c_str());
@@ -1845,7 +1846,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 		if (!auth_exists(playername)) {
 			infostream<<"Server: adding player "<<playername<<" to auth manager"<<std::endl;
 			uint64_t privs = 0;
-			char* priv = config_get("world.server.client.default.privs");
+			const char* priv = config_get("world.server.client.default.privs");
 			if (priv)
 				privs = auth_str2privs(priv);
 
@@ -1857,7 +1858,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 
 		// Enforce user limit.
 		// Don't enforce for users that have some admin right
-		char* admin_name = config_get("world.server.admin");
+		const char* admin_name = config_get("world.server.admin");
 		if (
 			m_clients.size() >= (uint16_t)config_get_int("world.server.client.max")
 			&& (auth_getprivs(playername) & (PRIV_SERVER|PRIV_BAN|PRIV_PRIVS)) == 0
@@ -2039,7 +2040,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 			return;
 
 		ToolItem *titem = NULL;
-		InventoryList *ilist = player->inventory.getList("main");
+		InventoryList* const ilist = player->inventory.getList("main");
 		if (ilist == NULL)
 			return;
 
@@ -2090,7 +2091,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 		v3f pf((f32)ps.X/100., (f32)ps.Y/100., (f32)ps.Z/100.);
 		v3f sf((f32)ss.X/100., (f32)ss.Y/100., (f32)ss.Z/100.);
 
-		ServerActiveObject *obj = new MobSAO(&m_env, 0, pf, sf*content_mob_features(thrown).static_thrown_speed*BS, thrown);
+		ServerActiveObject* const obj = new MobSAO(&m_env, 0, pf, sf*content_mob_features(thrown).static_thrown_speed*BS, thrown);
 
 		if (obj == NULL) {
 			infostream<<"WARNING: item resulted in NULL object, "
@@ -2111,7 +2112,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					infostream<<"WARNING: Server: dropped more items"
 							<<" than the slot contains"<<std::endl;
 
-				InventoryList *ilist = player->inventory.getList("main");
+				InventoryList* const ilist = player->inventory.getList("main");
 				if (ilist)
 					// Remove from inventory and send inventory
 					ilist->deleteItem(item_i);
@@ -2127,14 +2128,14 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 	break;
 	case TOSERVER_USEITEM:
 	{
-		InventoryList *ilist = player->inventory.getList("main");
+		InventoryList* const ilist = player->inventory.getList("main");
 		if (ilist == NULL)
 			return;
 
-		u16 item_i = player->getSelectedItem();
+		const u16 item_i = player->getSelectedItem();
 
 		// Get item
-		InventoryItem *item = ilist->getItem(item_i);
+		InventoryItem* const item = ilist->getItem(item_i);
 		if (item == NULL)
 			return;
 
@@ -2278,9 +2279,9 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 			content_t wield_item = CONTENT_IGNORE;
 			ToolItem *titem = NULL;
 
-			InventoryList *mlist = player->inventory.getList("main");
+			InventoryList* const mlist = player->inventory.getList("main");
 			if (mlist != NULL) {
-				InventoryItem *item = mlist->getItem(item_i);
+				InventoryItem* const item = mlist->getItem(item_i);
 				if (item) {
 					wield_item = item->getContent();
 					if ((wield_item&CONTENT_TOOLITEM_MASK) == CONTENT_TOOLITEM_MASK)
@@ -2290,13 +2291,13 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 			/*
 				Try creating inventory item
 			*/
-			InventoryItem *item = obj->createPickedUpItem(wield_item);
+			InventoryItem* item = obj->createPickedUpItem(wield_item);
 
 			if (item) {
-				InventoryList *ilist = player->inventory.getList("main");
+				InventoryList* const ilist = player->inventory.getList("main");
 				if (ilist != NULL) {
-					actionstream<<player->getName()<<" picked up "
-							<<item->getName()<<std::endl;
+					actionstream << player->getName() << " picked up "
+							<< item->getName() << std::endl;
 					if (!config_get_bool("world.player.inventory.creative")) {
 						// Skip if inventory has no free space
 						if (ilist->roomForItem(item) == false) {
@@ -2337,7 +2338,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						InventoryList *mlist = player->inventory.getList("main");
 						if (mlist != NULL) {
 							for (u32 i=0; i<(8*4); i++) {
-								InventoryItem *item = mlist->getItem(i);
+								InventoryItem* const item = mlist->getItem(i);
 								if (item && item->getContent() == CONTENT_TOOLITEM_MOB_SPAWNER && item->getData() == 0) {
 									MobSAO *mob = (MobSAO*)obj;
 									item->setData(mob->getContent());
@@ -2362,10 +2363,10 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				item = obj->createPickedUpItem(wield_item);
 				/* killing something might have caused a drop */
 				if (item) {
-					InventoryList *ilist = player->inventory.getList("main");
+					InventoryList* const ilist = player->inventory.getList("main");
 					if (ilist != NULL) {
 						actionstream<<player->getName()<<" picked up "
-								<<item->getName()<<std::endl;
+								<< item->getName() << std::endl;
 						if (!config_get_bool("world.player.inventory.creative")) {
 							// Skip if inventory has no free space
 							if (ilist->roomForItem(item) == false) {
@@ -2473,10 +2474,8 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 			}
 		}
 
-		InventoryItem *wielditem = (InventoryItem*)player->getWieldItem();
-		content_t wieldcontent = CONTENT_IGNORE;
-		if (wielditem)
-			wieldcontent = wielditem->getContent();
+		InventoryItem* const wielditem = (InventoryItem*) player->getWieldItem();
+		const content_t wieldcontent = wielditem ? wielditem->getContent() : CONTENT_IGNORE;
 		ToolItemFeatures wielded_tool_features = content_toolitem_features(wieldcontent);
 		CraftItemFeatures *wielded_craft_features = content_craftitem_features(wieldcontent);
 		ContentFeatures &wielded_material_features = content_features(wieldcontent);
@@ -2556,14 +2555,14 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					// send the node
 					sendAddNode(p_under, selected_node, 0, &far_players, 30);
 					// wear out the key - admin's key doesn't wear
-					ToolItem *titem = (ToolItem*)wielditem;
+					ToolItem* const titem = (ToolItem*)wielditem;
 					if (
 						!wielded_tool_features.has_super_unlock_effect
 						&& (getPlayerPrivs(player) & PRIV_SERVER) == 0
 						&& config_get_bool("world.player.tool.wear")
 					) {
 						bool weared_out = titem->addWear(1);
-						InventoryList *mlist = player->inventory.getList("main");
+						InventoryList* const mlist = player->inventory.getList("main");
 						if (weared_out) {
 							mlist->deleteItem(item_i);
 						}else{
@@ -2614,7 +2613,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					if (list) {
 						u16 max = list->getSize();
 						for (u16 i=0; i<max; i++) {
-							InventoryItem *itm = list->changeItem(i,NULL);
+							InventoryItem* const itm = list->changeItem(i,NULL);
 							if (!itm)
 								continue;
 							player->inventory.addItem("main", itm);
@@ -2750,7 +2749,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						client->SetBlocksNotSent(modified_blocks);
 					}
 				}
-				ToolItem *titem = (ToolItem*)wielditem;
+				ToolItem* const titem = (ToolItem*)wielditem;
 				if (config_get_bool("world.player.tool.wear")) {
 					bool weared_out = titem->addWear(1);
 					InventoryList *mlist = player->inventory.getList("main");
@@ -2770,7 +2769,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						v3s16 pp = floatToInt(player->getPosition(),BS);
 						meta->energise(ENERGY_MAX,pp,pp,p_under);
 					}
-					ToolItem *titem = (ToolItem*)wielditem;
+					ToolItem* const titem = (ToolItem*) wielditem;
 					if (config_get_bool("world.player.tool.wear")) {
 						bool weared_out = titem->addWear(1);
 						InventoryList *mlist = player->inventory.getList("main");
@@ -2800,7 +2799,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				if (!bmeta)
 					return;
 				if (wielded_tool_features.type == TT_BUCKET) {
-					content_t c = wielditem->getData();
+					const content_t c = wielditem->getData();
 					if (!c) {
 						if (bmeta->m_water_level < 4)
 							return;
@@ -2937,7 +2936,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				if (!cmeta)
 					return;
 				if (wielded_tool_features.type == TT_BUCKET) {
-					content_t c = wielditem->getData();
+					const content_t c = wielditem->getData();
 					if (!c) {
 						if (cmeta->m_water_level != 4)
 							return;
@@ -2979,9 +2978,9 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					}
 				}else if (wieldcontent == CONTENT_CRAFTITEM_IRON_BOTTLE) {
 					if (cmeta->m_water_level && cmeta->m_water_hot && wielditem->getCount() == 1) {
-						InventoryItem *itm = InventoryItem::create(CONTENT_CRAFTITEM_IRON_BOTTLE_WATER,1,0);
-						InventoryList *mlist = player->inventory.getList("main");
-						InventoryItem *old = mlist->changeItem(item_i,itm);
+						InventoryItem* const itm = InventoryItem::create(CONTENT_CRAFTITEM_IRON_BOTTLE_WATER,1,0);
+						InventoryList* const mlist = player->inventory.getList("main");
+						InventoryItem* const old = mlist->changeItem(item_i,itm);
 						if (old)
 							delete old;
 						cmeta->m_water_level--;
@@ -3005,15 +3004,15 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					}
 				}else if (wieldcontent == CONTENT_CRAFTITEM_GLASS_BOTTLE) {
 					if (cmeta->m_water_level && cmeta->m_water_heated && !cmeta->m_water_hot && wielditem->getCount() == 1) {
-						InventoryItem *itm = InventoryItem::create(CONTENT_CRAFTITEM_GLASS_BOTTLE_WATER,1,0);
-						InventoryList *mlist = player->inventory.getList("main");
-						InventoryItem *old = mlist->changeItem(item_i,itm);
+						InventoryItem* const itm = InventoryItem::create(CONTENT_CRAFTITEM_GLASS_BOTTLE_WATER,1,0);
+						InventoryList* const mlist = player->inventory.getList("main");
+						InventoryItem* const old = mlist->changeItem(item_i,itm);
 						if (old)
 							delete old;
 						cmeta->m_water_level--;
 						SendInventory(player->peer_id);
 						v3s16 blockpos = getNodeBlockPos(p_under);
-						MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+						MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 						if (!block)
 							return;
 						block->setChangedFlag();
@@ -3039,7 +3038,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				if (plist == NULL || ilist == NULL)
 					return;
 				if (((IncineratorNodeMetadata*)meta)->m_fuel_totaltime <= ((IncineratorNodeMetadata*)meta)->m_fuel_time) {
-					InventoryItem *fitem = ilist->getItem(0);
+					InventoryItem* const fitem = ilist->getItem(0);
 					if (!fitem || !fitem->getCount() || !fitem->isFuel())
 						return;
 					((IncineratorNodeMetadata*)meta)->m_should_fire = true;
@@ -3103,7 +3102,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					core::map<v3s16, MapBlock*> modified_blocks;
 					sendAddNode(p_under, selected_node, 0, &far_players, 30);
 					// wear out the crowbar
-					ToolItem *titem = (ToolItem*)wielditem;
+					ToolItem* const titem = (ToolItem*)wielditem;
 					if (config_get_bool("world.player.tool.wear")) {
 						bool weared_out = titem->addWear(1);
 						InventoryList *mlist = player->inventory.getList("main");
@@ -3150,7 +3149,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				/*
 					Handle inventory
 				*/
-				InventoryList *ilist = player->inventory.getList("main");
+				InventoryList* const ilist = player->inventory.getList("main");
 				if (!config_get_bool("world.player.inventory.creative") && ilist) {
 					// Remove from inventory and send inventory
 					if (wielditem->getCount() == 1) {
@@ -3171,7 +3170,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					m_env.getMap().addNodeAndUpdate(p_under, selected_node, modified_blocks, p_name);
 				}
 				v3s16 blockpos = getNodeBlockPos(p_under);
-				MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+				MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 				if (block)
 					block->setChangedFlag();
 
@@ -3457,9 +3456,9 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				*/
 				InventoryList *mlist = player->inventory.getList("main");
 				if (mlist != NULL && config_get_bool("world.player.tool.wear")) {
-					InventoryItem *item = mlist->getItem(item_i);
+					InventoryItem* const item = mlist->getItem(item_i);
 					if (item && (item->getContent()&CONTENT_TOOLITEM_MASK) == CONTENT_TOOLITEM_MASK) {
-						ToolItem *titem = (ToolItem*)item;
+						ToolItem* const titem = (ToolItem*) item;
 						// Get digging properties for material and tool
 						tooluse_t usage;
 						if (get_tool_use(&usage,selected_content,mineral,titem->getContent(),titem->getData())) {
@@ -3497,7 +3496,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 							InventoryList *l = inv->getList("0");
 							if (l) {
 								for (u32 i=0; i<32; i++) {
-									InventoryItem *itm = l->changeItem(i,NULL);
+									InventoryItem* const itm = l->changeItem(i,NULL);
 									if (!itm)
 										continue;
 									player->inventory.addItem("main", itm);
@@ -3533,10 +3532,12 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					}
 				}else if (selected_node_features.liquid_type == LIQUID_NONE) {
 					std::string &dug_s = selected_node_features.dug_item;
-					if (wielded_tool_features.type != TT_NONE && enchantment_have(wielditem->getData(),ENCHANTMENT_DONTBREAK)) {
+					if (wielded_tool_features.type != TT_NONE
+							&& enchantment_have(wielditem->getData(),ENCHANTMENT_DONTBREAK)) {
 						u16 data = 0;
-						if (selected_node_features.param_type == CPT_MINERAL || selected_node_features.param_type == CPT_BLOCKDATA)
-							data = selected_node.param1;
+						if (selected_node_features.param_type == CPT_MINERAL
+								|| selected_node_features.param_type == CPT_BLOCKDATA)
+						    data = selected_node.param1;
 						item = InventoryItem::create(selected_content,1,0,data);
 					}else if (
 						wielded_tool_features.type != TT_NONE
@@ -3564,12 +3565,12 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 								if ((selected_node.param1&0x20) == 0x20)
 									mineral = MINERAL_SALT;
 							}else if (myrand_range(0,5) == 0) {
-								InventoryItem *eitem = InventoryItem::create(extra,1,0);
+								InventoryItem* const eitem = InventoryItem::create(extra,1,0);
 								player->inventory.addItem("main", eitem);
 							}
 						}
 						if (item && selected_node_features.item_param_type == CPT_METADATA) {
-							NodeMetadata *meta = m_env.getMap().getNodeMetadata(p_under);
+							NodeMetadata* const meta = m_env.getMap().getNodeMetadata(p_under);
 							if (meta) {
 								uint16_t v = meta->getData();
 								item->setData(v);
@@ -3586,9 +3587,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 									if (p2 > 3)
 										count = 2;
 									item = InventoryItem::create(
-										selected_node_features.plantgrowth_small_dug_node,
-										count
-									);
+										selected_node_features.plantgrowth_small_dug_node,count);
 								}
 							}else{
 								if (selected_node_features.plantgrowth_large_gives_small) {
@@ -3609,9 +3608,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 								if (!count)
 									count = 1;
 								item = InventoryItem::create(
-									selected_node_features.plantgrowth_large_dug_node,
-									count
-								);
+									selected_node_features.plantgrowth_large_dug_node,count);
 							}
 						}else if (selected_node_features.draw_type == CDT_MELONLIKE) {
 							if (p2) {
@@ -3627,21 +3624,16 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 								}
 								if (selected_node_features.plantgrowth_small_dug_node != CONTENT_IGNORE)
 									item = InventoryItem::create(
-										selected_node_features.plantgrowth_small_dug_node,
-										1
-									);
+										selected_node_features.plantgrowth_small_dug_node,1);
 							}else{
 								if (selected_node_features.plantgrowth_large_gives_small) {
 									item = InventoryItem::create(
-										selected_node_features.plantgrowth_small_dug_node,
-										1
-									);
+										selected_node_features.plantgrowth_small_dug_node,1);
 									player->inventory.addItem("main", item);
 								}
 								item = InventoryItem::create(
 									selected_node_features.plantgrowth_large_dug_node,
-									selected_node_features.plantgrowth_large_count
-								);
+									selected_node_features.plantgrowth_large_count);
 							}
 						}
 					}
@@ -3717,12 +3709,12 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 		else if(action == 1)
 		{
 			v3s16 p_dir = p_under - p_over;
-			InventoryList *ilist = player->inventory.getList("main");
+			InventoryList* const ilist = player->inventory.getList("main");
 			if (ilist == NULL)
 				return;
 
 			// Get item
-			InventoryItem *item = ilist->getItem(item_i);
+			InventoryItem* const item = ilist->getItem(item_i);
 
 			// If there is no item, it is not possible to add it anywhere
 			if (item == NULL)
@@ -3990,10 +3982,10 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				/*
 					Handle inventory
 				*/
-				InventoryList *ilist = player->inventory.getList("main");
+				InventoryList* const ilist = player->inventory.getList("main");
 				if (!config_get_bool("world.player.inventory.creative") && ilist) {
 					if ((wieldcontent&CONTENT_TOOLITEM_MASK) == CONTENT_TOOLITEM_MASK) {
-						ToolItem *titem = (ToolItem*)wielditem;
+						ToolItem* const titem = (ToolItem*)wielditem;
 						if (titem->addWear(1)) {
 							ilist->deleteItem(item_i);
 						}else{
@@ -4087,12 +4079,9 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				if (!config_get_bool("world.player.inventory.creative")) {
 					if (wielded_tool_features.onplace_replace_item != CONTENT_IGNORE) {
 						u16 wear = ((ToolItem*)wielditem)->getWear();
-						InventoryItem *item = InventoryItem::create(
-							wielded_tool_features.onplace_replace_item,
-							1,
-							wear
-						);
-						InventoryItem *citem = ilist->changeItem(item_i,item);
+						InventoryItem* const item = InventoryItem::create(
+							wielded_tool_features.onplace_replace_item,1,wear);
+						InventoryItem* const citem = ilist->changeItem(item_i,item);
 						if (citem)
 							delete citem;
 					}else{
@@ -4141,7 +4130,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					return;
 				}
 				MapNode n = m_env.getMap().getNodeNoEx(p_over);
-				if (n.getContent() != CONTENT_AIR)
+				if (n.getContent() != CONTENT_AIR || !item)
 					return;
 				n.setContent(content_craftitem_features(item->getContent())->drop_item);
 				core::list<u16> far_players;
@@ -4149,7 +4138,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				if (!config_get_bool("world.player.inventory.creative")) {
 					// Delete the right amount of items from the slot
 					u16 dropcount = item->getDropCount();
-					InventoryList *ilist = player->inventory.getList("main");
+					InventoryList* const ilist = player->inventory.getList("main");
 					// Delete item if all gone
 					if (item->getCount() <= dropcount) {
 						if (item->getCount() < dropcount)
@@ -4204,7 +4193,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					Check that the block is loaded so that the item
 					can properly be added to the static list too
 				*/
-				MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+				MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 				if (block==NULL) {
 					infostream<<"Error while placing object: "
 							"block not found"<<std::endl;
@@ -4212,7 +4201,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				}
 
 				if (!config_get_bool("world.player.inventory.droppable")) {
-					InventoryList *mlist = player->inventory.getList("main");
+					InventoryList* const mlist = player->inventory.getList("main");
 					mlist->deleteItem(item_i);
 				}else if ((getPlayerPrivs(player) & PRIV_BUILD) == 0) {
 					infostream<<"Not allowing player to drop item: no build privs"<<std::endl;
@@ -4230,13 +4219,13 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				/*
 					Create the object
 				*/
-				ServerActiveObject *obj = wielditem->createSAO(&m_env, 0, pos);
+				ServerActiveObject* const obj = wielditem->createSAO(&m_env, 0, pos);
 
 				if (obj == NULL) {
 					InventoryItem *nitem;
 					if (!config_get_bool("world.player.inventory.creative")) {
 						// Delete the right amount of items from the slot
-						InventoryList *ilist = player->inventory.getList("main");
+						InventoryList* const ilist = player->inventory.getList("main");
 						nitem = ilist->changeItem(item_i,NULL);
 						// Send inventory
 						UpdateCrafting(peer_id);
@@ -4256,7 +4245,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 
 					if (!config_get_bool("world.player.inventory.creative")) {
 						// Delete the right amount of items from the slot
-						InventoryList *ilist = player->inventory.getList("main");
+						InventoryList* const ilist = player->inventory.getList("main");
 
 						wielditem->setData(0);
 						ilist->addDiff(item_i,wielditem);
@@ -4280,7 +4269,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				if (!config_get_bool("world.player.inventory.creative")) {
 					// Delete the right amount of items from the slot
 					u16 dropcount = item->getDropCount();
-					InventoryList *ilist = player->inventory.getList("main");
+					InventoryList* const ilist = player->inventory.getList("main");
 
 					// Delete item if all gone
 					if (item->getCount() <= dropcount) {
@@ -4316,7 +4305,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					Check that the block is loaded so that the item
 					can properly be added to the static list too
 				*/
-				MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+				MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 				if (block==NULL) {
 					infostream<<"Error while placing object: "
 							"block not found"<<std::endl;
@@ -4344,30 +4333,36 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				*/
 				ServerActiveObject *obj = NULL;
 				/* createSAO will drop all craft items, we may not want that */
-				if (
-					wielded_craft_features->content == wieldcontent
-					&& wielded_craft_features->drop_item == CONTENT_IGNORE
-				) {
-					InventoryItem *ditem = InventoryItem::create(wieldcontent,item->getDropCount());
-					obj = ditem->createSAO(&m_env, 0, pos);
-					delete ditem;
+				if (wielded_craft_features->content == wieldcontent
+						&& wielded_craft_features->drop_item == CONTENT_IGNORE) {
+				    InventoryItem* const ditem = InventoryItem::create(wieldcontent,item->getDropCount());
+				    obj = ditem->createSAO(&m_env, 0, pos);
+				    delete ditem;
 				}else{
-					obj = item->createSAO(&m_env, 0, pos);
+				    InventoryItem* const ditem = ilist->getItem(item_i);
+
+				    if(ditem)
+					obj = ditem->createSAO(&m_env, 0, pos);
 				}
 
 				if (obj == NULL) {
-					InventoryItem *nitem;
+					InventoryItem* nitem = NULL;
 					if (!config_get_bool("world.player.inventory.creative")) {
 						// Delete the right amount of items from the slot
-						InventoryList *ilist = player->inventory.getList("main");
+						InventoryList* const ilist = player->inventory.getList("main");
 						nitem = ilist->changeItem(item_i,NULL);
 						// Send inventory
 						UpdateCrafting(peer_id);
 						SendInventory(peer_id);
 					}else{
+					/* BUG PB : Get again, it can have disapperead. */
+					    InventoryItem* const wielditem = (InventoryItem*) player->getWieldItem();
+
+					    if(wielditem)
 						nitem = wielditem->clone();
 					}
-					m_env.dropToParcel(p_over,nitem);
+					if(nitem)
+					    m_env.dropToParcel(p_over,nitem);
 				}else{
 					actionstream<<player->getName()<<" places "<<item->getName()
 							<<" at "<<PP(p_over)<<std::endl;
@@ -4380,7 +4375,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					if (!config_get_bool("world.player.inventory.creative")) {
 						// Delete the right amount of items from the slot
 						u16 dropcount = item->getDropCount();
-						InventoryList *ilist = player->inventory.getList("main");
+						InventoryList* const ilist = player->inventory.getList("main");
 
 						// Delete item if all gone
 						if (item->getCount() <= dropcount) {
@@ -4411,8 +4406,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 			Catch invalid actions
 		*/
 		else{
-			infostream<<"WARNING: Server: Invalid action "
-					<<action<<std::endl;
+			infostream<<"WARNING: Server: Invalid action " << action << std::endl;
 		}
 	}
 	break;
@@ -4663,8 +4657,8 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						&& ma->from_inv == "current_player"
 						&& ma->to_list == "discard"
 					) {
-						InventoryList *list = player->inventory.getList("discard");
-						InventoryItem *item = list->getItem(0);
+						InventoryList* const list = player->inventory.getList("discard");
+						InventoryItem* item = list->getItem(0);
 						if (item) {
 							if (config_get_bool("world.player.inventory.droppable")) {
 								v3f pos = player->getPosition();
@@ -5166,6 +5160,9 @@ void Server::SendPlayerInfo(float dtime)
 {
 	DSTACK(__FUNCTION_NAME);
 
+	JMutexAutoLock lock1(m_env_mutex);
+	JMutexAutoLock lock2(m_con_mutex);
+
 	std::ostringstream os(std::ios_base::binary);
 	u8 buf[12];
 
@@ -5323,7 +5320,7 @@ void Server::SendPlayerItems()
 			continue;
 
 		writeU16(os, player->peer_id);
-		InventoryItem *item = (InventoryItem*)player->getWieldItem();
+		InventoryItem* const item = (InventoryItem*)player->getWieldItem();
 		if (item == NULL) {
 			writeU16(os,CONTENT_IGNORE);
 		}else{
@@ -5331,10 +5328,10 @@ void Server::SendPlayerItems()
 		}
 		const char* list[7] = {"hat","shirt","pants","boots","decorative","jacket","belt"};
 		for (int j=0; j<7; j++) {
-			InventoryList *l = player->inventory.getList(list[j]);
+			InventoryList* const l = player->inventory.getList(list[j]);
 			if (l == NULL)
 				continue;
-			InventoryItem *itm = l->getItem(0);
+			InventoryItem* const itm = l->getItem(0);
 			if (itm == NULL) {
 				writeU16(os,CONTENT_IGNORE);
 				continue;
@@ -5362,7 +5359,7 @@ void Server::SendPlayerItems(Player *player)
 	writeU16(os, 1);
 	writeU16(os, 8);
 	writeU16(os, player->peer_id);
-	InventoryItem *item = (InventoryItem*)player->getWieldItem();
+	InventoryItem* const item = (InventoryItem*)player->getWieldItem();
 	if (item == NULL) {
 		writeU16(os,CONTENT_IGNORE);
 	}else{
@@ -5370,10 +5367,10 @@ void Server::SendPlayerItems(Player *player)
 	}
 	const char* list[7] = {"hat","shirt","pants","boots","decorative","jacket","belt"};
 	for (int j=0; j<7; j++) {
-		InventoryList *l = player->inventory.getList(list[j]);
+		InventoryList* const l = player->inventory.getList(list[j]);
 		if (l == NULL)
 			continue;
-		InventoryItem *itm = l->getItem(0);
+		InventoryItem* const itm = l->getItem(0);
 		if (itm == NULL) {
 			writeU16(os,CONTENT_IGNORE);
 			continue;
@@ -5952,7 +5949,7 @@ std::wstring Server::getStatusString()
 		os<<name<<L",";
 	}
 	os<<L"}";
-	char* motd = config_get("world.game.motd");
+	const char* motd = config_get("world.game.motd");
 	if (motd && motd[0])
 		os<<std::endl<<L"# Server: "<<narrow_to_wide(motd);
 	return os.str();
@@ -6050,9 +6047,7 @@ Player *Server::emergePlayer(const char *name, const char *password, u16 peer_id
 	*/
 	{
 		uint64_t privs = 0;
-		char* priv;
-
-		priv = config_get("world.server.client.default.privs");
+		const char* priv = config_get("world.server.client.default.privs");
 
 		if (priv && priv[0])
 			privs = auth_str2privs(priv);
@@ -6240,13 +6235,12 @@ void Server::addUser(const char *name, const char *password)
 
 uint64_t Server::getPlayerPrivs(Player *player)
 {
-	const char* playername;
-	char* admin_name;
+
 	if (!player)
 		return 0;
 
-	playername = player->getName();
-	admin_name = config_get("world.server.admin");
+	const char* playername = player->getName();
+	const char* admin_name = config_get("world.server.admin");
 
 	if (admin_name && !strcmp(admin_name,playername))
 		return PRIV_ALL;

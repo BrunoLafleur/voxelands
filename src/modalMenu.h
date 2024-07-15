@@ -34,6 +34,7 @@ class IMenuManager
 {
 public:
 	// A GUIModalMenu calls these when this class is passed as a parameter
+	virtual ~IMenuManager() {};
 	virtual void createdMenu(GUIModalMenu *menu) = 0;
 	virtual void deletingMenu(GUIModalMenu *menu) = 0;
 };

@@ -50,11 +50,11 @@ static int file_extend(file_t *file, int min)
 }
 
 /* load a file into memory */
-file_t *file_load(char* type, char* name)
+file_t *file_load(const char* type,const char* name)
 {
 	file_t *ft;
 	FILE *f;
-	char* fn;
+	const char* fn;
 	char* path;
 
 	if (type) {
@@ -101,7 +101,7 @@ file_t *file_load(char* type, char* name)
 		return NULL;
 	}
 
-	if (ft->len != fread(ft->data, 1, ft->len, f)) {
+	if ((size_t) ft->len != fread(ft->data, 1, ft->len, f)) {
 		free(path);
 		fclose(f);
 		free(ft->data);
@@ -121,10 +121,10 @@ file_t *file_load(char* type, char* name)
 }
 
 /* load a file into memory */
-file_t *file_create(char* type, char *name)
+file_t *file_create(const char* type,const char *name)
 {
 	file_t *ft;
-	char* fn;
+	const char* fn;
 	char* path;
 
 	if (name) {
@@ -195,7 +195,7 @@ void file_flush(file_t *file)
 		return;
 
 	if (file->len) {
-		if (fwrite(file->data,1,file->len,f) != file->len) {
+	    if (fwrite(file->data,1,file->len,f) != (size_t) file->len) {
 			fclose(f);
 			return;
 		}
@@ -382,7 +382,7 @@ void *file_get(file_t *file)
 }
 
 /* write data to a file buffer */
-int file_write(file_t *file, void *buff, int size)
+int file_write(file_t *file,const void *buff, int size)
 {
 	if (!file || !buff || size)
 		return -1;
@@ -409,7 +409,7 @@ int file_write(file_t *file, void *buff, int size)
 }
 
 /* write a formatted string to a file buffer (printf style) */
-int file_writef(file_t *file, char* fmt, ...)
+int file_writef(file_t *file,const char* fmt, ...)
 {
 	va_list ap;
 	int l;

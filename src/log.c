@@ -45,7 +45,7 @@ static struct {
 	{"none","error","warn","action","chat","info","debug"}
 };
 
-static void level_setter(char* v, int *l, int d)
+static void level_setter(const char* v, int *l, int d)
 {
 	int i;
 	if (v) {
@@ -61,37 +61,37 @@ static void level_setter(char* v, int *l, int d)
 }
 
 /* config setters */
-int log_minlevel_setter(char* v)
+int log_minlevel_setter(const char* v)
 {
 	level_setter(v,&logdata.min_level,1);
 	return 0;
 }
-int log_maxlevel_setter(char* v)
+int log_maxlevel_setter(const char* v)
 {
 	level_setter(v,&logdata.max_level,5);
 	return 0;
 }
-int log_sminlevel_setter(char* v)
+int log_sminlevel_setter(const char* v)
 {
 	level_setter(v,&logdata.system_min_level,4);
 	return 0;
 }
-int log_smaxlevel_setter(char* v)
+int log_smaxlevel_setter(const char* v)
 {
 	level_setter(v,&logdata.system_max_level,5);
 	return 0;
 }
-int log_cminlevel_setter(char* v)
+int log_cminlevel_setter(const char* v)
 {
 	level_setter(v,&logdata.console_min_level,4);
 	return 0;
 }
-int log_cmaxlevel_setter(char* v)
+int log_cmaxlevel_setter(const char* v)
 {
 	level_setter(v,&logdata.console_max_level,5);
 	return 0;
 }
-int log_file_setter(char* v)
+int log_file_setter(const char* v)
 {
 	if (logdata.logfile)
 		free(logdata.logfile);
@@ -106,7 +106,7 @@ int log_file_setter(char* v)
 }
 
 /* print text to game and system consoles */
-void vlprint(uint8_t type, char* str)
+void vlprint(uint8_t type,const char* str)
 {
 	char buff[1024];
 	char* b = buff;
@@ -181,7 +181,7 @@ void vlprint(uint8_t type, char* str)
 }
 
 /* print formatted text to game and system consoles */
-void vlprintf(uint8_t type, char* fmt,...)
+void vlprintf(uint8_t type,const char* fmt,...)
 {
 	char buff[1024];
 	va_list ap;

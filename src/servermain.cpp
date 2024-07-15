@@ -49,7 +49,7 @@
 #include <iostream>
 #include <fstream>
 #include <time.h>
-#include <jmutexautolock.h>
+#include "jmutexautolock.h"
 #include <locale.h>
 #include "common_irrlicht.h"
 #include "debug.h"
@@ -137,10 +137,9 @@ int main(int argc, char *argv[])
 	/*
 		Initialization
 	*/
-
+	log_mutex.Init();
 	log_add_output_maxlev(&main_stderr_log_out, LMT_ACTION);
 	log_add_output_all_levs(&main_dstream_no_stderr_log_out);
-
 	log_register_thread("main");
 
 	// Set locale. This is for forcing '.' as the decimal point.

@@ -46,7 +46,7 @@ struct CollisionInfo
 	v3f new_speed;
 
 	CollisionInfo():
-		t(COLLISION_NODE),
+		t(COLLISION_NODE),speed(0),
 		node_p(-32768,-32768,-32768),
 		old_speed(0,0,0),
 		new_speed(0,0,0)

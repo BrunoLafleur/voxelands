@@ -43,6 +43,55 @@
 #include "exceptions.h"
 #include "porting.h"
 
+#if defined(__GNUC__) || defined(__clang__)
+#  define XINLINE inline
+#  define XFINLINE inline __attribute__ ((always_inline))
+#elif defined(__BORLANDC__) || defined(_MSC_VER) || defined(__LCC__)
+#  define XINLINE __inline
+#  define XFINLINE __forceinline
+#elif defined(__DMC__) || defined(__POCC__) || defined(__WATCOMC__) || \
+	defined(__SUNPRO_C)
+#  define XINLINE inline
+#  define XFINLINE inline
+#else
+#  define XINLINE inline
+#  define XFINLINE inline
+#endif
+
+#ifndef __I_IREFERENCE_COUNTED_H_INCLUDED__
+# ifdef __GNUC__
+    XFINLINE static int X1SyncGet(volatile int* const pval)
+    {
+	    return __sync_add_and_fetch(pval,0);
+    }
+
+    XFINLINE static int X1SyncInc(volatile int* const pval)
+    {
+	    return __sync_fetch_and_add(pval,1);
+    }
+
+    XFINLINE static int X1SyncDec(volatile int* const pval)
+    {
+	    return __sync_fetch_and_sub(pval,1);
+    }
+# else
+    XFINLINE static int X1SyncGet(volatile int* const pval)
+    {
+	    return *pval;
+    }
+
+    XFINLINE static int X1SyncInc(volatile int* const pval)
+    {
+	    return (*pval)++;
+    }
+
+    XFINLINE static int X1SyncDec(volatile int* const pval)
+    {
+	    return (*pval)--;
+    }
+# endif
+#endif
+
 using namespace jthread;
 
 extern const v3s16 g_6dirs[6];
@@ -318,9 +367,9 @@ public:
 	SharedPtr(SharedPtr<T> &t)
 	{
 		//*this = t;
-		drop();
+		//drop();
 		refcount = t.refcount;
-		(*refcount)++;
+		X1SyncInc(refcount);
 		ptr = t.ptr;
 	}
 	~SharedPtr()
@@ -337,9 +386,11 @@ public:
 	}
 	SharedPtr<T> & operator=(SharedPtr<T> &t)
 	{
+		if(this == &t)
+		    return *this;
 		drop();
 		refcount = t.refcount;
-		(*refcount)++;
+		X1SyncInc(refcount);
 		ptr = t.ptr;
 		return *this;
 	}
@@ -366,17 +417,18 @@ public:
 private:
 	void drop()
 	{
-		assert((*refcount) > 0);
-		(*refcount)--;
-		if(*refcount == 0)
+		assert(refcount && X1SyncGet(refcount) > 0);
+		
+		if (X1SyncDec(refcount) == 1)
 		{
-			delete refcount;
-			if(ptr != NULL)
-				delete ptr;
+		    delete refcount;refcount = NULL;
+		    if(ptr != NULL)
+			delete ptr;
+		    ptr = NULL;
 		}
 	}
 	T *ptr;
-	int *refcount;
+	volatile int *refcount;
 };
 
 template <typename T>
@@ -454,6 +506,7 @@ private:
 	{
 		if(data)
 			delete[] data;
+		data = NULL;m_size = 0;
 	}
 	T *data;
 	unsigned int m_size;
@@ -463,58 +516,56 @@ template <typename T>
 class SharedBuffer
 {
 public:
-	SharedBuffer()
+	SharedBuffer() :
+			data(NULL),m_size(0),refcount(0)
 	{
-		m_size = 0;
-		data = NULL;
-		refcount = new unsigned int;
-		(*refcount) = 1;
+		refcount = new int;*refcount = 1;
 	}
-	SharedBuffer(unsigned int size)
+	SharedBuffer(unsigned int size) :
+			data(NULL),m_size(size),refcount(0)
 	{
-		m_size = size;
-		if(m_size != 0)
-			data = new T[m_size];
-		else
-			data = NULL;
-		refcount = new unsigned int;
-		(*refcount) = 1;
+		if(m_size)
+		    data = new T[m_size];
+		refcount = new int;*refcount = 1;
 	}
-	SharedBuffer(const SharedBuffer &buffer)
+	SharedBuffer(const SharedBuffer& buffer) :
+			data(buffer.data),m_size(buffer.m_size),
+			refcount(buffer.refcount)
 	{
 		//std::cout<<"SharedBuffer(const SharedBuffer &buffer)"<<std::endl;
-		m_size = buffer.m_size;
-		data = buffer.data;
-		refcount = buffer.refcount;
-		(*refcount)++;
+		X1SyncInc(refcount);
 	}
-	SharedBuffer & operator=(const SharedBuffer & buffer)
+	
+	SharedBuffer& operator=(const SharedBuffer& buffer)
 	{
 		//std::cout<<"SharedBuffer & operator=(const SharedBuffer & buffer)"<<std::endl;
 		if(this == &buffer)
-			return *this;
+		    return *this;
+		
 		drop();
-		m_size = buffer.m_size;
 		data = buffer.data;
+		m_size = buffer.m_size;
 		refcount = buffer.refcount;
-		(*refcount)++;
+		X1SyncInc(refcount);
 		return *this;
 	}
 	/*
 		Copies whole buffer
 	*/
-	SharedBuffer(T *t, unsigned int size)
+	SharedBuffer(T* const t,const unsigned int size)
 	{
-		m_size = size;
-		if(m_size != 0)
+		
+		if(size)
 		{
-			data = new T[m_size];
-			memcpy(data, t, m_size);
+		    data = new T[size];
+		    memcpy(data,t,size);
 		}
 		else
-			data = NULL;
-		refcount = new unsigned int;
-		(*refcount) = 1;
+		    data = NULL;
+		
+		m_size = size;
+		refcount = new int;
+		*refcount = 1;
 	}
 	/*
 		Copies whole buffer
@@ -522,20 +573,22 @@ public:
 	SharedBuffer(const Buffer<T> &buffer)
 	{
 		m_size = buffer.getSize();
-		if(m_size != 0)
+		if(m_size)
 		{
-			data = new T[m_size];
-			memcpy(data, *buffer, buffer.getSize());
+		    data = new T[m_size];
+		    memcpy(data, *buffer, buffer.getSize());
 		}
 		else
-			data = NULL;
-		refcount = new unsigned int;
-		(*refcount) = 1;
+		    data = NULL;
+
+		refcount = new int;
+		*refcount = 1;
 	}
 	~SharedBuffer()
 	{
 		drop();
 	}
+	
 	T & operator[](unsigned int i) const
 	{
 		//assert(i < m_size)
@@ -556,18 +609,20 @@ public:
 private:
 	void drop()
 	{
-		assert((*refcount) > 0);
-		(*refcount)--;
-		if(*refcount == 0)
+		assert(refcount && X1SyncGet(refcount) > 0);
+
+		if (X1SyncDec(refcount) == 1)
 		{
-			if(data)
-				delete[] data;
-			delete refcount;
+		    delete refcount;refcount = NULL;
+		    if(data)
+			delete[] data;
+		    data = NULL;m_size = 0;
 		}
 	}
-	T *data;
+	
+	T* data;
 	unsigned int m_size;
-	unsigned int *refcount;
+	volatile int* refcount;
 };
 
 inline SharedBuffer<u8> SharedBufferFromString(const char *string)
@@ -581,7 +636,7 @@ class MutexedVariable
 {
 public:
 	MutexedVariable(T value):
-		m_value(value)
+			m_value(value),m_mutex()
 	{
 		m_mutex.Init();
 	}
@@ -1045,7 +1100,7 @@ template<typename T>
 class MutexedQueue
 {
 public:
-	MutexedQueue()
+	MutexedQueue() : m_mutex(),m_list()
 	{
 		m_mutex.Init();
 	}

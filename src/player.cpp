@@ -215,7 +215,7 @@ void Player::accelerate(v3f target_speed, f32 max_increase)
 void Player::serialize(std::ostream &os)
 {
 	// Utilize a Settings object for storing values
-	char* flags[8] = {
+	const char* flags[8] = {
 		"flag_white",
 		"flag_blue",
 		"flag_green",
@@ -281,9 +281,9 @@ void Player::deSerialize(std::istream &is)
 {
 	nvp_t *list = NULL;
 	std::string conf;
-	char* val;
+	const char* val;
 	v3_t v;
-	char* flags[8] = {
+	const char* flags[8] = {
 		"flag_white",
 		"flag_blue",
 		"flag_green",
@@ -639,7 +639,7 @@ RemotePlayer::RemotePlayer(
 		m_text->setPosition(v3f(0, (f32)BS*2.1, 0));
 
 		// get a unique mesh so that the player model has it's own lighting
-		scene::IAnimatedMesh* mesh = createModelMesh(mgr,"character.b3d",true);
+		scene::IAnimatedMesh* const mesh = createModelMesh(mgr,"character.b3d",true);
 		if (!mesh)
 			return;
 
@@ -701,7 +701,7 @@ void RemotePlayer::wieldItem(u16 item)
 	m_selected_item = item;
 	if (!m_wield)
 		return;
-	const InventoryItem *i = getWieldItem();
+	const InventoryItem* const i = getWieldItem();
 	if (!i) {
 		m_wield->setVisible(false);
 		return;
@@ -766,13 +766,17 @@ void RemotePlayer::move(f32 dtime, Map &map, f32 pos_max_d)
 	int frame = m_node->getFrameNr();
 	/* roughly sort of when a step sound should probably be heard, maybe */
 	if (frame == 218 || frame == 186 || frame == 209 || frame == 177) {
+#if USE_AUDIO == 1
 		sound_play_step(&map,m_showpos,m_next_foot,1.0);
+#endif
 		m_next_foot = !m_next_foot;
 	}
 	/* roughly sort of when a dig sound should probably be heard, maybe */
+#if USE_AUDIO == 1
 	if (frame == 214 || frame == 205 || frame == 193) {
 		sound_play_dig(m_pointed,m_showpos);
 	}
+#endif
 
 	if (m_anim_id == PLAYERANIM_DIE) {
 		if (m_node->getEndFrame() != 167)
@@ -861,7 +865,7 @@ LocalPlayer::LocalPlayer():
 	m_ignore_energy(false),
 	m_low_energy_effect(0)
 {
-	char* v;
+	const char* v;
 	m_energy = 10.0;
 
 	v = config_get("client.character");
@@ -1239,7 +1243,6 @@ void LocalPlayer::applyControl(float dtime)
 			std::string gender = f.next(":");
 			std::string snd("low-energy-");
 			snd += gender;
-
 			m_low_energy_effect = sound_play_effect((char*)snd.c_str(),1.0,1,NULL);
 		}
 #endif

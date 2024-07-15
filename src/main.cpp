@@ -134,6 +134,7 @@ std::ostream *derr_client_ptr = &errorstream;
 class TimeGetter
 {
 public:
+	virtual ~TimeGetter() {};
 	virtual u32 getTime() = 0;
 };
 
@@ -717,10 +718,9 @@ int main(int argc, char *argv[])
 	/*
 		Initialization
 	*/
-
+	log_mutex.Init();
 	log_add_output_maxlev(&main_stderr_log_out, LMT_ACTION);
 	log_add_output_all_levs(&main_dstream_no_stderr_log_out);
-
 	log_register_thread("main");
 
 	/*
@@ -798,7 +798,7 @@ int main(int argc, char *argv[])
 		// Create time getter
 		g_timegetter = new SimpleTimeGetter();
 
-		char* v = config_get("server.world");
+		const char* v = config_get("server.world");
 		world_init(v);
 
 		// Create server
@@ -836,7 +836,7 @@ int main(int argc, char *argv[])
 	video::E_DRIVER_TYPE driverType = video::EDT_OPENGL;
 
 	{
-		char* v = config_get("client.video.driver");
+		const char* v = config_get("client.video.driver");
 		if (v && !strcmp(v,"d3d9"))
 			driverType = video::EDT_DIRECT3D9;
 	}
@@ -900,7 +900,7 @@ int main(int argc, char *argv[])
 		char buff[1024];
 #if USE_FREETYPE
 		uint16_t font_size = config_get_int("client.ui.font.size");
-		char* v = config_get("client.ui.font");
+		const char* v = config_get("client.ui.font");
 		if (!v)
 			v = "unifont.ttf";
 		if (path_get("font",v,1,buff,1024))
@@ -971,7 +971,7 @@ int main(int argc, char *argv[])
 	// if there's no chardef then put the player directly into the character creator
 	bool character_creator = true;
 	{
-		char* v = config_get("client.character");
+		const char* v = config_get("client.character");
 		if (v && v[0])
 			character_creator = false;
 	}
@@ -1011,7 +1011,7 @@ int main(int argc, char *argv[])
 				// Initialize menu data
 				std::string playername = "";
 				{
-					char* v = config_get("client.name");
+					const char* v = config_get("client.name");
 					if (v)
 						playername = std::string(v);
 				}
@@ -1040,7 +1040,7 @@ int main(int argc, char *argv[])
 					menudata.use_fixed_seed = true;
 				menudata.map_type = config_get("world.map.type");
 
-				GUIMainMenu *menu = new GUIMainMenu(
+				GUIMainMenu* const menu = new GUIMainMenu(
 					guienv,
 					guiroot,
 					-1,
@@ -1054,7 +1054,7 @@ int main(int argc, char *argv[])
 					errorstream<<"error_message = "
 							<<wide_to_narrow(error_message)<<std::endl;
 
-					GUIMessageMenu *menu2 =
+					GUIMessageMenu* const menu2 =
 							new GUIMessageMenu(guienv, guiroot, -1,
 								&g_menumgr, error_message.c_str());
 					menu2->drop();
@@ -1105,7 +1105,7 @@ int main(int argc, char *argv[])
 
 				infostream<<"Dropping main menu"<<std::endl;
 
-				menu->drop();
+				menu->drop(); // Don't use after.
 
 				character_creator = menudata.character_creator;
 
@@ -1169,7 +1169,7 @@ int main(int argc, char *argv[])
 				character_creator = false;
 				video::IVideoDriver* driver = device->getVideoDriver();
 
-				GUICharDefMenu *menu = new GUICharDefMenu(device, guienv, guiroot, -1, &g_menumgr);
+				GUICharDefMenu* const menu = new GUICharDefMenu(device, guienv, guiroot, -1, &g_menumgr);
 				menu->allowFocusRemoval(true);
 
 #if USE_AUDIO == 1
@@ -1201,7 +1201,6 @@ int main(int argc, char *argv[])
 #endif
 
 				menu->drop();
-
 				continue;
 			}
 			// Initialize mapnode again to enable changed graphics settings
@@ -1211,7 +1210,7 @@ int main(int argc, char *argv[])
 				Run game
 			*/
 			{
-				char* v = config_get("world.server.address");
+				const char* v = config_get("world.server.address");
 				if (!v || !v[0]) {
 					if (!world_init(NULL)) {
 						the_game(

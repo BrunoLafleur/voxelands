@@ -18,10 +18,10 @@ typedef struct dirlist_s {
 /* defined in path.c */
 int path_init(void);
 void path_exit(void);
-int path_custom_setter(char* p);
-int path_screenshot_setter(char* p);
-int path_world_setter(char* p);
-char* path_get(char* type, char* file, int must_exist, char* buff, int size);
+int path_custom_setter(const char* p);
+int path_screenshot_setter(const char* p);
+int path_world_setter(const char* p);
+char* path_get(const char* type,const char* file, int must_exist, char* buff, int size);
 int path_exists(char* path);
 int path_create(char* type, char* file);
 int path_remove(char* type, char* path);

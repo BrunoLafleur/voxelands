@@ -751,7 +751,7 @@ void the_game(
 	*/
 	SharedPtr<Server> server;
 	{
-		char* v = config_get("world.server.address");
+		const char* v = config_get("world.server.address");
 		if (!v || !v[0]) {
 			//draw_load_screen(L"Creating server...", driver, font);
 			drawLoadingScreen(device,narrow_to_wide(gettext("Creating server...")));
@@ -778,7 +778,7 @@ void the_game(
 		port = 30000;
 	Address connect_address(0,0,0,0, port);
 	try{
-		char* v = config_get("world.server.address");
+		const char* v = config_get("world.server.address");
 		if (!v || !v[0]) {
 			connect_address.setAddress(127,0,0,1);
 		}else{
@@ -927,7 +927,7 @@ void the_game(
 	profiler_print_interval = config_get_float("debug.profiler.interval");
 	mouse_sensitivity = config_get_float("client.ui.mouse.sensitivity");
 	{
-		char* v = config_get("client.graphics.selection");
+		const char* v = config_get("client.graphics.selection");
 		if (v && !strcmp(v,"outline"))
 			highlight_selected_node = false;
 	}
@@ -1141,7 +1141,7 @@ void the_game(
 		if (input->wasKeyDown(getKeySetting(VLKC_INVENTORY))) {
 			infostream<<"the_game: Launching inventory"<<std::endl;
 
-			GUIFormSpecMenu *menu = new GUIFormSpecMenu(guienv, guiroot, -1, &g_menumgr, &client);
+			GUIFormSpecMenu* const menu = new GUIFormSpecMenu(guienv, guiroot, -1, &g_menumgr, &client);
 
 			InventoryLocation inventoryloc;
 			inventoryloc.setCurrentPlayer();
@@ -1477,7 +1477,7 @@ void the_game(
 					}
 #if USE_AUDIO == 1
 					{
-						char* v;
+						const char* v;
 						std::string ch = std::string(PLAYER_DEFAULT_CHARDEF);
 						v = config_get("client.character");
 						if (v)
@@ -1496,10 +1496,10 @@ void the_game(
 					if (respawn_menu_active)
 						continue;
 
-					MainRespawnInitiator *respawner =
+					MainRespawnInitiator* const respawner =
 							new MainRespawnInitiator(
 									&respawn_menu_active, &client);
-					GUIDeathScreen *menu =
+					GUIDeathScreen* const menu =
 							new GUIDeathScreen(guienv, guiroot, -1,
 								&g_menumgr, respawner);
 					menu->drop();
@@ -1758,7 +1758,8 @@ void the_game(
 
 							/* Create menu */
 
-							GUIFormSpecMenu *menu = new GUIFormSpecMenu(guienv, guiroot, -1, &g_menumgr, &client);
+							GUIFormSpecMenu* const menu = new GUIFormSpecMenu(guienv, guiroot, -1, &g_menumgr, &client);
+							
 							menu->setFormSpec(meta->getDrawSpecString(client.getLocalPlayer()), inventoryloc);
 							menu->setFormIO(new NodeMetadataFormIO(nodepos, &client));
 							menu->drop();
@@ -1783,7 +1784,9 @@ void the_game(
 
 									/* Create menu */
 
-									GUIFormSpecMenu *menu = new GUIFormSpecMenu(guienv, guiroot, -1, &g_menumgr, &client);
+									GUIFormSpecMenu* const menu =
+									    new GUIFormSpecMenu(guienv, guiroot, -1, &g_menumgr, &client);
+									
 									menu->setFormSpec(ameta->getDrawSpecString(client.getLocalPlayer()), inventoryloc);
 									menu->setFormIO(new NodeMetadataFormIO(npos, &client));
 									menu->drop();

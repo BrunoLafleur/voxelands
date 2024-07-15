@@ -200,7 +200,7 @@ public:
 
 	u32 getSeason()
 	{
-		char* s = config_get("world.game.environment.season");
+		const char* s = config_get("world.game.environment.season");
 		if (s) {
 			if (!strcmp(s,"summer"))
 				return ENV_SEASON_SUMMER;

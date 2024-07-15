@@ -88,9 +88,10 @@ enum MobDrawType
 
 #define CONTENT_MOB_MASK 0x2000
 
-struct MobFeatures {
+class MobFeatures {
+    public:
 	content_t content;
-	char* description;
+	const char* description;
 	u8 level;
 #ifndef SERVER
 	TileSpec tiles[6];
@@ -150,6 +151,17 @@ struct MobFeatures {
 		reset();
 	}
 
+	MobFeatures(const MobFeatures& m)
+	{
+		copie(m);
+	}
+	
+	MobFeatures& operator=(const MobFeatures& m)
+	{
+		copie(m);
+		return *this;
+	}
+	
 	void setCollisionBox(aabb3f cb)
 	{
 		cb.MinEdge.Y -= 0.5*BS;
@@ -157,20 +169,20 @@ struct MobFeatures {
 		collisionbox = cb;
 	}
 
-	aabb3f getCollisionBox()
+	aabb3f getCollisionBox() const
 	{
 		if (collisionbox.MinEdge != collisionbox.MaxEdge)
 			return collisionbox;
 		return aabb3f(-0.5*BS,0.,-0.5*BS,0.5*BS,BS,0.5*BS);
 	}
 
-	v3f getSize()
+	v3f getSize() const
 	{
 		aabb3f c = getCollisionBox();
 		return v3f((c.MaxEdge.X-c.MinEdge.X)/BS,(c.MaxEdge.Y-c.MinEdge.Y)/BS,(c.MaxEdge.Z-c.MinEdge.Z)/BS);
 	}
 
-	v3s16 getSizeBlocks()
+	v3s16 getSizeBlocks() const
 	{
 		v3f s = getSize();
 		return v3s16(MYMAX(s.X+0.5,1.0),MYMAX(s.Y+0.5,1.0),MYMAX(s.Z+0.5,1.0));
@@ -181,10 +193,8 @@ struct MobFeatures {
 	void setTexture(std::string name) {texture = name;}
 
 #ifdef SERVER
-	void setBoxTexture(u16 i, std::string name, u8 alpha=255)
-	{}
-	void setAllBoxTextures(std::string name, u8 alpha=255)
-	{}
+	void setBoxTexture(u16 i, std::string name, u8 alpha=255) {}
+	void setAllBoxTextures(std::string name, u8 alpha=255) {}
 #else
 	void setBoxTexture(u16 i, std::string name, u8 alpha=255);
 
@@ -196,16 +206,16 @@ struct MobFeatures {
 	}
 #endif
 
+    private:
+	
 	void reset()
 	{
-		content = CONTENT_IGNORE;
-		description = (char*)"";
-		texture = "";
-		texture_display = MDT_AUTO;
-		model = "";
-		model_scale = v3f(1.0,1.0,1.0);
-		model_offset = v3f(0,0,0);
+		content = CONTENT_IGNORE;description = "";level = MOB_NONE;
+		texture = "";texture_display = MDT_AUTO;
+		model = "";model_scale = v3f(1.0,1.0,1.0);model_offset = v3f(0,0,0);
 		model_rotation = v3f(0,0,0);
+		collisionbox = aabb3f(-0.5*BS,0.,-0.5*BS,0.5*BS,BS,0.5*BS);
+		
 		punch_action = MPA_DIE;
 		motion_type = MMT_WALK;
 		motion = MM_STATIC;
@@ -231,18 +241,63 @@ struct MobFeatures {
 		contact_place_node = CONTENT_IGNORE;
 		contact_drop_item = CONTENT_IGNORE;
 		moves_silently = false;
+		
 		sound_spawn = "";
 		sound_death = "";
 		sound_attack = "";
 		sound_punch = "mob-dig";
 		sound_random = "";
 		sound_random_extra = "";
+		
 		spawn_min_height = -20000;
 		spawn_max_height = 100;
 		spawn_chance = 1;
 		spawn_group = 1;
 		spawn_water = false;
+		
 		spawn_naturally = true;
+	}
+
+	void copie(const MobFeatures& m)
+	{
+		content = m.content;description = m.description;level = m.level;
+		texture = m.texture;texture_display = m.texture_display;
+		model = m.model;model_scale = m.model_scale;
+		model_offset = m.model_offset;model_rotation = m.model_rotation;
+		collisionbox = m.collisionbox;
+		
+		punch_action = m.punch_action;motion_type = m.motion_type;motion = m.motion;
+		angry_motion = m.angry_motion;
+		static_thrown_speed = m.static_thrown_speed;
+		follow_item = m.follow_item;tamed_mob = m.tamed_mob;
+		attack_throw_object = m.attack_throw_object;
+		attack_throw_offset = m.attack_throw_offset;
+		attack_player_damage = m.attack_player_damage;
+		attack_player_range = m.attack_player_range;
+		attack_mob_damage = m.attack_mob_damage;
+		attack_mob_range = m.attack_mob_range;
+		glow_light = m.glow_light;attack_glow_light = m.attack_glow_light;
+		hp = m.hp;dropped_item = m.dropped_item;
+		special_punch_item = m.special_punch_item;
+		special_dropped_item = m.special_dropped_item;
+		special_dropped_count = m.special_dropped_count;
+		special_dropped_max = m.special_dropped_max;
+		contact_explosion_diameter = m.contact_explosion_diameter;
+		contact_place_node = m.contact_place_node;
+		contact_drop_item = m.contact_drop_item;
+		moves_silently = m.moves_silently;
+		
+		sound_spawn = m.sound_spawn;sound_death = m.sound_death;
+		sound_attack = m.sound_attack;sound_punch = m.sound_punch;
+		sound_random = m.sound_random;sound_random_extra = m.sound_random_extra;
+		
+		spawn_min_height = m.spawn_min_height;
+		spawn_max_height = m.spawn_max_height;
+		spawn_chance = m.spawn_chance;
+		spawn_group = m.spawn_group;
+		spawn_water = m.spawn_water;
+		
+		spawn_naturally = m.spawn_naturally;
 	}
 };
 
@@ -299,6 +354,6 @@ void content_mob_init();
 #define CONTENT_MOB_SHEARED_SHEEP (CONTENT_MOB_MASK | 0x14)
 
 // increment me if you add a mob!
-#define CONTENT_MOB_COUNT 21
+#define CONTENT_MOB_COUNT 20
 
 #endif

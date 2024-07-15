@@ -33,8 +33,8 @@ typedef struct authdata_s {
 
 /* defined in auth.c */
 int auth_privs2str(uint64_t privs, char* buff, int size);
-uint64_t auth_str2privs(char* str);
-int auth_init(char* file);
+uint64_t auth_str2privs(const char* str);
+int auth_init(const char* file);
 void auth_exit(void);
 void auth_load(void);
 void auth_save(void);

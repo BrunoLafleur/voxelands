@@ -59,7 +59,7 @@ struct QueuedBlockEmerge
 class BlockEmergeQueue
 {
 public:
-	BlockEmergeQueue()
+	BlockEmergeQueue() : m_queue(),m_mutex()
 	{
 		m_mutex.Init();
 	}

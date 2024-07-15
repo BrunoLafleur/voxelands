@@ -399,7 +399,9 @@ void ServerEnvironment::serializePlayers()
 		}
 		list_file = list_file->next;
 	}
-
+	
+	path_dirlist_free(list);
+	
 	for (i=0; i<m_players->length; i++) {
 		player = (Player*)array_get_ptr(m_players,i);
 		if (!player)
@@ -427,7 +429,6 @@ void ServerEnvironment::serializePlayers()
 	}
 
 	nvp_free(&saved_players,0);
-
 }
 
 void ServerEnvironment::deSerializePlayers()
@@ -3118,6 +3119,10 @@ void ServerEnvironment::step(float dtime)
 
 		for (std::map<u16, ServerActiveObject*>::iterator i = m_active_objects.begin(); i != m_active_objects.end(); i++) {
 			ServerActiveObject* obj = i->second;
+
+			if(!obj)
+			    continue;
+			
 			// Remove non-peaceful mobs on peaceful mode
 			if (obj->level() > mob_level)
 				obj->m_removed = true;
@@ -3165,10 +3170,13 @@ void ServerEnvironment::getActiveObjects(v3f origin, f32 max_d, core::array<Dist
 	for (std::map<u16, ServerActiveObject*>::iterator i = m_active_objects.begin(); i != m_active_objects.end(); i++) {
 		ServerActiveObject* obj = i->second;
 
+		if(!obj)
+		    continue;
+		
 		f32 d = (obj->getBasePosition() - origin).getLength();
 
 		if (d > max_d)
-			continue;
+		    continue;
 
 		DistanceSortedActiveObject dso(obj, d);
 

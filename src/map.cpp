@@ -72,10 +72,15 @@
 
 Map::Map(std::ostream &dout):
 	m_dout(dout),
-	m_sector_cache(NULL)
+	m_event_receivers(),
+	m_sectors(),
+	m_sectors_mutex(),
+	m_sector_cache(NULL),
+	m_sector_cache_p(),
+	m_transforming_liquid()
 {
-	/*m_sector_mutex.Init();
-	assert(m_sector_mutex.IsInitialized());*/
+	m_sectors_mutex.Init();
+	assert(m_sectors_mutex.IsInitialized());
 }
 
 Map::~Map()
@@ -83,6 +88,8 @@ Map::~Map()
 	/*
 		Free all MapSectors
 	*/
+	JMutexAutoLock lock(m_sectors_mutex);
+	
 	core::map<v2s16, MapSector*>::Iterator i = m_sectors.getIterator();
 	for(; i.atEnd() == false; i++)
 	{
@@ -137,6 +144,7 @@ MapSector * Map::getSectorNoGenerateNoExNoLock(v2s16 p)
 
 MapSector * Map::getSectorNoGenerateNoEx(v2s16 p)
 {
+	JMutexAutoLock lock(m_sectors_mutex);
 	return getSectorNoGenerateNoExNoLock(p);
 }
 
@@ -152,7 +160,8 @@ MapSector * Map::getSectorNoGenerate(v2s16 p)
 MapBlock * Map::getBlockNoCreateNoEx(v3s16 p3d)
 {
 	v2s16 p2d(p3d.X, p3d.Z);
-	MapSector * sector = getSectorNoGenerateNoEx(p2d);
+	JMutexAutoLock lock(m_sectors_mutex);
+	MapSector * sector = getSectorNoGenerateNoExNoLock(p2d);
 	if(sector == NULL)
 		return NULL;
 	MapBlock *block = sector->getBlockNoCreateNoEx(p3d.Y);
@@ -1233,10 +1242,11 @@ void Map::timerUpdate(float dtime, float unload_timeout,
 	u32 deleted_blocks_count = 0;
 	u32 saved_blocks_count = 0;
 
-	core::map<v2s16, MapSector*>::Iterator si;
-
 	beginSave();
-	si = m_sectors.getIterator();
+	m_sectors_mutex.Lock();
+	
+	core::map<v2s16, MapSector*>::Iterator si = m_sectors.getIterator();
+	
 	for(; si.atEnd() == false; si++)
 	{
 		MapSector *sector = si.getNode()->getValue();
@@ -1284,6 +1294,7 @@ void Map::timerUpdate(float dtime, float unload_timeout,
 			sector_deletion_queue.push_back(si.getNode()->getKey());
 		}
 	}
+	m_sectors_mutex.Unlock();
 	endSave();
 
 	// Finally delete the empty sectors
@@ -1303,9 +1314,11 @@ void Map::timerUpdate(float dtime, float unload_timeout,
 void Map::deleteSectors(core::list<v2s16> &list)
 {
 	core::list<v2s16>::Iterator j;
+	JMutexAutoLock lock(m_sectors_mutex);
+
 	for(j=list.begin(); j!=list.end(); j++)
 	{
-		MapSector *sector = m_sectors[*j];
+		MapSector* const sector = m_sectors[*j];
 		// If sector is in sector cache, remove it from there
 		if(m_sector_cache == sector)
 			m_sector_cache = NULL;
@@ -1661,8 +1674,10 @@ void Map::nodeMetadataStep(float dtime, core::map<v3s16, MapBlock*> &changed_blo
 		reloaded a block with a furnace when I walked back to it from
 		a distance.
 	*/
-	core::map<v2s16, MapSector*>::Iterator si;
-	si = m_sectors.getIterator();
+	JMutexAutoLock lock(m_sectors_mutex);
+
+	core::map<v2s16, MapSector*>::Iterator si = m_sectors.getIterator();
+	
 	for(; si.atEnd() == false; si++)
 	{
 		MapSector *sector = si.getNode()->getValue();
@@ -2001,7 +2016,9 @@ ServerMapSector * ServerMap::createSector(v2s16 p2d)
 	/*
 		Insert to container
 	*/
+	m_sectors_mutex.Lock();
 	m_sectors.insert(p2d, sector);
+	m_sectors_mutex.Unlock();
 
 	return sector;
 }
@@ -2260,6 +2277,7 @@ void ServerMap::save(bool only_changed)
 
 	// Don't do anything with sqlite unless something is really saved
 	bool save_started = false;
+	JMutexAutoLock lock(m_sectors_mutex);
 
 	for (core::map<v2s16, MapSector*>::Iterator i = m_sectors.getIterator(); i.atEnd() == false; i++) {
 		ServerMapSector *sector = (ServerMapSector*)i.getNode()->getValue();
@@ -2353,7 +2371,7 @@ void ServerMap::loadMapMeta()
 	}
 	m_type = MGT_DEFAULT;
 	if (config_get("world.map.type")) {
-		char* type = config_get("world.map.type");
+		const char* type = config_get("world.map.type");
 		if (!strcmp(type,"flat")) {
 			m_type = MGT_FLAT;
 		}else{
@@ -2549,20 +2567,19 @@ ClientMap::ClientMap(
 	Map(dout_client),
 	scene::ISceneNode(parent, mgr, id),
 	m_client(client),
+	m_box(-BS*1000000,-BS*1000000,-BS*1000000,
+			BS*1000000,BS*1000000,BS*1000000),
 	m_control(control),
 	m_camera_position(0,0,0),
 	m_camera_direction(0,0,1),
-	m_camera_fov(PI)
+	m_camera_fov(PI),
+	m_render_trilinear(config_get_bool("client.video.trilinear")),
+	m_render_bilinear(config_get_bool("client.video.bilinear")),
+	m_render_anisotropic(config_get_bool("client.video.anisotropic")),
+	m_last_drawn_sectors()
 {
 	m_camera_mutex.Init();
 	assert(m_camera_mutex.IsInitialized());
-
-	m_box = core::aabbox3d<f32>(-BS*1000000,-BS*1000000,-BS*1000000,
-			BS*1000000,BS*1000000,BS*1000000);
-
-	m_render_trilinear = config_get_bool("client.video.trilinear");
-	m_render_bilinear = config_get_bool("client.video.bilinear");
-	m_render_anisotropic = config_get_bool("client.video.anisotropic");
 }
 
 ClientMap::~ClientMap()
@@ -2584,7 +2601,7 @@ MapSector * ClientMap::emergeSector(v2s16 p2d)
 	ClientMapSector *sector = new ClientMapSector(this, p2d);
 
 	{
-		//JMutexAutoLock lock(m_sector_mutex); // Bulk comment-out
+		JMutexAutoLock lock(m_sectors_mutex);
 		m_sectors.insert(p2d, sector);
 	}
 
@@ -2661,6 +2678,7 @@ void ClientMap::renderMap(video::IVideoDriver* driver, s32 pass)
 	m_camera_mutex.Lock();
 	v3f camera_position = m_camera_position;
 	v3f camera_direction = m_camera_direction;
+	v3s16 camera_offset = m_camera_offset;
 	f32 camera_fov = m_camera_fov;
 	m_camera_mutex.Unlock();
 
@@ -2724,6 +2742,8 @@ void ClientMap::renderMap(video::IVideoDriver* driver, s32 pass)
 			si = m_sectors.getIterator();
 			si.atEnd() == false; si++)
 	{
+	    	m_sectors_mutex.Lock();
+
 		MapSector *sector = si.getNode()->getValue();
 		v2s16 sp = sector->getPos();
 
@@ -2738,6 +2758,8 @@ void ClientMap::renderMap(video::IVideoDriver* driver, s32 pass)
 
 		core::list< MapBlock * > sectorblocks;
 		sector->getBlocks(sectorblocks);
+		
+		m_sectors_mutex.Unlock();
 
 		/*
 			Loop through blocks in sector
@@ -2748,15 +2770,18 @@ void ClientMap::renderMap(video::IVideoDriver* driver, s32 pass)
 		core::list< MapBlock * >::Iterator i;
 		for(i=sectorblocks.begin(); i!=sectorblocks.end(); i++)
 		{
-			MapBlock *block = *i;
+			MapBlock* const block = *i;
 
+			if(!block)
+			    continue;
+			
 			/*
 				Compare block position to camera position, skip
 				if not seen on display
 			*/
 
 			if (block->mesh != NULL)
-				block->mesh->updateCameraOffset(m_camera_offset);
+				block->mesh->updateCameraOffset(camera_offset);
 
 			float range = 100000 * BS;
 			if(m_control.range_all == false)
@@ -2874,7 +2899,7 @@ void ClientMap::renderMap(video::IVideoDriver* driver, s32 pass)
 			{
 				JMutexAutoLock lock(block->mesh_mutex);
 
-				MapBlockMesh *mesh = block->mesh;
+				MapBlockMesh* const mesh = block->mesh;
 
 				if (mesh == NULL) {
 					blocks_in_range_without_mesh++;
@@ -2942,7 +2967,7 @@ void ClientMap::renderMap(video::IVideoDriver* driver, s32 pass)
 		{
 			JMutexAutoLock lock(block->mesh_mutex);
 
-			MapBlockMesh *mesh = block->mesh;
+			MapBlockMesh* const mesh = block->mesh;
 			if (!mesh || !mesh->getMesh())
 				continue;
 			scene::SMesh *m = NULL;
@@ -3143,7 +3168,12 @@ int ClientMap::getBackgroundBrightness(
 	float sunlight_min_d = max_d*0.8;
 	if (sunlight_min_d > 35*BS)
 		sunlight_min_d = 35*BS;
-
+	
+	m_camera_mutex.Lock();
+	v3f camera_position = m_camera_position;
+	v3f camera_direction = m_camera_direction;
+	m_camera_mutex.Unlock();
+	
 	core::array<int> values;
 
 	for (u32 i=0; i<sizeof(z_directions)/sizeof(*z_directions); i++) {
@@ -3151,7 +3181,7 @@ int ClientMap::getBackgroundBrightness(
 		z_dir.normalize();
 		core::CMatrix4<f32> a;
 		a.buildRotateFromTo(v3f(0,1,0), z_dir);
-		v3f dir = m_camera_direction;
+		v3f dir = camera_direction;
 		a.rotateVect(dir);
 		int br = 0;
 		float step = BS*1.5;
@@ -3161,7 +3191,7 @@ int ClientMap::getBackgroundBrightness(
 		bool sunlight_seen_now = false;
 		bool ok = getVisibleBrightness(
 			this,
-			m_camera_position,
+			camera_position,
 			dir,
 			step,
 			1.0,
@@ -3200,7 +3230,7 @@ int ClientMap::getBackgroundBrightness(
 
 	int ret = 0;
 	if (brightness_count == 0) {
-		MapNode n = getNodeNoEx(floatToInt(m_camera_position, BS));
+		MapNode n = getNodeNoEx(floatToInt(camera_position, BS));
 		if (content_features(n).param_type == CPT_LIGHT) {
 			ret = decode_light(n.getLightBlend(daylight_factor));
 		}else{
@@ -3281,14 +3311,18 @@ void ClientMap::renderPostFx()
 void ClientMap::expireMeshes(bool only_daynight_diffed)
 {
 	TimeTaker timer("expireMeshes()");
-
-	core::map<v2s16, MapSector*>::Iterator si;
-	si = m_sectors.getIterator();
+	
+	core::map<v2s16, MapSector*>::Iterator si = m_sectors.getIterator();
+	
 	for (; si.atEnd() == false; si++) {
+	    	m_sectors_mutex.Lock();
+
 		MapSector *sector = si.getNode()->getValue();
 
 		core::list< MapBlock * > sectorblocks;
 		sector->getBlocks(sectorblocks);
+		
+		m_sectors_mutex.Unlock();
 
 		core::list< MapBlock * >::Iterator i;
 		for (i=sectorblocks.begin(); i!=sectorblocks.end(); i++) {

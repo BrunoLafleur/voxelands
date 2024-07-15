@@ -32,6 +32,7 @@
 class IGameCallback
 {
 public:
+	virtual ~IGameCallback() {};
 	virtual void exitToOS() = 0;
 	virtual void disconnect() = 0;
 	virtual void changePassword() = 0;
