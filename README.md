@@ -1,6 +1,6 @@
 # voxelands
 
-Clone of voxelands for correcting bugs made by :
+Clone of voxelands v1709.00 for correcting bugs made by :
 ------------------------------------------------
 Pierre Brochard : pierre.brochard.1982@m4x.org
 
