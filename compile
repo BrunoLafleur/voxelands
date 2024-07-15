@@ -1,0 +1,18 @@
+#! /bin/sh
+
+export CFLAGS="-g -O0 -Wall -Wextra"
+export CXXFLAGS="-g -O0 -Wall -Weffc++ -Wextra"
+export LDFLAGS="-g -O0"
+
+cmake -DRUN_IN_PLACE=1 \
+    -DCMAKE_C_FLAGS:STRING="-g -O0 -Wall -Wextra" \
+    -DCMAKE_CXX_FLAGS:STRING="-g -O0 -Wall -Weffc++ -Wextra" \
+    -DCMAKE_EXE_LINKER_FLAGS:STRING="-g -O0" \
+    -DCMAKE_SHARED_LINKER_FLAGS:STRING="-g -O0" \
+    -DCMAKE_C_FLAGS_RELEASE="-DNDEBUG -g -O0" \
+    -DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG -g -O0" \
+    -DCMAKE_EXE_LINKER_FLAGS_RELEASE="-g -O0" \
+    -DCMAKE_SHARED_LINKER_FLAGS_RELEASE="-g -O0" \
+    -DCMAKE_BUILD_TYPE=relwithdebinfo \
+    -DENABLE_AUDIO=off \
+    .
