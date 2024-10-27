@@ -1519,6 +1519,9 @@ void the_game(
 		v3f player_position = player->getPosition();
 		v3f camera_position = camera.getPosition();
 		v3f camera_direction = camera.getDirection();
+#if USE_AUDIO == 1
+		v3f camera_up = camera.getCameraNode()->getUpVector();
+#endif
 		f32 camera_fov = camera.getFovMax();
 		v3s16 camera_offset = camera.getOffset();
 
