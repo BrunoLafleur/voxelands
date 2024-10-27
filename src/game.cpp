@@ -1519,7 +1519,6 @@ void the_game(
 		v3f player_position = player->getPosition();
 		v3f camera_position = camera.getPosition();
 		v3f camera_direction = camera.getDirection();
-		v3f camera_up = camera.getCameraNode()->getUpVector();
 		f32 camera_fov = camera.getFovMax();
 		v3s16 camera_offset = camera.getOffset();
 
@@ -1855,9 +1854,12 @@ void the_game(
 		{
 			v3f pp = client.getLocalPlayer()->getPosition();
 			v3s16 ppos = floatToInt(pp,BS);
-			MapBlock *block = client.getEnv().getMap().getBlockNoCreateNoEx(getNodeBlockPos(ppos));
-			if (block != NULL)
+			MapBlock* const block = client.getEnv().getMap().getBlockNoCreateNoEx(getNodeBlockPos(ppos));
+			if (block)
+			{
 				biome = block->getBiome();
+				block->ResetCurrent();
+			}
 		}
 		if (biome == BIOME_SPACE || free_move) {
 			direct_brightness = time_brightness;
@@ -2269,10 +2271,14 @@ void the_game(
 						v3f pp = client.getLocalPlayer()->getPosition();
 						spos = floatToInt(pp,BS);
 					}
-					MapBlock *block = client.getEnv().getMap().getBlockNoCreateNoEx(getNodeBlockPos(spos));
+					MapBlock* const block =
+					    client.getEnv().getMap().getBlockNoCreateNoEx(getNodeBlockPos(spos));
 					snode = client.getEnv().getMap().getNodeNoEx(spos,NULL);
-					if (block != NULL)
+					if (block)
+					{
 						biome = block->getBiome();
+						block->ResetCurrent();
+					}
 				}
 
 				LocalPlayer *p = client.getLocalPlayer();

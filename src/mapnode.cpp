@@ -46,36 +46,44 @@ std::vector<NodeBox> transformNodeBox(MapNode &n,
 {
 	std::vector<NodeBox> boxes;
 	int facedir = 0;
-	if (
-		content_features(n).param2_type == CPT_FACEDIR_SIMPLE
-		|| content_features(n).param2_type == CPT_FACEDIR_WALLMOUNT
-	) {
+	
+	if (content_features(n).param2_type == CPT_FACEDIR_SIMPLE
+			|| content_features(n).param2_type == CPT_FACEDIR_WALLMOUNT)
 		facedir = n.param2&0x0F;
-	}else if (
-		content_features(n).param_type == CPT_FACEDIR_SIMPLE
-		|| content_features(n).param_type == CPT_FACEDIR_WALLMOUNT
-	) {
+	else if (content_features(n).param_type == CPT_FACEDIR_SIMPLE
+			|| content_features(n).param_type == CPT_FACEDIR_WALLMOUNT)
 		facedir = n.param1;
-	}
-	for(std::vector<NodeBox>::const_iterator i = nodebox.begin(); i != nodebox.end(); i++) {
+
+	for(std::vector<NodeBox>::const_iterator i = nodebox.begin(); i != nodebox.end(); i++)
+	{
 		NodeBox box = *i;
-		if (facedir == 1) {
+		
+		if (facedir == 1)
+		{
 			box.m_box.MinEdge.rotateXZBy(-90);
 			box.m_box.MaxEdge.rotateXZBy(-90);
 			box.m_box.repair();
-		}else if (facedir == 2) {
+		}
+		else if (facedir == 2)
+		{
 			box.m_box.MinEdge.rotateXZBy(180);
 			box.m_box.MaxEdge.rotateXZBy(180);
 			box.m_box.repair();
-		}else if (facedir == 3) {
+		}
+		else if (facedir == 3)
+		{
 			box.m_box.MinEdge.rotateXZBy(90);
 			box.m_box.MaxEdge.rotateXZBy(90);
 			box.m_box.repair();
-		}else if (facedir == 4) {
+		}
+		else if (facedir == 4)
+		{
 			box.m_box.MinEdge.rotateXYBy(-90);
 			box.m_box.MaxEdge.rotateXYBy(-90);
 			box.m_box.repair();
-		}else if (facedir == 5) {
+		}
+		else if (facedir == 5)
+		{
 			box.m_box.MinEdge.rotateXYBy(90);
 			box.m_box.MaxEdge.rotateXYBy(90);
 			box.m_box.repair();
@@ -102,14 +110,18 @@ void ContentFeatures::setTexture(u16 i, std::string name, u8 alpha)
 {
 	used_texturenames[name] = true;
 
-	if (g_texturesource) {
+	if (g_texturesource)
+	{
 		tiles[i].texture = g_texturesource->getTexture(name);
 
 		// we have an animated texture!
-		if (tiles[i].material_flags & MATERIAL_FLAG_ANIMATION_VERTICAL_FRAMES) {
+		if (tiles[i].material_flags & MATERIAL_FLAG_ANIMATION_VERTICAL_FRAMES)
+		{
 			// Get raw texture size to determine frame count by aspect ratio
-			video::ITexture *t = g_texturesource->getTextureRaw(name);
-			if (t != NULL) {
+			video::ITexture* const t = g_texturesource->getTextureRaw(name);
+			
+			if (t != NULL)
+			{
 				v2u32 size = t->getOriginalSize();
 				int frame_count = size.Y / size.X;
 				int frame_length_ms = 1000.0 * animation_length / frame_count;
@@ -140,11 +152,11 @@ void ContentFeatures::setMetaTexture(u16 i, std::string name, u8 alpha)
 {
 	used_texturenames[name] = true;
 
-	if(g_texturesource) {
+	if(g_texturesource)
 		meta_tiles[i].texture = g_texturesource->getTexture(name);
-	}
 
-	if (alpha != 255) {
+	if (alpha != 255)
+	{
 		meta_tiles[i].alpha = alpha;
 		meta_tiles[i].material_type = MATERIAL_ALPHA_VERTEX;
 	}
@@ -211,13 +223,14 @@ void ContentFeatures::setInventoryTextureNodeBox(content_t c, std::string top,
 
 struct ContentFeatures g_content_features[MAX_CONTENT+1];
 
-ContentFeatures & content_features(content_t i)
+ContentFeatures& content_features(content_t i)
 {
 	if (i > MAX_CONTENT)
 		i = CONTENT_IGNORE;
 	return g_content_features[i];
 }
-ContentFeatures & content_features(MapNode &n)
+
+ContentFeatures& content_features(const MapNode& n)
 {
 	return content_features(n.getContent());
 }
@@ -235,12 +248,16 @@ void init_mapnode()
 #endif
 {
 	bool repeat = false;
-	if (g_texturesource == NULL) {
+	
+	if (g_texturesource == NULL)
+	{
 		dstream<<"INFO: Initial run of init_mapnode with "
 				"g_texturesource=NULL. If this segfaults, "
 				"there is a bug with something not checking for "
 				"the NULL value."<<std::endl;
-	}else{
+	}
+	else
+	{
 		repeat = true;
 		dstream<<"INFO: Full run of init_mapnode with "
 				"g_texturesource!=NULL"<<std::endl;
@@ -269,12 +286,12 @@ void init_mapnode()
 		initial_material_type = MATERIAL_ALPHA_NONE;*/
 	for(u16 i=0; i<MAX_CONTENT+1; i++)
 	{
-		ContentFeatures *f = &g_content_features[i];
+		ContentFeatures& f = g_content_features[i];
 		// Re-initialize
-		f->reset();
+		f.reset();
 
 		for(u16 j=0; j<6; j++)
-			f->tiles[j].material_type = initial_material_type;
+			f.tiles[j].material_type = initial_material_type;
 	}
 #endif
 
@@ -282,13 +299,16 @@ void init_mapnode()
 		Initially set every block to be shown as an unknown block.
 		Don't touch CONTENT_IGNORE or CONTENT_AIR.
 	*/
-	for (u16 i=0; i <= MAX_CONTENT; i++) {
-		ContentFeatures *f = &g_content_features[i];
-		f->description = (char*)"???";
+	for (u16 i=0; i <= MAX_CONTENT; i++)
+	{
+		ContentFeatures& f = g_content_features[i];
+		
+		f.description = (char*)"???";
 		if (i == CONTENT_IGNORE || i == CONTENT_AIR)
 			continue;
-		f->draw_type = CDT_CUBELIKE;
-		f->setAllTextures("unknown_block.png");
+		
+		f.draw_type = CDT_CUBELIKE;
+		f.setAllTextures("unknown_block.png");
 	}
 
 	// Make CONTENT_IGNORE to not block the view when occlusion culling
@@ -359,7 +379,7 @@ v3s16 facedir_rotate(u8 facedir, v3s16 dir)
 	return dir;
 }
 
-v3s16 MapNode::getRotation(v3s16 dir)
+v3s16 MapNode::getRotation(v3s16 dir) const
 {
 	if (
 		content_features(*this).param2_type == CPT_FACEDIR_SIMPLE
@@ -375,72 +395,68 @@ v3s16 MapNode::getRotation(v3s16 dir)
 	return dir;
 }
 
-s16 MapNode::getRotationAngle()
+s16 MapNode::getRotationAngle() const
 {
 	int facedir = 0;
-	ContentFeatures &f = content_features(*this);
-	if (
-		f.param2_type == CPT_FACEDIR_SIMPLE
-		|| f.param2_type == CPT_FACEDIR_WALLMOUNT
-	) {
+	const ContentFeatures& f = content_features(*this);
+	
+	if (f.param2_type == CPT_FACEDIR_SIMPLE
+			|| f.param2_type == CPT_FACEDIR_WALLMOUNT)
 		facedir = param2&0x0F;
-	}else if (
-		f.param_type == CPT_FACEDIR_SIMPLE
-		|| f.param_type == CPT_FACEDIR_WALLMOUNT
-	) {
+	else if (f.param_type == CPT_FACEDIR_SIMPLE
+			|| f.param_type == CPT_FACEDIR_WALLMOUNT)
 		facedir = param1;
-	}
-	switch (facedir) {
-	case 1:
+
+	switch (facedir)
+	{
+	  case 1:
 		return -90;
 		break;
-	case 2:
+	  case 2:
 		return 180;
 		break;
-	case 3:
+	  case 3:
 		return 90;
 		break;
-	default:;
+	  default:;
 	}
+	
 	return 0;
 }
 
-v3s16 MapNode::getEffectedRotation()
+v3s16 MapNode::getEffectedRotation() const
 {
 	u8 facedir = 0;
-	ContentFeatures *f = &content_features(getContent());
-	if (f->onact_also_affects == v3s16(0,0,0))
+	const ContentFeatures& f = content_features(getContent());
+	
+	if (f.onact_also_affects == v3s16(0,0,0))
 		return v3s16(0,0,0);
 
-	if (
-		f->param2_type == CPT_FACEDIR_SIMPLE
-		|| f->param2_type == CPT_FACEDIR_WALLMOUNT
-	) {
+	if (f.param2_type == CPT_FACEDIR_SIMPLE
+			|| f.param2_type == CPT_FACEDIR_WALLMOUNT)
 		facedir = (param2&0x0F);
-	}else if (
-		f->param_type == CPT_FACEDIR_SIMPLE
-		|| f->param_type == CPT_FACEDIR_WALLMOUNT
-	) {
+	else if (f.param_type == CPT_FACEDIR_SIMPLE
+			|| f.param_type == CPT_FACEDIR_WALLMOUNT)
 		facedir = param1;
+
+	switch (facedir)
+	{
+	  case 0: // Same
+		return v3s16(-f.onact_also_affects.X, f.onact_also_affects.Y, -f.onact_also_affects.Z);
+		break;
+	  case 1: // Face is taken from rotXZccv(-90)
+		return v3s16(-f.onact_also_affects.Z, f.onact_also_affects.Y, f.onact_also_affects.X);
+		break;
+	  case 2: // Face is taken from rotXZccv(180)
+		return v3s16(f.onact_also_affects.X, f.onact_also_affects.Y, f.onact_also_affects.Z);
+		break;
+	  case 3: // Face is taken from rotXZccv(90)
+		return v3s16(f.onact_also_affects.Z, f.onact_also_affects.Y, -f.onact_also_affects.X);
+		break;
+	  default:;
 	}
 
-	switch (facedir) {
-	case 0: // Same
-		return v3s16(-f->onact_also_affects.X, f->onact_also_affects.Y, -f->onact_also_affects.Z);
-		break;
-	case 1: // Face is taken from rotXZccv(-90)
-		return v3s16(-f->onact_also_affects.Z, f->onact_also_affects.Y, f->onact_also_affects.X);
-		break;
-	case 2: // Face is taken from rotXZccv(180)
-		return v3s16(f->onact_also_affects.X, f->onact_also_affects.Y, f->onact_also_affects.Z);
-		break;
-	case 3: // Face is taken from rotXZccv(90)
-		return v3s16(f->onact_also_affects.Z, f->onact_also_affects.Y, -f->onact_also_affects.X);
-		break;
-	default:;
-	}
-
-	return f->onact_also_affects;
+	return f.onact_also_affects;
 }
 
 #ifndef SERVER
@@ -448,40 +464,38 @@ TileSpec MapNode::getTileFrom(v3s16 dir, TileSpec raw_spec[6], bool rotate)
 {
 	TileSpec spec;
 	s32 dir_i = 0;
-	ContentFeatures &f = content_features(*this);
+	const ContentFeatures& f = content_features(*this);
 
-	if (
-		f.param2_type == CPT_FACEDIR_SIMPLE
-		|| f.param2_type == CPT_FACEDIR_WALLMOUNT
-	) {
+	if (f.param2_type == CPT_FACEDIR_SIMPLE
+			|| f.param2_type == CPT_FACEDIR_WALLMOUNT)
 		dir = facedir_rotate(param2&0x0F, dir);
-	}else if (
-		f.param_type == CPT_FACEDIR_SIMPLE
-		|| f.param_type == CPT_FACEDIR_WALLMOUNT
-	) {
+	else if (f.param_type == CPT_FACEDIR_SIMPLE
+			|| f.param_type == CPT_FACEDIR_WALLMOUNT)
 		dir = facedir_rotate(param1, dir);
-	}
-	if (dir == v3s16(0,-1,0)) {
+
+	if (dir == v3s16(0,-1,0))
 		dir_i = 1;
-	}else if(dir == v3s16(1,0,0)) {
+	else if(dir == v3s16(1,0,0))
 		dir_i = 2;
-	}else if(dir == v3s16(-1,0,0)) {
+	else if(dir == v3s16(-1,0,0))
 		dir_i = 3;
-	}else if(dir == v3s16(0,0,1)) {
+	else if(dir == v3s16(0,0,1))
 		dir_i = 4;
-	}else if(dir == v3s16(0,0,-1)) {
+	else if(dir == v3s16(0,0,-1))
 		dir_i = 5;
-	}
 
 	spec = raw_spec[dir_i];
 
 	/*
 		If it contains some mineral, change texture id
 	*/
-	if (f.param_type == CPT_MINERAL && g_texturesource) {
-		u8 mineral = getMineral();
-		std::string mineral_texture_name = mineral_features(mineral).texture;
-		if (mineral_texture_name != "") {
+	if (f.param_type == CPT_MINERAL && g_texturesource)
+	{
+		const u8 mineral = getMineral();
+		const std::string mineral_texture_name = mineral_features(mineral).texture;
+		
+		if (mineral_texture_name != "")
+		{
 			u32 orig_id = spec.texture.id;
 			std::string texture_name = g_texturesource->getTextureName(orig_id);
 			//texture_name += "^blit:";
@@ -491,67 +505,72 @@ TileSpec MapNode::getTileFrom(v3s16 dir, TileSpec raw_spec[6], bool rotate)
 			spec.texture = g_texturesource->getTexture(new_id);
 		}
 	}
-	if (rotate && f.rotate_tile_with_nodebox) {
-		u32 orig_id = spec.texture.id;
+	if (rotate && f.rotate_tile_with_nodebox)
+	{
+		const u32 orig_id = spec.texture.id;
 		std::string texture_name = g_texturesource->getTextureName(orig_id);
+		
 		texture_name += getTileRotationString(dir);
-		u32 new_id = g_texturesource->getTextureId(texture_name);
+		
+		const u32 new_id = g_texturesource->getTextureId(texture_name);
+		
 		spec.texture = g_texturesource->getTexture(new_id);
 	}
 
 	return spec;
 }
+
 std::string MapNode::getTileRotationString(v3s16 dir)
 {
 	s32 dir_i = 0;
-	ContentFeatures &f = content_features(*this);
+	const ContentFeatures& f = content_features(*this);
+	
 	if (!f.rotate_tile_with_nodebox)
 		return "";
 
-	if (
-		f.param2_type == CPT_FACEDIR_SIMPLE
-		|| f.param2_type == CPT_FACEDIR_WALLMOUNT
-	) {
+	if (f.param2_type == CPT_FACEDIR_SIMPLE
+			|| f.param2_type == CPT_FACEDIR_WALLMOUNT)
 		dir = facedir_rotate(param2&0x0F, dir);
-	}else if (
-		f.param_type == CPT_FACEDIR_SIMPLE
-		|| f.param_type == CPT_FACEDIR_WALLMOUNT
-	) {
+	else if (f.param_type == CPT_FACEDIR_SIMPLE
+			|| f.param_type == CPT_FACEDIR_WALLMOUNT)
 		dir = facedir_rotate(param1, dir);
-	}
-	if (dir == v3s16(0,-1,0)) {
+
+	if (dir == v3s16(0,-1,0))
 		dir_i = 1;
-	}else if(dir == v3s16(1,0,0)) {
+	else if(dir == v3s16(1,0,0))
 		dir_i = 2;
-	}else if(dir == v3s16(-1,0,0)) {
+	else if(dir == v3s16(-1,0,0))
 		dir_i = 3;
-	}else if(dir == v3s16(0,0,1)) {
+	else if(dir == v3s16(0,0,1))
 		dir_i = 4;
-	}else if(dir == v3s16(0,0,-1)) {
+	else if(dir == v3s16(0,0,-1))
 		dir_i = 5;
-	}
+	
 	u8 facedir = 0;
-	if (f.param_type == CPT_FACEDIR_SIMPLE) {
+	if (f.param_type == CPT_FACEDIR_SIMPLE)
 		facedir = param1;
-	}else if (f.param2_type == CPT_FACEDIR_SIMPLE) {
+	else if (f.param2_type == CPT_FACEDIR_SIMPLE)
 		facedir = (param2&0x0F);
+
+	if (dir_i == 0)
+	{
+		if (facedir == 1) // -90
+			return "^[transformR270";
+		else if (facedir == 2) // 180
+			return "^[transformR180";
+		else if (facedir == 3) // 90
+			return "^[transformR90";
+		
 	}
-	if (dir_i == 0) {
-		if (facedir == 1) { // -90
-			return "^[transformR270";
-		}else if (facedir == 2) { // 180
-			return "^[transformR180";
-		}else if (facedir == 3) { // 90
+	else if (dir_i == 1)
+	{
+		if (facedir == 1) // -90
 			return "^[transformR90";
-		}
-	}else if (dir_i == 1) {
-		if (facedir == 1) { // -90
-			return "^[transformR90";
-		}else if (facedir == 2) { // 180
+		else if (facedir == 2) // 180
 			return "^[transformR180";
-		}else if (facedir == 3) { // 90
+		else if (facedir == 3) // 90
 			return "^[transformR270";
-		}
+		
 	}
 
 	return "";
@@ -560,29 +579,26 @@ std::string MapNode::getTileRotationString(v3s16 dir)
 FaceText MapNode::getFaceText(v3s16 dir)
 {
 	s32 dir_i = 0;
-	ContentFeatures &f = content_features(*this);
-	if (
-		f.param2_type == CPT_FACEDIR_SIMPLE
-		|| f.param2_type == CPT_FACEDIR_WALLMOUNT
-	) {
+	const ContentFeatures& f = content_features(*this);
+	
+	if (f.param2_type == CPT_FACEDIR_SIMPLE
+			|| f.param2_type == CPT_FACEDIR_WALLMOUNT)
 		dir = facedir_rotate(param2&0x0F, dir);
-	}else if (
-		f.param_type == CPT_FACEDIR_SIMPLE
-		|| f.param_type == CPT_FACEDIR_WALLMOUNT
-	) {
+	else if (f.param_type == CPT_FACEDIR_SIMPLE
+			|| f.param_type == CPT_FACEDIR_WALLMOUNT)
 		dir = facedir_rotate(param1, dir);
-	}
-	if (dir == v3s16(0,-1,0)) {
+	
+	if (dir == v3s16(0,-1,0))
 		dir_i = 1;
-	}else if(dir == v3s16(1,0,0)) {
+	else if(dir == v3s16(1,0,0))
 		dir_i = 2;
-	}else if(dir == v3s16(-1,0,0)) {
+	else if(dir == v3s16(-1,0,0))
 		dir_i = 3;
-	}else if(dir == v3s16(0,0,1)) {
+	else if(dir == v3s16(0,0,1))
 		dir_i = 4;
-	}else if(dir == v3s16(0,0,-1)) {
+	else if(dir == v3s16(0,0,-1))
 		dir_i = 5;
-	}
+       
 
 	return f.facetexts[dir_i];
 }
@@ -590,9 +606,7 @@ FaceText MapNode::getFaceText(v3s16 dir)
 u8 MapNode::getMineral()
 {
 	if(content_features(*this).param_type == CPT_MINERAL)
-	{
 		return param1 & 0x0f;
-	}
 
 	return MINERAL_NONE;
 }
@@ -613,21 +627,26 @@ void MapNode::serialize(u8 *dest, u8 version)
 		throw VersionMismatchException("ERROR: MapNode format not supported");
 
 	// Translate to wanted version
-	MapNode n_foreign = mapnode_translate_from_internal(*this, version);
+	const MapNode n_foreign = mapnode_translate_from_internal(*this, version);
 
-	if (version <= 20) {
+	if (version <= 20)
+	{
 		u8 p0 = 0;
 		dest[1] = n_foreign.param1;
 		dest[2] = n_foreign.param2;
-		if (content < 0x80) {
+		
+		if (content < 0x80)
 			p0 = content;
-		}else{
+		else
+		{
 			p0 = content>>4;
 			dest[2] &= ~(0xF0);
 			dest[2] |= (content&0x0F)<<4;
 		}
 		dest[0] = p0;
-	}else{
+	}
+	else
+	{
 		dest[0] = (n_foreign.content&0xFF00)>>8;
 		dest[1] = (n_foreign.content&0xFF);
 		dest[2] = n_foreign.param1;
@@ -639,16 +658,22 @@ void MapNode::deSerialize(u8 *source, u8 version)
 	if (!ser_ver_supported(version))
 		throw VersionMismatchException("ERROR: MapNode format not supported");
 
-	if (version <= 20) {
-		if (source[0] < 0x80) {
+	if (version <= 20)
+	{
+		if (source[0] < 0x80)
+		{
 			content = source[0];
 			param2 = source[2];
-		}else{
+		}
+		else
+		{
 			content = (source[0]<<4) + (source[2]>>4);
 			param2 = (source[2]&0x0F);
 		}
 		param1 = source[1];
-	}else{
+	}
+	else
+	{
 		content = (source[0]<<8) | source[1];
 		param1 = source[2];
 		param2 = source[3];
@@ -677,10 +702,12 @@ void MapNode::deSerialize(u8 *source, u8 version)
 u8 getFaceLight(u32 daynight_ratio, MapNode n, MapNode n2,
 		v3s16 face_dir)
 {
-	try{
+	try
+	{
 		u8 light;
-		u8 l1 = n.getLightBlend(daynight_ratio);
-		u8 l2 = n2.getLightBlend(daynight_ratio);
+		const u8 l1 = n.getLightBlend(daynight_ratio);
+		const u8 l2 = n2.getLightBlend(daynight_ratio);
+		
 		if(l1 > l2)
 			light = l1;
 		else
@@ -715,12 +742,13 @@ u8 face_light(MapNode n, MapNode n2, v3s16 face_dir)
 	u8 ln = n.getLight(LIGHTBANK_NIGHT);
 	u8 ln2 = n2.getLight(LIGHTBANK_NIGHT);
 
-	if (n2.getContent() == CONTENT_IGNORE) {
-		if (ld > 0) {
+	if (n2.getContent() == CONTENT_IGNORE)
+	{
+		if (ld > 0)
 			ld2 = ld;
-		}else{
+		else
 			ld2 = LIGHT_MAX;
-		}
+
 		ln2 = ln;
 	}
 
@@ -729,13 +757,16 @@ u8 face_light(MapNode n, MapNode n2, v3s16 face_dir)
 	if (ln2 > ln)
 		ln = ln2;
 
-	if (face_dir.X == 1 || face_dir.X == -1 || face_dir.Y == -1) {
+	if (face_dir.X == 1 || face_dir.X == -1 || face_dir.Y == -1)
+	{
 		ld = MYMAX(0,ld-2);
 		ln = MYMAX(0,ln-2);
-	}else if(face_dir.Z == 1 || face_dir.Z == -1) {
+	}
+	else if(face_dir.Z == 1 || face_dir.Z == -1)
+	{
 		ld = MYMAX(0,ld-1);
 		ln = MYMAX(0,ln-1);
 	}
 
-	return (ln<<4)|ld;
+	return (ln<<4) | ld;
 }

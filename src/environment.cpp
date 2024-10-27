@@ -601,15 +601,19 @@ void ServerEnvironment::clearAllObjects()
 		ServerActiveObject* obj = i->second;
 		u16 id = i->first;
 		// Delete static object if block is loaded
-		if (obj->m_static_exists) {
-			MapBlock *block = m_map->getBlockNoCreateNoEx(obj->m_static_block);
-			if (block) {
+		if (obj->m_static_exists)
+		{
+			MapBlock* const block = m_map->getBlockNoCreateNoEx(obj->m_static_block);
+			if (block)
+			{
 				block->m_active_objects.remove(id);
 				obj->m_static_exists = false;
+				block->ResetCurrent();
 			}
 		}
 		// If known by some client, don't delete immediately
-		if (obj->m_known_by_count > 0) {
+		if (obj->m_known_by_count > 0)
+		{
 			obj->m_pending_deactivation = true;
 			obj->m_removed = true;
 			continue;
@@ -638,7 +642,7 @@ void ServerEnvironment::clearAllObjects()
 	u32 num_objs_cleared = 0;
 	for (core::list<v3s16>::Iterator i = loadable_blocks.begin(); i != loadable_blocks.end(); i++) {
 		v3s16 p = *i;
-		MapBlock *block = m_map->emergeBlock(p, false);
+		MapBlock* const block = m_map->emergeBlock(p, false);
 		if (!block)
 			continue;
 
@@ -653,13 +657,15 @@ void ServerEnvironment::clearAllObjects()
 		}
 		num_blocks_checked++;
 
-		if (num_blocks_checked % report_interval == 0) {
+		if (num_blocks_checked % report_interval == 0)
+		{
 			float percent = 100.0 * (float)num_blocks_checked/loadable_blocks.size();
 			infostream<<"ServerEnvironment::clearAllObjects(): "
 					<<"Cleared "<<num_objs_cleared<<" objects"
 					<<" in "<<num_blocks_cleared<<" blocks ("
 					<<percent<<"%)"<<std::endl;
 		}
+		block->ResetCurrent();
 	}
 	infostream<<"ServerEnvironment::clearAllObjects(): "
 			<<"Finished: Cleared "<<num_objs_cleared<<" objects"
@@ -669,29 +675,35 @@ void ServerEnvironment::clearAllObjects()
 bool ServerEnvironment::searchNear(v3s16 pos, v3s16 radius_min, v3s16 radius_max, std::vector<content_t> c, v3s16 *found)
 {
 	v3s16 blockpos = getNodeBlockPos(pos);
-	MapBlock *block = m_map->getBlockNoCreateNoEx(blockpos);
-	if (block == NULL)
+	MapBlock* const block = m_map->getBlockNoCreateNoEx(blockpos);
+	if (!block)
 		return false;
 	v3s16 relpos = blockpos*MAP_BLOCKSIZE;
 	v3s16 p;
 	v3s16 bp;
 
-	for(s16 x=radius_min.X; x<=radius_max.X; x++) {
-		for(s16 y=radius_min.Y; y<=radius_max.Y; y++) {
-			for(s16 z=radius_min.Z; z<=radius_max.Z; z++) {
+	for(s16 x=radius_min.X; x<=radius_max.X; x++)
+	{
+		for(s16 y=radius_min.Y; y<=radius_max.Y; y++)
+		{
+			for(s16 z=radius_min.Z; z<=radius_max.Z; z++)
+			{
 				if (!x && !y && !z)
 					continue;
 				p = pos+v3s16(x,y,z);
 				MapNode n_test;
 				bp = getNodeBlockPos(p);
-				if (bp == blockpos) {
+				if (bp == blockpos)
+				{
 					bool pos_ok;
 					n_test = block->getNodeNoCheck(p-relpos,&pos_ok);
-				}else{
-					n_test = m_map->getNodeNoEx(p);
 				}
-				for (std::vector<content_t>::iterator i=c.begin(); i != c.end(); i++) {
-					if (n_test.getContent() == *i) {
+				else
+					n_test = m_map->getNodeNoEx(p);
+				for (std::vector<content_t>::iterator i=c.begin(); i != c.end(); i++)
+				{
+					if (n_test.getContent() == *i)
+					{
 						if (found != NULL)
 							*found = p;
 						return true;
@@ -700,21 +712,28 @@ bool ServerEnvironment::searchNear(v3s16 pos, v3s16 radius_min, v3s16 radius_max
 			}
 		}
 	}
+
+	block->ResetCurrent();
 	return false;
 }
 
 bool ServerEnvironment::searchNearInv(v3s16 pos, v3s16 radius_min, v3s16 radius_max, std::vector<content_t> c, v3s16 *found)
 {
 	v3s16 blockpos = getNodeBlockPos(pos);
-	MapBlock *block = m_map->getBlockNoCreateNoEx(blockpos);
-	if (block == NULL)
+	MapBlock* const block = m_map->getBlockNoCreateNoEx(blockpos);
+	if (!block)
 		return false;
+	
 	v3s16 relpos = blockpos*MAP_BLOCKSIZE;
 	v3s16 p;
 	v3s16 bp;
-	for(s16 x=radius_min.X; x<=radius_max.X; x++) {
-		for(s16 y=radius_min.Y; y<=radius_max.Y; y++) {
-			for(s16 z=radius_min.Z; z<=radius_max.Z; z++) {
+	
+	for(s16 x=radius_min.X; x<=radius_max.X; x++)
+	{
+		for(s16 y=radius_min.Y; y<=radius_max.Y; y++)
+		{
+			for(s16 z=radius_min.Z; z<=radius_max.Z; z++)
+			{
 				if (!x && !y && !z)
 					continue;
 				p = pos+v3s16(x,y,z);
@@ -741,6 +760,8 @@ bool ServerEnvironment::searchNearInv(v3s16 pos, v3s16 radius_min, v3s16 radius_
 			}
 		}
 	}
+	
+	block->ResetCurrent();
 	return false;
 }
 
@@ -884,24 +905,30 @@ bool ServerEnvironment::dropToParcel(v3s16 pos, InventoryItem *item)
 		}
 	}
 
-	if (!item) {
+	if (!item)
+	{
 		v3s16 bp = getNodeBlockPos(ppos);
-		MapBlock *block = m_map->getBlockNoCreateNoEx(bp);
-		if (block) {
+		MapBlock* const block = m_map->getBlockNoCreateNoEx(bp);
+		if (block)
+		{
 			MapEditEvent event;
 			event.type = MEET_BLOCK_NODE_METADATA_CHANGED;
 			event.p = bp;
 			m_map->dispatchEvent(&event);
 
 			block->setChangedFlag();
+			block->ResetCurrent();
 		}
 		return true;
 	}
 
 	// if underground, go up to first air_equivalent and buildable_to
-	if (!content_features(m_map->getNodeNoEx(pos).getContent()).air_equivalent) {
-		if (!getCollidedPosition(pos,v3s16(0,1,0),&ppos)) {
-			if (!searchNear(pos,v3s16(2,0,2),CONTENT_AIR,&ppos)) {
+	if (!content_features(m_map->getNodeNoEx(pos).getContent()).air_equivalent)
+	{
+		if (!getCollidedPosition(pos,v3s16(0,1,0),&ppos))
+		{
+			if (!searchNear(pos,v3s16(2,0,2),CONTENT_AIR,&ppos))
+			{
 				delete item;
 				return false;
 			}
@@ -919,12 +946,15 @@ bool ServerEnvironment::dropToParcel(v3s16 pos, InventoryItem *item)
 	}
 
 	// look for a parcel near pos
-	if (searchNear(pos,v3s16(3,3,3),CONTENT_PARCEL,&ppos)) {
+	if (searchNear(pos,v3s16(3,3,3),CONTENT_PARCEL,&ppos))
+	{
 		// add items if found
 		meta = m_map->getNodeMetadata(ppos);
-		if (meta) {
+		if (meta)
+		{
 			inv = meta->getInventory();
-			if (inv) {
+			if (inv)
+			{
 				list = inv->getList("0");
 				if (list)
 					item = list->addItem(item);
@@ -934,24 +964,30 @@ bool ServerEnvironment::dropToParcel(v3s16 pos, InventoryItem *item)
 
 	if (!item) {
 		v3s16 bp = getNodeBlockPos(ppos);
-		MapBlock *block = m_map->getBlockNoCreateNoEx(bp);
-		if (block) {
+		MapBlock* const block = m_map->getBlockNoCreateNoEx(bp);
+		if (block)
+		{
 			MapEditEvent event;
 			event.type = MEET_BLOCK_NODE_METADATA_CHANGED;
 			event.p = bp;
 			m_map->dispatchEvent(&event);
 
 			block->setChangedFlag();
+			block->ResetCurrent();
 		}
 		return true;
 	}
 
 	// if liquid, do a slightly wider search for a parcel on shore
-	if (content_features(m_map->getNodeNoEx(pos).getContent()).liquid_type != LIQUID_NONE) {
-		if (content_features(m_map->getNodeNoEx(pos).getContent()).damage_per_second > 0) {
+	if (content_features(m_map->getNodeNoEx(pos).getContent()).liquid_type != LIQUID_NONE)
+	{
+		if (content_features(m_map->getNodeNoEx(pos).getContent()).damage_per_second > 0)
+		{
 			delete item;
 			return false;
-		}else if (searchNear(pos,v3s16(5,5,5),CONTENT_PARCEL,&ppos)) {
+		}
+		else if (searchNear(pos,v3s16(5,5,5),CONTENT_PARCEL,&ppos))
+		{
 			// add items if found
 			meta = m_map->getNodeMetadata(ppos);
 			if (meta) {
@@ -967,14 +1003,16 @@ bool ServerEnvironment::dropToParcel(v3s16 pos, InventoryItem *item)
 
 	if (!item) {
 		v3s16 bp = getNodeBlockPos(ppos);
-		MapBlock *block = m_map->getBlockNoCreateNoEx(bp);
-		if (block) {
+		MapBlock* const block = m_map->getBlockNoCreateNoEx(bp);
+		if (block)
+		{
 			MapEditEvent event;
 			event.type = MEET_BLOCK_NODE_METADATA_CHANGED;
 			event.p = bp;
 			m_map->dispatchEvent(&event);
 
 			block->setChangedFlag();
+			block->ResetCurrent();
 		}
 		return true;
 	}
@@ -1001,14 +1039,16 @@ bool ServerEnvironment::dropToParcel(v3s16 pos, InventoryItem *item)
 
 	if (!item) {
 		v3s16 bp = getNodeBlockPos(pos);
-		MapBlock *block = m_map->getBlockNoCreateNoEx(bp);
-		if (block) {
+		MapBlock* const block = m_map->getBlockNoCreateNoEx(bp);
+		if (block)
+		{
 			MapEditEvent event;
 			event.type = MEET_BLOCK_NODE_METADATA_CHANGED;
 			event.p = bp;
 			m_map->dispatchEvent(&event);
 
 			block->setChangedFlag();
+			block->ResetCurrent();
 		}
 		return true;
 	}
@@ -1181,35 +1221,39 @@ void ServerEnvironment::step(float dtime)
 		// Convert active objects that are no more in active blocks to static
 		deactivateFarObjects(false);
 
-		for (std::set<v3s16>::iterator i = blocks_removed.begin(); i != blocks_removed.end(); i++) {
+		for (std::set<v3s16>::iterator i = blocks_removed.begin(); i != blocks_removed.end(); i++)
+		{
 			v3s16 p = *i;
 
 			/*infostream<<"Server: Block ("<<p.X<<","<<p.Y<<","<<p.Z
 					<<") became inactive"<<std::endl;*/
 
-			MapBlock *block = m_map->getBlockNoCreateNoEx(p);
-			if (block == NULL)
+			MapBlock* const block = m_map->getBlockNoCreateNoEx(p);
+			if (!block)
 				continue;
 
 			// Set current time as timestamp (and let it set ChangedFlag)
 			block->setTimestamp(m_game_time);
+			block->ResetCurrent();
 		}
 
 		/*
 			Handle added blocks
 		*/
 
-		for (std::set<v3s16>::iterator i = blocks_added.begin(); i != blocks_added.end(); i++) {
+		for (std::set<v3s16>::iterator i = blocks_added.begin(); i != blocks_added.end(); i++)
+		{
 			v3s16 p = *i;
 
 			/*infostream<<"Server: Block ("<<p.X<<","<<p.Y<<","<<p.Z
 					<<") became active"<<std::endl;*/
 
-			MapBlock *block = m_map->emergeBlock(p,false);
-			if (block == NULL)
+			MapBlock* const block = m_map->emergeBlock(p,false);
+			if (!block)
 				continue;
 
 			activateBlock(block);
+			block->ResetCurrent();
 		}
 	}
 
@@ -1220,21 +1264,27 @@ void ServerEnvironment::step(float dtime)
 	bool metastep = m_active_blocks_nodemetadata_interval.step(dtime, 1.0);
 	bool nodestep = m_active_blocks_test_interval.step(dtime, 10.0);
 
-	if (circuitstep || metastep || nodestep) {
+	if (circuitstep || metastep || nodestep)
+	{
 		float circuit_dtime = 0.5;
 		float meta_dtime = 1.0;
 		u16 season = getSeason();
 		uint16_t time = getTimeOfDay();
 		bool unsafe_fire = config_get_bool("world.game.environment.fire.spread");
-		for (std::set<v3s16>::iterator i = m_active_blocks.m_list.begin(); i != m_active_blocks.m_list.end(); i++) {
+		
+		for (std::set<v3s16>::iterator i = m_active_blocks.m_list.begin();
+		     i != m_active_blocks.m_list.end(); i++)
+		{
 			v3s16 bp = *i;
 
-			MapBlock *block = m_map->getBlockNoCreateNoEx(bp);
-			if (block == NULL)
+			MapBlock* const block = m_map->getBlockNoCreateNoEx(bp);
+			if (!block)
 				continue;
 
 			std::list<u16> new_list;
-			for (std::list<u16>::iterator oi = block->m_active_objects.begin(); oi != block->m_active_objects.end(); oi++) {
+			for (std::list<u16>::iterator oi = block->m_active_objects.begin();
+			     oi != block->m_active_objects.end(); oi++)
+			{
 				ServerActiveObject *obj = getActiveObject(*oi);
 				if (obj && obj->m_static_exists && obj->m_static_block == block->getPos())
 					new_list.push_back(*oi);
@@ -1252,21 +1302,24 @@ void ServerEnvironment::step(float dtime)
 
 			m_poststep_nodeswaps.clear();
 
-			if (circuitstep) {
+			if (circuitstep)
+			{
 				// Run node metadata
 				bool changed = block->m_node_metadata.stepCircuit(circuit_dtime, block->getPosRelative(), this);
 				if (changed)
 					blockchanged = true;
 			}
 
-			if (metastep) {
+			if (metastep)
+			{
 				// Run node metadata
 				bool changed = block->m_node_metadata.step(meta_dtime, block->getPosRelative(), this);
 				if (changed)
 					blockchanged = true;
 			}
 
-			if (blockchanged) {
+			if (blockchanged)
+			{
 				MapEditEvent event;
 				event.type = MEET_BLOCK_NODE_METADATA_CHANGED;
 				event.p = bp;
@@ -1275,8 +1328,10 @@ void ServerEnvironment::step(float dtime)
 				block->setChangedFlag();
 			}
 
-			if (m_poststep_nodeswaps.size() > 0) {
-				for (std::map<v3s16,MapNode>::iterator i = m_poststep_nodeswaps.begin(); i != m_poststep_nodeswaps.end(); i++) {
+			if (m_poststep_nodeswaps.size() > 0)
+			{
+				for (std::map<v3s16,MapNode>::iterator i = m_poststep_nodeswaps.begin();
+				     i != m_poststep_nodeswaps.end(); i++) {
 					v3s16 sp = i->first;
 					MapNode n = i->second;
 					NodeMetadata *meta = NULL;
@@ -1321,22 +1376,21 @@ void ServerEnvironment::step(float dtime)
 				searching loop to keep things fast.
 			*/
 
-			if (block->last_spawn < m_time_of_day-6000) {
+			if (block->last_spawn < m_time_of_day-6000)
+			{
 				MapNode n1 = block->getNodeNoEx(block->spawn_area+v3s16(0,1,0));
 				MapNode n2 = block->getNodeNoEx(block->spawn_area+v3s16(0,2,0));
 				u8 light = n1.getLightBlend(getDayNightRatio());
-				if (
-					!content_features(n1.getContent()).air_equivalent
-					|| !content_features(n2.getContent()).air_equivalent
-				)
+				if (!content_features(n1.getContent()).air_equivalent
+						|| !content_features(n2.getContent()).air_equivalent)
 					block->has_spawn_area = false;
 
-				if (block->has_spawn_area && m_time_of_day > 19000 && m_time_of_day < 20000) {
-					if (light <= LIGHT_SPAWN_DARK) {
-						if (
-							block->getPos().Y > 0
-							|| myrand_range(0,5) == 0
-						) {
+				if (block->has_spawn_area && m_time_of_day > 19000 && m_time_of_day < 20000)
+				{
+					if (light <= LIGHT_SPAWN_DARK)
+					{
+						if (block->getPos().Y > 0 || myrand_range(0,5) == 0)
+						{
 							mob_spawn_hostile(block->spawn_area+block->getPosRelative(),false,this);
 						}
 					}
@@ -1347,7 +1401,9 @@ void ServerEnvironment::step(float dtime)
 			v3s16 p0;
 			uint8_t biome = block->getBiome();
 			bool coldzone = false;
-			switch (biome) {
+			
+			switch (biome)
+			{
 			case BIOME_JUNGLE:
 				if (season == ENV_SEASON_WINTER && time > 4000 && time < 8000)
 					coldzone = true;
@@ -1394,33 +1450,31 @@ void ServerEnvironment::step(float dtime)
 			default:
 				break;
 			}
+			
 			for (p0.X=0; p0.X<MAP_BLOCKSIZE; p0.X++)
 			for (p0.Y=0; p0.Y<MAP_BLOCKSIZE; p0.Y++)
 			for (p0.Z=0; p0.Z<MAP_BLOCKSIZE; p0.Z++) {
 				v3s16 p = p0 + block->getPosRelative();
 				block->incNodeTicks(p0);
 				MapNode n = block->getNodeNoEx(p0);
-				if (
-					!block->has_spawn_area
-					&& (
-						content_features(n.getContent()).draw_type == CDT_DIRTLIKE
+				if (!block->has_spawn_area
+					&& (content_features(n.getContent()).draw_type == CDT_DIRTLIKE
 						|| n.getContent() == CONTENT_SAND
-						|| n.getContent() == CONTENT_STONE
-					)
-				) {
+						|| n.getContent() == CONTENT_STONE))
+				{
 					MapNode n1 = block->getNodeNoEx(p0+v3s16(0,1,0));
 					MapNode n2 = block->getNodeNoEx(p0+v3s16(0,2,0));
-					if (
-						content_features(n1.getContent()).air_equivalent
+					if (content_features(n1.getContent()).air_equivalent
 						&& content_features(n2.getContent()).air_equivalent
-						&& myrand_range(0,5) == 0
-					) {
+						&& myrand_range(0,5) == 0)
+					{
 						block->spawn_area = p0;
 						block->has_spawn_area = true;
 					}
 				}
 
-				switch(n.getContent()) {
+				switch(n.getContent())
+				{
 	/*
 	 * param1:
 	 * 	top nibble:
@@ -3056,31 +3110,23 @@ void ServerEnvironment::step(float dtime)
 				}
 				}
 
-				if (
-					coldzone
-					&& biome != BIOME_BEACH
-					&& (
-						content_features(n).draw_type == CDT_CUBELIKE
+				if (coldzone && biome != BIOME_BEACH
+					&& (content_features(n).draw_type == CDT_CUBELIKE
 						|| content_features(n).draw_type == CDT_GLASSLIKE
-						|| (
-							content_features(n).draw_type == CDT_DIRTLIKE
+						|| (content_features(n).draw_type == CDT_DIRTLIKE
 							&& (n.param1&0x20) != 0x20
-							&& (
-								(n.param1&0x0F) == 0x00
-								|| (n.param1&0x0F) == 0x04
-							)
-						)
-					)
-				) {
-					if (myrand()%20 == 0) {
+							&& ((n.param1&0x0F) == 0x00
+								|| (n.param1&0x0F) == 0x04))))
+				{
+					if (myrand()%20 == 0)
+					{
 						std::vector<content_t> search;
 						search.push_back(CONTENT_AIR);
 						// check that it's on top, and somewhere snow could fall
 						// not 100% because torches
-						if (
-							!searchNearInv(p,v3s16(0,1,0),v3s16(0,16,0),search,NULL)
-							&& !searchNear(p,v3s16(3,3,3),CONTENT_FIRE,NULL)
-						) {
+						if (!searchNearInv(p,v3s16(0,1,0),v3s16(0,16,0),search,NULL)
+							&& !searchNear(p,v3s16(3,3,3),CONTENT_FIRE,NULL))
+						{
 							MapNode nn(CONTENT_SNOW);
 							m_map->addNodeWithEvent(p+v3s16(0,1,0),nn);
 							//n.param1 &= ~0x0F;
@@ -3092,10 +3138,15 @@ void ServerEnvironment::step(float dtime)
 				}
 			}
 
-			for (std::map<v3s16,MapNode>::iterator it = m_delayed_node_changes.begin(); it != m_delayed_node_changes.end(); it++) {
+			for (std::map<v3s16,MapNode>::iterator it = m_delayed_node_changes.begin();
+			     it != m_delayed_node_changes.end(); it++)
+			{
 				m_map->addNodeWithEvent(it->first, it->second);
 			}
 			m_delayed_node_changes.clear();
+
+			if(block)
+			    block->ResetCurrent();		
 		}
 	}
 
@@ -3636,15 +3687,19 @@ u16 ServerEnvironment::addActiveObjectRaw(ServerActiveObject *object, bool set_c
 
 	// Add to the block where the object is located in
 	v3s16 blockpos = getNodeBlockPos(floatToInt(object->getBasePosition(), BS));
-	MapBlock *block = m_map->getBlockNoCreateNoEx(blockpos);
-	if (block) {
+	MapBlock* const block = m_map->getBlockNoCreateNoEx(blockpos);
+	if (block)
+	{
 		block->m_active_objects.push_back(object->getId());
 		object->m_static_exists = true;
 		object->m_static_block = blockpos;
 
 		if (set_changed)
 			block->raiseModified(MOD_STATE_WRITE_NEEDED);
-	}else{
+		block->ResetCurrent();
+	}
+	else
+	{
 		errorstream<<"ServerEnvironment::addActiveObjectRaw(): "
 				<<"could not find block for storing id="<<object->getId()
 				<<" statically"<<std::endl;
@@ -3675,27 +3730,36 @@ void ServerEnvironment::removeRemovedObjects()
 			We will delete objects that are marked as removed
 			and are not known by clients
 		*/
-		if (obj->m_removed == false) {
+		if (obj->m_removed == false)
+		{
 			// enforce static data
-			if (obj->m_static_exists) {
-				MapBlock *block = m_map->emergeBlock(obj->m_static_block, false);
-				if (block) {
+			if (obj->m_static_exists)
+			{
+				MapBlock* const block = m_map->emergeBlock(obj->m_static_block, false);
+				if (block)
+				{
 					bool keep = false;
-					for (std::list<u16>::iterator oi = block->m_active_objects.begin(); oi != block->m_active_objects.end(); oi++) {
-						if (*oi == id) {
+					for (std::list<u16>::iterator oi = block->m_active_objects.begin();
+					     oi != block->m_active_objects.end(); oi++) {
+						if (*oi == id)
+						{
 							keep = true;
 							break;
 						}
 					}
 					obj->m_static_exists = keep;
+					block->ResetCurrent();
 				}
 			}
-			if (!obj->m_static_exists) {
+			if (!obj->m_static_exists)
+			{
 				obj->m_static_block = getNodeBlockPos(floatToInt(obj->getBasePosition(), BS));
-				MapBlock *block = m_map->emergeBlock(obj->m_static_block, false);
-				if (block) {
+				MapBlock* const block = m_map->emergeBlock(obj->m_static_block, false);
+				if (block)
+				{
 					block->m_active_objects.push_back(id);
 					obj->m_static_exists = true;
+					block->ResetCurrent();
 				}
 			}
 			continue;
@@ -3708,11 +3772,14 @@ void ServerEnvironment::removeRemovedObjects()
 		/*
 			Delete static data from block if is marked as removed
 		*/
-		if (obj->m_static_exists) {
-			MapBlock *block = m_map->emergeBlock(obj->m_static_block, false);
-			if (block) {
+		if (obj->m_static_exists)
+		{
+			MapBlock* const block = m_map->emergeBlock(obj->m_static_block, false);
+			if (block)
+			{
 				obj->m_static_exists = false;
 				block->m_active_objects.remove(id);
+				block->ResetCurrent();
 			}
 		}
 
@@ -3863,19 +3930,23 @@ void ServerEnvironment::deactivateFarObjects(bool force_delete)
 		// The block in which the object resides in
 		v3s16 blockpos_o = getNodeBlockPos(floatToInt(objectpos, BS));
 
-		if (force_delete) {
+		if (force_delete)
+		{
 			// if it isn't m_removed, then ensure it's stored
-			if (!obj->m_removed) {
+			if (!obj->m_removed)
+			{
 				if (!obj->m_static_exists)
 					obj->m_static_block = blockpos_o;
 
-				MapBlock *block = m_map->emergeBlock(obj->m_static_block, false);
-				if (block) {
+				MapBlock* const block = m_map->emergeBlock(obj->m_static_block, false);
+				if (block)
+				{
 					// create new static object
 					std::string staticdata_new = obj->getStaticData();
 					StaticObject s_obj(obj->getType(), objectpos, staticdata_new);
 					block->m_static_objects.m_objects.push_back(s_obj);
 					block->raiseModified(MOD_STATE_WRITE_NEEDED);
+					block->ResetCurrent();
 				}
 			}
 			// delete active object
@@ -3886,26 +3957,32 @@ void ServerEnvironment::deactivateFarObjects(bool force_delete)
 		}
 
 		// if object is stored in a different block to where it's located, remove it
-		if (obj->m_static_exists && obj->m_static_block != blockpos_o) {
-			MapBlock *block = m_map->emergeBlock(obj->m_static_block, false);
-			if (block) {
+		if (obj->m_static_exists && obj->m_static_block != blockpos_o)
+		{
+			MapBlock* const block = m_map->emergeBlock(obj->m_static_block, false);
+			if (block)
+			{
 				obj->m_static_exists = false;
 				block->m_active_objects.remove(id);
+				block->ResetCurrent();
 			}
 		}
 
-		if (!obj->m_static_exists) {
+		if (!obj->m_static_exists)
+		{
 			obj->m_static_block = blockpos_o;
 
 			// Save to block where object is located
-			MapBlock *block = m_map->emergeBlock(blockpos_o, false);
-			if (!block) {
+			MapBlock* const block = m_map->emergeBlock(blockpos_o, false);
+			if (!block)
+			{
 				obj->m_removed = true;
 				continue;
 			}
 
 			block->m_active_objects.push_back(id);
 			obj->m_static_exists = true;
+			block->ResetCurrent();
 		}
 
 		// If block is active, don't remove
@@ -3930,16 +4007,21 @@ void ServerEnvironment::deactivateFarObjects(bool force_delete)
 		// Get or generate the block
 		MapBlock *block = NULL;
 		bool was_generated = false;
-		try{
+		try
+		{
 			block = m_map->emergeBlock(blockpos,true,&was_generated);
-		} catch(InvalidPositionException &e) {
+		}
+		catch(InvalidPositionException &e)
+		{
 			// Handled via NULL pointer
 			// NOTE: emergeBlock's failure is usually determined by it
 			//       actually returning NULL
 		}
 
-		if (block) {
-			if (block->m_static_objects.m_objects.size() >= 50) {
+		if (block)
+		{
+			if (block->m_static_objects.m_objects.size() >= 50)
+			{
 				errorstream<<"ServerEnv: Trying to store id="<<obj->getId()
 						<<" statically but block "<<PP(blockpos)
 						<<" already contains "
@@ -3947,12 +4029,17 @@ void ServerEnvironment::deactivateFarObjects(bool force_delete)
 						<<" objects."
 						<<" Forcing delete."<<std::endl;
 				force_delete = true;
-			}else{
+			}
+			else
+			{
 				// Store static data
 				block->m_static_objects.m_objects.push_back(s_obj);
 				block->raiseModified(MOD_STATE_WRITE_NEEDED);
 			}
-		}else{
+			block->ResetCurrent();
+		}
+		else
+		{
 			if (!force_delete) {
 				v3s16 p = floatToInt(objectpos, BS);
 				errorstream<<"ServerEnv: Could not find or generate "
@@ -4155,19 +4242,24 @@ void ClientEnvironment::step(float dtime)
 		}
 	}
 
-	if (lplayer->health > 0) {
+	if (lplayer->health > 0)
+	{
 		/* player damage */
-		if (m_damage_interval.step(dtime, 1.0)) {
+		if (m_damage_interval.step(dtime, 1.0))
+		{
 			v3f pf = lplayer->getPosition();
 			v3s16 pp = floatToInt(pf, BS);
 
 			uint32_t time = getTimeOfDay();
 			uint16_t season = getSeason();
 			uint8_t biome = BIOME_UNKNOWN;
-			MapBlock *block = m_map->getBlockNoCreateNoEx(getNodeBlockPos(pp));
+			MapBlock* const block = m_map->getBlockNoCreateNoEx(getNodeBlockPos(pp));
 			if (block)
+			{
 				biome = block->getBiome();
-
+				block->ResetCurrent();
+			}
+			
 			v3f ps[7] = {
 				v3f(0, BS*-0.1, 0),
 				v3f(0, BS*0.1, 0),
@@ -4667,29 +4759,36 @@ ClientEnvEvent ClientEnvironment::getClientEvent()
 bool ClientEnvironment::searchNear(v3s16 pos, v3s16 radius_min, v3s16 radius_max, std::vector<content_t> c, v3s16 *found)
 {
 	v3s16 blockpos = getNodeBlockPos(pos);
-	MapBlock *block = m_map->getBlockNoCreateNoEx(blockpos);
-	if (block == NULL)
+	MapBlock* const block = m_map->getBlockNoCreateNoEx(blockpos);
+	if (!block)
 		return false;
 	v3s16 relpos = blockpos*MAP_BLOCKSIZE;
 	v3s16 p;
 	v3s16 bp;
 
-	for(s16 x=radius_min.X; x<=radius_max.X; x++) {
-		for(s16 y=radius_min.Y; y<=radius_max.Y; y++) {
-			for(s16 z=radius_min.Z; z<=radius_max.Z; z++) {
+	for(s16 x=radius_min.X; x<=radius_max.X; x++)
+	{
+		for(s16 y=radius_min.Y; y<=radius_max.Y; y++)
+		{
+			for(s16 z=radius_min.Z; z<=radius_max.Z; z++)
+			{
 				if (!x && !y && !z)
 					continue;
 				p = pos+v3s16(x,y,z);
 				MapNode n_test;
 				bp = getNodeBlockPos(p);
-				if (bp == blockpos) {
+				if (bp == blockpos)
+				{
 					bool pos_ok;
 					n_test = block->getNodeNoCheck(p-relpos,&pos_ok);
-				}else{
-					n_test = m_map->getNodeNoEx(p);
 				}
-				for (std::vector<content_t>::iterator i=c.begin(); i != c.end(); i++) {
-					if (n_test.getContent() == *i) {
+				else
+					n_test = m_map->getNodeNoEx(p);
+
+				for (std::vector<content_t>::iterator i=c.begin(); i != c.end(); i++)
+				{
+					if (n_test.getContent() == *i)
+					{
 						if (found != NULL)
 							*found = p;
 						return true;
@@ -4698,40 +4797,51 @@ bool ClientEnvironment::searchNear(v3s16 pos, v3s16 radius_min, v3s16 radius_max
 			}
 		}
 	}
+	
+	block->ResetCurrent();
 	return false;
 }
 
 bool ClientEnvironment::searchNearInv(v3s16 pos, v3s16 radius_min, v3s16 radius_max, std::vector<content_t> c, v3s16 *found)
 {
 	v3s16 blockpos = getNodeBlockPos(pos);
-	MapBlock *block = m_map->getBlockNoCreateNoEx(blockpos);
-	if (block == NULL)
+	MapBlock* const block = m_map->getBlockNoCreateNoEx(blockpos);
+	if (!block)
 		return false;
 	v3s16 relpos = blockpos*MAP_BLOCKSIZE;
 	v3s16 p;
 	v3s16 bp;
-	for(s16 x=radius_min.X; x<=radius_max.X; x++) {
-		for(s16 y=radius_min.Y; y<=radius_max.Y; y++) {
-			for(s16 z=radius_min.Z; z<=radius_max.Z; z++) {
+	
+	for(s16 x=radius_min.X; x<=radius_max.X; x++)
+	{
+		for(s16 y=radius_min.Y; y<=radius_max.Y; y++)
+		{
+			for(s16 z=radius_min.Z; z<=radius_max.Z; z++)
+			{
 				if (!x && !y && !z)
 					continue;
 				p = pos+v3s16(x,y,z);
 				MapNode n_test;
 				bp = getNodeBlockPos(p);
-				if (bp == blockpos) {
+				if (bp == blockpos)
+				{
 					bool pos_ok;
 					n_test = block->getNodeNoCheck(p-relpos,&pos_ok);
-				}else{
-					n_test = m_map->getNodeNoEx(p);
 				}
+				else
+					n_test = m_map->getNodeNoEx(p);
+
 				bool s = false;
-				for (std::vector<content_t>::iterator i=c.begin(); i != c.end(); i++) {
-					if (n_test.getContent() == *i) {
+				for (std::vector<content_t>::iterator i=c.begin(); i != c.end(); i++)
+				{
+					if (n_test.getContent() == *i)
+					{
 						s = true;
 						break;
 					}
 				}
-				if (!s) {
+				if (!s)
+				{
 					if (found != NULL)
 						*found = p;
 					return true;
@@ -4739,19 +4849,23 @@ bool ClientEnvironment::searchNearInv(v3s16 pos, v3s16 radius_min, v3s16 radius_
 			}
 		}
 	}
+
+	block->ResetCurrent();
 	return false;
 }
 
 void ClientEnvironment::updateObjectsCameraOffset(v3s16 camera_offset)
 {
-	for (std::map<u16, ClientActiveObject*>::iterator i = m_active_objects.begin(); i != m_active_objects.end(); i++) {
+	for (std::map<u16, ClientActiveObject*>::iterator i = m_active_objects.begin(); i != m_active_objects.end(); i++)
+	{
 		ClientActiveObject* obj = i->second;
 		obj->updateCameraOffset(camera_offset);
 	}
 
 	Player *player;
 	uint32_t i;
-	for (i=0; i<m_players->length; i++) {
+	for (i=0; i<m_players->length; i++)
+	{
 		player = (Player*)array_get_ptr(m_players,i);
 		if (!player)
 			continue;

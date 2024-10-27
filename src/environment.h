@@ -125,7 +125,7 @@ struct EnvEvent {
 
 class Environment
 {
-public:
+    public:
 	// Environment will delete the map passed to the constructor
 	Environment();
 	virtual ~Environment();
@@ -149,7 +149,8 @@ public:
 	array_t *getPlayers();
 	array_t *getPlayers(bool ignore_disconnected);
 	void printPlayers(std::ostream &o);
-	virtual bool propogateEnergy(u8 level, v3s16 powersrc, v3s16 signalsrc, v3s16 pos, core::map<v3s16,MapBlock*> &modified_blocks) {return false;};
+	virtual bool propogateEnergy(u8 level, v3s16 powersrc, v3s16 signalsrc, v3s16 pos,
+			core::map<v3s16,MapBlock*> &modified_blocks) {return false;};
 
 	u32 getDayNightRatio();
 
@@ -229,7 +230,7 @@ public:
 		return m_time%240;
 	}
 
-protected:
+    protected:
 	// peer_ids in here should be unique, except that there may be many 0s
 	array_t *m_players;
 	u32 m_time;

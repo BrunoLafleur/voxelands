@@ -42,55 +42,7 @@
 #include "strfnd.h"
 #include "exceptions.h"
 #include "porting.h"
-
-#if defined(__GNUC__) || defined(__clang__)
-#  define XINLINE inline
-#  define XFINLINE inline __attribute__ ((always_inline))
-#elif defined(__BORLANDC__) || defined(_MSC_VER) || defined(__LCC__)
-#  define XINLINE __inline
-#  define XFINLINE __forceinline
-#elif defined(__DMC__) || defined(__POCC__) || defined(__WATCOMC__) || \
-	defined(__SUNPRO_C)
-#  define XINLINE inline
-#  define XFINLINE inline
-#else
-#  define XINLINE inline
-#  define XFINLINE inline
-#endif
-
-#ifndef __I_IREFERENCE_COUNTED_H_INCLUDED__
-# ifdef __GNUC__
-    XFINLINE static int X1SyncGet(volatile int* const pval)
-    {
-	    return __sync_add_and_fetch(pval,0);
-    }
-
-    XFINLINE static int X1SyncInc(volatile int* const pval)
-    {
-	    return __sync_fetch_and_add(pval,1);
-    }
-
-    XFINLINE static int X1SyncDec(volatile int* const pval)
-    {
-	    return __sync_fetch_and_sub(pval,1);
-    }
-# else
-    XFINLINE static int X1SyncGet(volatile int* const pval)
-    {
-	    return *pval;
-    }
-
-    XFINLINE static int X1SyncInc(volatile int* const pval)
-    {
-	    return (*pval)++;
-    }
-
-    XFINLINE static int X1SyncDec(volatile int* const pval)
-    {
-	    return (*pval)--;
-    }
-# endif
-#endif
+#include "xsync.h"
 
 using namespace jthread;
 
@@ -357,7 +309,7 @@ inline v3f readV3F1000(std::istream &is)
 template <typename T>
 class SharedPtr
 {
-public:
+    public:
 	SharedPtr(T *t=NULL)
 	{
 		refcount = new int;
@@ -414,7 +366,7 @@ public:
 	{
 		return ptr[i];
 	}
-private:
+    private:
 	void drop()
 	{
 		assert(refcount && X1SyncGet(refcount) > 0);
@@ -434,7 +386,7 @@ private:
 template <typename T>
 class Buffer
 {
-public:
+    public:
 	Buffer()
 	{
 		m_size = 0;
@@ -501,7 +453,7 @@ public:
 	{
 		return m_size;
 	}
-private:
+    private:
 	void drop()
 	{
 		if(data)
@@ -515,7 +467,7 @@ private:
 template <typename T>
 class SharedBuffer
 {
-public:
+    public:
 	SharedBuffer() :
 			data(NULL),m_size(0),refcount(0)
 	{
@@ -606,7 +558,7 @@ public:
 	{
 		return Buffer<T>(data, m_size);
 	}
-private:
+    private:
 	void drop()
 	{
 		assert(refcount && X1SyncGet(refcount) > 0);
@@ -672,7 +624,7 @@ private:
 
 class TimeTaker
 {
-public:
+    public:
 	TimeTaker(const char *name, u32 *result=NULL);
 
 	~TimeTaker()
@@ -684,7 +636,7 @@ public:
 
 	u32 getTime();
 
-private:
+    private:
 	const char *m_name;
 	u32 m_time1;
 	bool m_running;
@@ -780,7 +732,7 @@ inline void getFacePositions(core::list<v3s16> &list, u16 d)
 
 class IndentationRaiser
 {
-public:
+    public:
 	IndentationRaiser(u16 *indentation)
 	{
 		m_indentation = indentation;
@@ -790,7 +742,7 @@ public:
 	{
 		(*m_indentation)--;
 	}
-private:
+    private:
 	u16 *m_indentation;
 };
 
@@ -1099,7 +1051,7 @@ protected:
 template<typename T>
 class MutexedQueue
 {
-public:
+    public:
 	MutexedQueue() : m_mutex(),m_list()
 	{
 		m_mutex.Init();
@@ -1177,7 +1129,7 @@ public:
 		return m_list;
 	}
 
-protected:
+    protected:
 	JMutex m_mutex;
 	core::list<T> m_list;
 };
@@ -1189,7 +1141,7 @@ protected:
 template<typename Caller, typename Data>
 class CallerInfo
 {
-public:
+    public:
 	Caller caller;
 	Data data;
 };
@@ -1197,7 +1149,7 @@ public:
 template<typename Key, typename T, typename Caller, typename CallerData>
 class GetResult
 {
-public:
+    public:
 	Key key;
 	T item;
 	core::list<CallerInfo<Caller, CallerData> > callers;
@@ -1211,7 +1163,7 @@ class ResultQueue: public MutexedQueue< GetResult<Key, T, Caller, CallerData> >
 template<typename Key, typename T, typename Caller, typename CallerData>
 class GetRequest
 {
-public:
+    public:
 	GetRequest()
 	{
 		dest = NULL;
@@ -1238,7 +1190,7 @@ public:
 template<typename Key, typename T, typename Caller, typename CallerData>
 class RequestQueue
 {
-public:
+    public:
 	u32 size()
 	{
 		return m_queue.size();
@@ -1299,7 +1251,7 @@ public:
 		return m_queue.pop_front(wait_if_empty);
 	}
 
-private:
+    private:
 	MutexedQueue< GetRequest<Key, T, Caller, CallerData> > m_queue;
 };
 
@@ -1326,7 +1278,7 @@ bool isBlockInSight(v3s16 blockpos_b, v3f camera_pos, v3f camera_dir,
 template<typename Value>
 class UniqueQueue
 {
-public:
+    public:
 
 	/*
 		Does nothing if value is already queued.
@@ -1362,7 +1314,7 @@ public:
 		return m_list.size();
 	}
 
-private:
+    private:
 	core::map<Value, u8> m_map;
 	core::list<Value> m_list;
 };
@@ -1371,7 +1323,7 @@ private:
 template<typename Key, typename Value>
 class MutexedMap
 {
-public:
+    public:
 	MutexedMap()
 	{
 		m_mutex.Init();
@@ -1401,7 +1353,7 @@ public:
 		return true;
 	}
 
-private:
+    private:
 	core::map<Key, Value> m_values;
 	JMutex m_mutex;
 };
@@ -1422,7 +1374,7 @@ private:
 template<typename T>
 class MutexedIdGenerator
 {
-public:
+    public:
 	MutexedIdGenerator()
 	{
 		m_mutex.Init();
@@ -1456,7 +1408,7 @@ public:
 		return new_id;
 	}
 
-private:
+    private:
 	JMutex m_mutex;
 	// Values are stored here at id-1 position (id 1 = [0])
 	core::array<T> m_id_to_value;
@@ -1724,7 +1676,7 @@ inline core::aabbox3d<f32> getNodeBox(v3s16 p, float d)
 
 class IntervalLimiter
 {
-public:
+    public:
 	IntervalLimiter():
 		m_accumulator(0)
 	{
@@ -1744,7 +1696,7 @@ public:
 		m_accumulator -= wanted_interval;
 		return true;
 	}
-protected:
+    protected:
 	float m_accumulator;
 };
 

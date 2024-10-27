@@ -29,6 +29,7 @@
 #include "gettime.h"
 #include "content_mapnode.h"
 #include "environment.h"
+#include "log.h"
 
 /*
 	Debug stuff
@@ -37,26 +38,18 @@ u32 addarea_time = 0;
 u32 emerge_time = 0;
 u32 emerge_load_time = 0;
 u32 clearflag_time = 0;
-//u32 getwaterpressure_time = 0;
-//u32 spreadwaterpressure_time = 0;
 u32 updateareawaterpressure_time = 0;
 u32 flowwater_pre_time = 0;
 
 
-VoxelManipulator::VoxelManipulator():
-	m_data(NULL),
-	m_flags(NULL),
-	m_env(NULL)
+VoxelManipulator::VoxelManipulator() : m_area(),m_data(NULL),
+				       m_flags(NULL),m_env(NULL)
 {
 }
 
 VoxelManipulator::~VoxelManipulator()
 {
 	clear();
-	if(m_data)
-		delete[] m_data;
-	if(m_flags)
-		delete[] m_flags;
 }
 
 MapNode VoxelManipulator::getNodeRO(v3s16 p)
@@ -64,16 +57,16 @@ MapNode VoxelManipulator::getNodeRO(v3s16 p)
 #ifdef SERVER
 	return getNodeNoEx(p);
 #else
-	if (
-		m_area.contains(p) == false
-		|| (m_flags[m_area.index(p)] & VOXELFLAG_INEXISTENT)
-		|| (m_flags[m_area.index(p)] & VOXELFLAG_NOT_LOADED)
-		|| m_data[m_area.index(p)].getContent() == CONTENT_IGNORE
-	) {
+	if (m_area.contains(p) == false
+			|| (m_flags[m_area.index(p)] & VOXELFLAG_INEXISTENT)
+			|| (m_flags[m_area.index(p)] & VOXELFLAG_NOT_LOADED)
+			|| m_data[m_area.index(p)].getContent() == CONTENT_IGNORE)
+	{
 		if (m_env)
 			return m_env->getMap().getNodeNoEx(p);
 		return MapNode(CONTENT_IGNORE);
 	}
+	
 	return m_data[m_area.index(p)];
 #endif
 }
@@ -120,8 +113,9 @@ void VoxelManipulator::print(std::ostream &o, VoxelPrintMode mode)
 				else
 				{
 					c = 'X';
-					content_t m = m_data[m_area.index(x,y,z)].getContent();
-					u8 pr = m_data[m_area.index(x,y,z)].param2;
+					const content_t m = m_data[m_area.index(x,y,z)].getContent();
+					const u8 pr = m_data[m_area.index(x,y,z)].param2;
+					
 					if(mode == VOXELPRINT_MATERIAL)
 					{
 						if(m <= 9)
@@ -153,7 +147,7 @@ void VoxelManipulator::print(std::ostream &o, VoxelPrintMode mode)
 	}
 }
 
-void VoxelManipulator::addArea(VoxelArea area)
+void VoxelManipulator::addArea(const VoxelArea area)
 {
 	// Cancel if requested area has zero volume
 	if(area.getExtent() == v3s16(0,0,0))
@@ -179,7 +173,7 @@ void VoxelManipulator::addArea(VoxelArea area)
 		new_area.addArea(area);
 	}
 
-	s32 new_size = new_area.getVolume();
+	const s32 new_size = new_area.getVolume();
 
 	/*dstream<<"adding area ";
 	area.print(dstream);
@@ -191,9 +185,12 @@ void VoxelManipulator::addArea(VoxelArea area)
 	dstream<<std::endl;*/
 
 	// Allocate and clear new data
-	MapNode *new_data = new MapNode[new_size];
+	MapNode* const new_data = new MapNode[new_size];
+	
 	assert(new_data);
-	u8 *new_flags = new u8[new_size];
+	
+	u8* const new_flags = new u8[new_size];
+	
 	assert(new_flags);
 	memset(new_flags, VOXELFLAG_INEXISTENT, new_size);
 
@@ -203,10 +200,12 @@ void VoxelManipulator::addArea(VoxelArea area)
 	for(s32 y=m_area.MinEdge.Y; y<=m_area.MaxEdge.Y; y++)
 	for(s32 x=m_area.MinEdge.X; x<=m_area.MaxEdge.X; x++)
 	{
-		unsigned int old_index = m_area.index(x,y,z);
+		const unsigned int old_index = m_area.index(x,y,z);
+		
 		// If loaded, copy data and flags
 		if((m_flags[old_index] & VOXELFLAG_NOT_LOADED) == false) {
-			unsigned int new_index = new_area.index(x,y,z);
+			const unsigned int new_index = new_area.index(x,y,z);
+			
 			new_data[new_index] = m_data[old_index];
 			new_flags[new_index] = m_flags[old_index];
 		}
@@ -216,8 +215,8 @@ void VoxelManipulator::addArea(VoxelArea area)
 
 	m_area = new_area;
 
-	MapNode *old_data = m_data;
-	u8 *old_flags = m_flags;
+	MapNode* const old_data = m_data;
+	u8* const old_flags = m_flags;
 
 	/*dstream<<"old_data="<<(int)old_data<<", new_data="<<(int)new_data
 	<<", old_flags="<<(int)m_flags<<", new_flags="<<(int)new_flags<<std::endl;*/
@@ -233,28 +232,36 @@ void VoxelManipulator::addArea(VoxelArea area)
 	//dstream<<"addArea done"<<std::endl;
 }
 
-void VoxelManipulator::copyFrom(MapNode *src, VoxelArea src_area,
-		v3s16 from_pos, v3s16 to_pos, v3s16 size)
+// OK valeurs seulement, pas de pointeurs.
+
+void VoxelManipulator::copyFrom(const MapNode* const src,const VoxelArea src_area,
+		const v3s16 from_pos,const v3s16 to_pos,const v3s16 size)
 {
 	for(s16 z=0; z<size.Z; z++)
 	for(s16 y=0; y<size.Y; y++)
 	{
-		s32 i_src = src_area.index(from_pos.X, from_pos.Y+y, from_pos.Z+z);
-		s32 i_local = m_area.index(to_pos.X, to_pos.Y+y, to_pos.Z+z);
-		memcpy(&m_data[i_local], &src[i_src], size.X*sizeof(MapNode));
+		const s32 i_src = src_area.index(from_pos.X, from_pos.Y+y, from_pos.Z+z);
+		const s32 i_local = m_area.index(to_pos.X, to_pos.Y+y, to_pos.Z+z);
+
+		assert(i_src < MAP_BLOCKSIZE3);
+		assert(i_local < m_area.getVolume());
+		memcpy(&m_data[i_local], &src[i_src], size.X * sizeof(MapNode));
 		memset(&m_flags[i_local], 0, size.X);
 	}
 }
 
-void VoxelManipulator::copyTo(MapNode *dst, VoxelArea dst_area,
-		v3s16 dst_pos, v3s16 from_pos, v3s16 size)
+void VoxelManipulator::copyTo(MapNode* const dst,const VoxelArea dst_area,
+		const v3s16 dst_pos,const v3s16 from_pos,const v3s16 size)
 {
 	for(s16 z=0; z<size.Z; z++)
 	for(s16 y=0; y<size.Y; y++)
 	{
-		s32 i_dst = dst_area.index(dst_pos.X, dst_pos.Y+y, dst_pos.Z+z);
-		s32 i_local = m_area.index(from_pos.X, from_pos.Y+y, from_pos.Z+z);
-		memcpy(&dst[i_dst], &m_data[i_local], size.X*sizeof(MapNode));
+		const s32 i_dst = dst_area.index(dst_pos.X, dst_pos.Y+y, dst_pos.Z+z);
+		const s32 i_local = m_area.index(from_pos.X, from_pos.Y+y, from_pos.Z+z);
+
+	    	assert(i_dst < MAP_BLOCKSIZE3);
+		assert(i_local < m_area.getVolume());
+		memcpy(&dst[i_dst], &m_data[i_local], size.X * sizeof(MapNode));
 	}
 }
 
@@ -284,11 +291,10 @@ void VoxelManipulator::clearFlag(u8 flags)
 			count++;
 	}*/
 
-	s32 volume = m_area.getVolume();
+	const s32 volume = m_area.getVolume();
+	
 	for(s32 i=0; i<volume; i++)
-	{
 		m_flags[i] &= ~flags;
-	}
 
 	/*s32 volume = m_area.getVolume();
 	for(s32 i=0; i<volume; i++)
@@ -318,23 +324,24 @@ void VoxelManipulator::unspreadLight(enum LightBank bank, v3s16 p, u8 oldlight,
 	emerge(VoxelArea(p - v3s16(1,1,1), p + v3s16(1,1,1)));
 
 	// Loop through 6 neighbors
-	for (u16 i=0; i<6; i++) {
+	for (u16 i=0; i<6; i++)
+	{
 		// Get the position of the neighbor node
-		v3s16 n2pos = p + dirs[i];
-
-		u32 n2i = m_area.index(n2pos);
+		const v3s16 n2pos = p + dirs[i];
+		const u32 n2i = m_area.index(n2pos);
 
 		if (m_flags[n2i] & VOXELFLAG_INEXISTENT)
 			continue;
 
-		MapNode &n2 = m_data[n2i];
+		MapNode& n2 = m_data[n2i];
 
 		/*
 			If the neighbor is dimmer than what was specified
 			as oldlight (the light of the previous node)
 		*/
-		u8 light2 = n2.getLight(bank);
-		if (light2 < oldlight) {
+		const u8 light2 = n2.getLight(bank);
+		if (light2 < oldlight)
+		{
 			/*
 				And the neighbor is transparent and it has some light
 			*/
@@ -357,9 +364,9 @@ void VoxelManipulator::unspreadLight(enum LightBank bank, v3s16 p, u8 oldlight,
 					light_sources.remove(n2pos);
 				}*/
 			}
-		}else{
-			light_sources.insert(n2pos, true);
 		}
+		else
+			light_sources.insert(n2pos, true);
 	}
 }
 
@@ -388,16 +395,13 @@ void VoxelManipulator::unspreadLight(enum LightBank bank,
 	if(from_nodes.size() == 0)
 		return;
 
-	core::map<v3s16, u8>::Iterator j;
-	j = from_nodes.getIterator();
+	core::map<v3s16, u8>::Iterator j = from_nodes.getIterator();
 
 	for(; j.atEnd() == false; j++)
 	{
-		v3s16 pos = j.getNode()->getKey();
-
+		const v3s16 pos = j.getNode()->getKey();
 		//MapNode &n = m_data[m_area.index(pos)];
-
-		u8 oldlight = j.getNode()->getValue();
+		const u8 oldlight = j.getNode()->getValue();
 
 		unspreadLight(bank, pos, oldlight, light_sources);
 	}
@@ -439,31 +443,29 @@ void VoxelManipulator::unspreadLight(enum LightBank bank,
 		return;
 
 	core::map<v3s16, u8> unlighted_nodes;
-	core::map<v3s16, u8>::Iterator j;
-	j = from_nodes.getIterator();
+	core::map<v3s16, u8>::Iterator j = from_nodes.getIterator();
 
 	for(; j.atEnd() == false; j++)
 	{
-		v3s16 pos = j.getNode()->getKey();
+		const v3s16 pos = j.getNode()->getKey();
 
 		emerge(VoxelArea(pos - v3s16(1,1,1), pos + v3s16(1,1,1)));
 
 		//MapNode &n = m_data[m_area.index(pos)];
 
-		u8 oldlight = j.getNode()->getValue();
+		const u8 oldlight = j.getNode()->getValue();
 
 		// Loop through 6 neighbors
 		for(u16 i=0; i<6; i++)
 		{
 			// Get the position of the neighbor node
-			v3s16 n2pos = pos + dirs[i];
-
-			u32 n2i = m_area.index(n2pos);
+			const v3s16 n2pos = pos + dirs[i];
+			const u32 n2i = m_area.index(n2pos);
 
 			if(m_flags[n2i] & VOXELFLAG_INEXISTENT)
 				continue;
 
-			MapNode &n2 = m_data[n2i];
+			MapNode& n2 = m_data[n2i];
 
 			/*
 				If the neighbor is dimmer than what was specified
@@ -479,10 +481,9 @@ void VoxelManipulator::unspreadLight(enum LightBank bank,
 					/*
 						Set light to 0 and add to queue
 					*/
-
-					u8 current_light = n2.getLight(bank);
+					const u8 current_light = n2.getLight(bank);
+					
 					n2.setLight(bank, 0);
-
 					unlighted_nodes.insert(n2pos, current_light);
 
 					/*
@@ -496,9 +497,9 @@ void VoxelManipulator::unspreadLight(enum LightBank bank,
 					}*/
 				}
 			}
-			else{
+			else
 				light_sources.insert(n2pos, true);
-			}
+
 		}
 	}
 
@@ -530,23 +531,22 @@ void VoxelManipulator::spreadLight(enum LightBank bank, v3s16 p)
 	if (m_flags[i] & VOXELFLAG_INEXISTENT)
 		return;
 
-	MapNode &n = m_data[i];
-
-	u8 oldlight = n.getLight(bank);
-	u8 newlight = diminish_light(oldlight);
+	const MapNode& n = m_data[i];
+	const u8 oldlight = n.getLight(bank);
+	const u8 newlight = diminish_light(oldlight);
 
 	// Loop through 6 neighbors
-	for (u16 i=0; i<6; i++) {
+	for (u16 i=0; i<6; i++)
+	{
 		// Get the position of the neighbor node
-		v3s16 n2pos = p + dirs[i];
-
-		u32 n2i = m_area.index(n2pos);
+		const v3s16 n2pos = p + dirs[i];
+		const u32 n2i = m_area.index(n2pos);
 
 		if (m_flags[n2i] & VOXELFLAG_INEXISTENT)
 			continue;
 
-		MapNode &n2 = m_data[n2i];
-		u8 light2 = n2.getLight(bank);
+		MapNode& n2 = m_data[n2i];
+		const u8 light2 = n2.getLight(bank);
 
 		/*
 			If the neighbor is brighter than the current node,
@@ -558,7 +558,8 @@ void VoxelManipulator::spreadLight(enum LightBank bank, v3s16 p)
 			If the neighbor is dimmer than how much light this node
 			would spread on it, add to list
 		*/
-		if (light2 < newlight && content_features(n2).light_propagates) {
+		if (light2 < newlight && content_features(n2).light_propagates)
+		{
 			n2.setLight(bank, newlight);
 			spreadLight(bank, n2pos);
 		}
@@ -580,10 +581,10 @@ void VoxelManipulator::spreadLight(enum LightBank bank,
 		return;
 
 	core::map<v3s16, bool> lighted_nodes;
-	core::map<v3s16, bool>::Iterator j;
-	j = from_nodes.getIterator();
+	core::map<v3s16, bool>::Iterator j = from_nodes.getIterator();
 
-	for (; j.atEnd() == false; j++) {
+	for (; j.atEnd() == false; j++)
+	{
 		v3s16 pos = j.getNode()->getKey();
 		spreadLight(bank, pos);
 	}
@@ -611,37 +612,37 @@ void VoxelManipulator::spreadLight(enum LightBank bank,
 		return;
 
 	core::map<v3s16, bool> lighted_nodes;
-	core::map<v3s16, bool>::Iterator j;
-	j = from_nodes.getIterator();
+	core::map<v3s16, bool>::Iterator j = from_nodes.getIterator();
 
-	for (; j.atEnd() == false; j++) {
-		v3s16 pos = j.getNode()->getKey();
+	for (; j.atEnd() == false; j++)
+	{
+		const v3s16 pos = j.getNode()->getKey();
 
 		emerge(VoxelArea(pos - v3s16(1,1,1), pos + v3s16(1,1,1)));
 
-		u32 i = m_area.index(pos);
+		const u32 i = m_area.index(pos);
 
 		if (m_flags[i] & VOXELFLAG_INEXISTENT)
 			continue;
 
-		MapNode &n = m_data[i];
-
-		u8 oldlight = n.getLight(bank);
-		u8 newlight = diminish_light(oldlight);
+		const MapNode& n = m_data[i];
+		const u8 oldlight = n.getLight(bank);
+		const u8 newlight = diminish_light(oldlight);
 
 		// Loop through 6 neighbors
-		for (u16 i=0; i<6; i++) {
+		for (u16 i=0; i<6; i++)
+		{
 			// Get the position of the neighbor node
-			v3s16 n2pos = pos + dirs[i];
+			const v3s16 n2pos = pos + dirs[i];
 
 			try{
-				u32 n2i = m_area.index(n2pos);
+				const u32 n2i = m_area.index(n2pos);
 
 				if (m_flags[n2i] & VOXELFLAG_INEXISTENT)
 					continue;
 
-				MapNode &n2 = m_data[n2i];
-				u8 light2 = n2.getLight(bank);
+				MapNode& n2 = m_data[n2i];
+				const u8 light2 = n2.getLight(bank);
 
 				/*
 					If the neighbor is brighter than the current node,
@@ -672,5 +673,3 @@ void VoxelManipulator::spreadLight(enum LightBank bank,
 		spreadLight(bank, lighted_nodes);
 }
 #endif
-
-//END

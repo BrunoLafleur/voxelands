@@ -817,8 +817,8 @@ struct ContentFeatures
 /*
 	Call this to access the ContentFeature list
 */
-ContentFeatures & content_features(content_t i);
-ContentFeatures & content_features(MapNode &n);
+ContentFeatures& content_features(content_t i);
+ContentFeatures& content_features(const MapNode& n);
 
 struct SelectedNode
 {
@@ -954,7 +954,7 @@ struct MapNode
 
 	u32 envticks;
 
-	MapNode(const MapNode & n) :
+	MapNode(const MapNode& n) :
 			content(n.content),param1(n.param1),param2(n.param2),
 			envticks(n.envticks)
 	{
@@ -973,15 +973,14 @@ struct MapNode
 		return *this;
 	}
 	
-	bool operator==(const MapNode &other)
+	bool operator==(const MapNode &other) const
 	{
-		return (content == other.content
-				&& param1 == other.param1
-				&& param2 == other.param2);
+		return content == other.content && param1 == other.param1
+		    && param2 == other.param2;
 	}
 
 	// To be used everywhere
-	content_t getContent()
+	content_t getContent() const
 	{
 		return content;
 	}
@@ -991,13 +990,15 @@ struct MapNode
 		envticks = 0;
 	}
 
-	u8 getLightBanksWithSource()
+	u8 getLightBanksWithSource() const
 	{
 		// Select the brightest of [light source, propagated light]
 		u8 lightday = 0;
 		u8 lightnight = 0;
-		ContentFeatures &f = content_features(content);
-		if (f.param_type == CPT_LIGHT) {
+		const ContentFeatures& f = content_features(content);
+		
+		if (f.param_type == CPT_LIGHT)
+		{
 			lightday = param1 & 0x0f;
 			lightnight = (param1>>4)&0x0f;
 		}
@@ -1008,11 +1009,11 @@ struct MapNode
 		return (lightday&0x0f) | ((lightnight<<4)&0xf0);
 	}
 
-	u8 getLight(enum LightBank bank)
+	u8 getLight(enum LightBank bank) const
 	{
 		// Select the brightest of [light source, propagated light]
 		u8 light = 0;
-		ContentFeatures &f = content_features(content);
+		const ContentFeatures& f = content_features(content);
 		if (f.param_type == CPT_LIGHT) {
 			if (bank == LIGHTBANK_DAY) {
 				light = param1 & 0x0f;
@@ -1027,12 +1028,13 @@ struct MapNode
 
 	// 0 <= daylight_factor <= 1000
 	// 0 <= return value <= LIGHT_SUN
-	u8 getLightBlend(u32 daylight_factor)
+	u8 getLightBlend(u32 daylight_factor) const
 	{
 		u8 l = ((daylight_factor * getLight(LIGHTBANK_DAY)
 			+ (1000-daylight_factor) * getLight(LIGHTBANK_NIGHT))
 			)/1000;
 		u8 max = LIGHT_MAX;
+		
 		if(getLight(LIGHTBANK_DAY) == LIGHT_SUN)
 			max = LIGHT_SUN;
 		if(l > max)
@@ -1053,9 +1055,10 @@ struct MapNode
 			param1 |= (a_light & 0x0f)<<4;
 		}
 	}
-	v3s16 getRotation(v3s16 dir = v3s16(1,1,1));
-	s16 getRotationAngle();
-	v3s16 getEffectedRotation();
+	
+	v3s16 getRotation(v3s16 dir = v3s16(1,1,1)) const;
+	s16 getRotationAngle() const;
+	v3s16 getEffectedRotation() const;
 
 	// In mapnode.cpp
 #ifndef SERVER

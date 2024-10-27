@@ -74,7 +74,7 @@ void scaleMesh(scene::IMesh *mesh, v3f scale);
 /*
 	Translate each vertex coordinate by the specified vector.
 */
-void translateMesh(scene::IMesh *mesh, v3f vec);
+void translateMesh(scene::IMesh* const mesh,const v3f vec);
 
 /*
 	Set a constant color for all vertices in the mesh
@@ -120,7 +120,7 @@ video::ITexture *generateTextureFromMesh(scene::IMesh *mesh,
  */
 class ExtrudedSpriteSceneNode: public scene::ISceneNode
 {
-public:
+    public:
 	ExtrudedSpriteSceneNode(
 		scene::ISceneNode* parent,
 		scene::ISceneManager* mgr,
@@ -146,7 +146,8 @@ public:
 	virtual void OnRegisterSceneNode();
 	virtual void render();
 
-private:
+    private:
+	
 	scene::IMeshSceneNode* m_meshnode;
 	f32 m_thickness;
 	scene::IMesh* m_cubemesh;

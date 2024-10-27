@@ -84,7 +84,7 @@ private:
 	bool *m_flag;
 };
 
-void * ServerThread::Thread()
+void* ServerThread::Thread()
 {
 	ThreadStarted();
 	log_mutex.Lock();
@@ -141,7 +141,7 @@ void * EmergeThread::Thread()
 	*/
 	while(getRun())
 	{
-		QueuedBlockEmerge *qptr = m_server->m_emerge_queue.pop();
+		QueuedBlockEmerge* const qptr = m_server->m_emerge_queue.pop();
 		if (qptr == NULL)
 			break;
 
@@ -198,12 +198,12 @@ void * EmergeThread::Thread()
 		//vlprintf(CN_DEBUG,"EmergeThread: p=(%d,%d,%d) only_from_disk = %d",p.X,p.Y,p.Z,only_from_disk);
 		
 		JMutexAutoLock envlock(m_server->m_env_mutex);
-		ServerMap &map = ((ServerMap&)m_server->m_env.getMap());
+		ServerMap& map = ((ServerMap&) m_server->m_env.getMap());
 
 		//core::map<v3s16, MapBlock*> changed_blocks;
 		//core::map<v3s16, MapBlock*> lighting_invalidated_blocks;
 
-		MapBlock *block = NULL;
+		MapBlock* block = NULL;
 		bool got_block = true;
 		core::map<v3s16, MapBlock*> modified_blocks;
 
@@ -213,17 +213,22 @@ void * EmergeThread::Thread()
 		{
 			// Load sector if it isn't loaded
 			map.getSectorNoGenerateNoEx(p2d);
-
 			block = map.getBlockNoCreateNoEx(p);
-			if (!block || block->isDummy() || !block->isGenerated()) {
+			    
+			if (!block || block->isDummy() || !block->isGenerated())
+			{
 				bool was_generated = false;
 				//vlprintf(CN_DEBUG,"EmergeThread: not in memory, loading");
 
 				// Load/generate block
+				if(block)
+				    block->ResetCurrent();
 				block = map.loadBlock(p);
 
-				if (only_from_disk == false) {
-					if (block == NULL || block->isGenerated() == false) {
+				if (only_from_disk == false)
+				{
+					if (!block || block->isGenerated() == false)
+					{
 						//vlprintf(CN_DEBUG,"EmergeThread: generating");
 						block = map.generateBlock(p, modified_blocks);
 						was_generated = true;
@@ -232,9 +237,10 @@ void * EmergeThread::Thread()
 
 				//vlprintf(CN_DEBUG,"EmergeThread: ended up with: %s",analyze_block(block).c_str());
 
-				if (block == NULL) {
+				if (!block)
 					got_block = false;
-				}else{
+				else
+				{
 					/*
 						Ignore map edit events, they will not need to be
 						sent to anybody because the block hasn't been sent
@@ -246,7 +252,8 @@ void * EmergeThread::Thread()
 					m_server->m_env.activateBlock(block, 3600);
 				}
 
-				if (was_generated && myrand_range(0,27) == 0) {
+				if (was_generated && myrand_range(0,27) == 0)
+				{
 					bool has_spawn = false;
 					bool water_spawn = false;
 					v3s16 bsp(0,0,0);
@@ -288,16 +295,19 @@ void * EmergeThread::Thread()
 					}
 					}
 
-					if (water_spawn) {
-						if (myrand_range(0,5) == 0) {
+					if (water_spawn)
+					{
+						if (myrand_range(0,5) == 0)
 							mob_spawn_hostile(wsp,true,&m_server->m_env);
-						}else{
+						else
 							mob_spawn_passive(wsp,true,&m_server->m_env);
-						}
-					}else if (has_spawn) {
+					}
+					else if (has_spawn)
+					{
 						MapNode n = block->getNodeNoEx(bsp);
 						u8 overlay = (n.param1&0x0F);
-						if (overlay == 0x01 || overlay == 0x02 || (overlay == 0x04 && myrand_range(0,5) == 0)) {
+						if (overlay == 0x01 || overlay == 0x02
+								|| (overlay == 0x04 && myrand_range(0,5) == 0)) {
 							mob_spawn_passive(sp,false,&m_server->m_env);
 						}else if (overlay == 0x00 && block->getPosRelative().Y < -16) {
 							mob_spawn(sp,CONTENT_MOB_RAT,&m_server->m_env);
@@ -308,6 +318,9 @@ void * EmergeThread::Thread()
 						}
 					}
 				}
+
+				if(block)
+				    block->ResetCurrent();
 			}
 
 			// TODO: Some additional checking and lighting updating,
@@ -331,14 +344,17 @@ void * EmergeThread::Thread()
 			Set the modified blocks unsent for all the clients
 		*/
 
-		for (core::map<u16, RemoteClient*>::Iterator i = m_server->m_clients.getIterator(); i.atEnd() == false; i++) {
-			RemoteClient *client = i.getNode()->getValue();
+		for (core::map<u16, RemoteClient*>::Iterator i = m_server->m_clients.getIterator(); i.atEnd() == false; i++)
+		{
+			RemoteClient* const client = i.getNode()->getValue();
 
 			// Remove block from sent history
 			if (modified_blocks.size() > 0)
 				client->SetBlocksNotSent(modified_blocks);
 		}
 
+		if(block)
+		    block->ResetCurrent();
 	}
 
 	END_DEBUG_EXCEPTION_HANDLER(errorstream)
@@ -369,7 +385,7 @@ void RemoteClient::GetNextBlocks(Server *server, float dtime,
 
 	//TimeTaker timer("RemoteClient::GetNextBlocks");
 
-	Player *player = server->m_env.getPlayer(peer_id);
+	Player* const player = server->m_env.getPlayer(peer_id);
 
 	assert(player != NULL);
 
@@ -585,11 +601,10 @@ void RemoteClient::GetNextBlocks(Server *server, float dtime,
 				FOV setting. The default of 72 degrees is fine.
 			*/
 
-			float camera_fov = (72.0*PI/180) * 4./3.;
+			const float camera_fov = (72.0*PI/180) * 4./3.;
+			
 			if(isBlockInSight(p, camera_pos, camera_dir, camera_fov, 10000*BS) == false)
-			{
 				continue;
-			}
 #endif
 			/*
 				Don't send already sent blocks
@@ -604,11 +619,11 @@ void RemoteClient::GetNextBlocks(Server *server, float dtime,
 			/*
 				Check if map has this block
 			*/
-			MapBlock *block = server->m_env.getMap().getBlockNoCreateNoEx(p);
-
+			MapBlock* const block = server->m_env.getMap().getBlockNoCreateNoEx(p);
 			bool surely_not_found_on_disk = false;
 			bool block_is_invalid = false;
-			if(block != NULL)
+			
+			if(block)
 			{
 				// Reset usage timer, this block will be of use in the future.
 				block->resetUsageTimer();
@@ -654,6 +669,7 @@ void RemoteClient::GetNextBlocks(Server *server, float dtime,
 						continue;
 				}
 #endif
+				block->ResetCurrent();
 			}
 
 			/*
@@ -1530,8 +1546,13 @@ void Server::AsyncRunStep()
 						i.atEnd()==false; i++)
 				{
 					v3s16 p = i.getNode()->getKey();
-					modified_blocks2.insert(p,
-							m_env.getMap().getBlockNoCreateNoEx(p));
+					MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(p);
+
+					if(block)
+					{
+					    modified_blocks2.insert(p,block);
+					    block->ResetCurrent();
+					}
 				}
 				// Set blocks not sent
 				for(core::list<u16>::Iterator
@@ -2578,20 +2599,27 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					std::string p_name = std::string(player->getName());
 					m_env.getMap().addNodeAndUpdate(p_under, selected_node, modified_blocks, p_name);
 				}
-				if (ometa) {
+				
+				if (ometa)
+				{
 					//m_env.getMap().setNodeMetadata(p_under,ometa);
 					meta = m_env.getMap().getNodeMetadata(p_under);
-					if (meta) {
+					if (meta)
+					{
 						meta->import(ometa);
 						meta->setOwner(player->getName());
 						delete ometa;
 					}
 				}
+				
 				v3s16 blockpos = getNodeBlockPos(p_under);
-				MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+				MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 				if (block)
+				{
 					block->setChangedFlag();
-
+					block->ResetCurrent();
+				}
+				
 				for(core::map<u16, RemoteClient*>::Iterator
 					i = m_clients.getIterator();
 					i.atEnd()==false; i++)
@@ -2600,15 +2628,16 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					client->SetBlocksNotSent(modified_blocks);
 					client->SetBlockNotSent(blockpos);
 				}
-			}else if (
-				selected_node_features.onpunch_gives_inventory
-				&& (meta = m_env.getMap().getNodeMetadata(p_under))
-				&& (meta->getInventory())
-				&& (meta->getInventory()->getList("main"))
-				&& (meta->getInventory()->getList("main")->getUsedSlots() > 0)
-			) {
-				Inventory *inv = meta->getInventory();
-				if (inv) {
+			}
+			else if (selected_node_features.onpunch_gives_inventory
+					&& (meta = m_env.getMap().getNodeMetadata(p_under))
+					&& (meta->getInventory())
+					&& (meta->getInventory()->getList("main"))
+					&& (meta->getInventory()->getList("main")->getUsedSlots() > 0))
+			{
+				Inventory* const inv = meta->getInventory();
+				if (inv)
+				{
 					InventoryList *list = inv->getList("main");
 					if (list) {
 						u16 max = list->getSize();
@@ -2694,10 +2723,13 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				}
 
 				v3s16 blockpos = getNodeBlockPos(p_under);
-				MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+				MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 				if (block)
+				{
 					block->setChangedFlag();
-
+					block->ResetCurrent();
+				}
+				
 				for(core::map<u16, RemoteClient*>::Iterator
 					i = m_clients.getIterator();
 					i.atEnd()==false; i++)
@@ -2798,7 +2830,8 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				BarrelNodeMetadata *bmeta = (BarrelNodeMetadata*)m_env.getMap().getNodeMetadata(p_under);
 				if (!bmeta)
 					return;
-				if (wielded_tool_features.type == TT_BUCKET) {
+				if (wielded_tool_features.type == TT_BUCKET)
+				{
 					const content_t c = wielditem->getData();
 					if (!c) {
 						if (bmeta->m_water_level < 4)
@@ -2824,9 +2857,10 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						return;
 					}
 					v3s16 blockpos = getNodeBlockPos(p_under);
-					MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+					MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 					if (!block)
 						return;
+					
 					block->setChangedFlag();
 					core::map<v3s16, MapBlock*> modified_blocks;
 					modified_blocks.insert(block->getPos(),block);
@@ -2839,7 +2873,10 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						client->SetBlocksNotSent(modified_blocks);
 						client->SetBlockNotSent(blockpos);
 					}
-				}else if (wielded_tool_features.type == TT_NONE) {
+					block->ResetCurrent();
+				}
+				else if (wielded_tool_features.type == TT_NONE)
+				{
 					core::list<u16> far_players;
 					core::map<v3s16, MapBlock*> modified_blocks;
 
@@ -2869,10 +2906,13 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					}
 
 					v3s16 blockpos = getNodeBlockPos(p_under);
-					MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+					MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 					if (block)
+					{
 						block->setChangedFlag();
-
+						block->ResetCurrent();
+					}
+					
 					for(core::map<u16, RemoteClient*>::Iterator
 						i = m_clients.getIterator();
 						i.atEnd()==false; i++)
@@ -2882,12 +2922,12 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						client->SetBlockNotSent(blockpos);
 					}
 				}
-			}else if (
-				selected_content == CONTENT_WOOD_BARREL_SEALED
-				|| selected_content == CONTENT_APPLEWOOD_BARREL_SEALED
-				|| selected_content == CONTENT_JUNGLEWOOD_BARREL_SEALED
-				|| selected_content == CONTENT_PINE_BARREL_SEALED
-			) {
+			}
+			else if (selected_content == CONTENT_WOOD_BARREL_SEALED
+					|| selected_content == CONTENT_APPLEWOOD_BARREL_SEALED
+					|| selected_content == CONTENT_JUNGLEWOOD_BARREL_SEALED
+					|| selected_content == CONTENT_PINE_BARREL_SEALED)
+			{
 				if (wielded_tool_features.type == TT_NONE) {
 					core::list<u16> far_players;
 					core::map<v3s16, MapBlock*> modified_blocks;
@@ -2918,10 +2958,13 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					}
 
 					v3s16 blockpos = getNodeBlockPos(p_under);
-					MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+					MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 					if (block)
+					{
 						block->setChangedFlag();
-
+						block->ResetCurrent();
+					}
+					
 					for(core::map<u16, RemoteClient*>::Iterator
 						i = m_clients.getIterator();
 						i.atEnd()==false; i++)
@@ -2931,7 +2974,9 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						client->SetBlockNotSent(blockpos);
 					}
 				}
-			}else if (selected_content == CONTENT_CAULDRON) {
+			}
+			else if (selected_content == CONTENT_CAULDRON)
+			{
 				CauldronNodeMetadata *cmeta = (CauldronNodeMetadata*)m_env.getMap().getNodeMetadata(p_under);
 				if (!cmeta)
 					return;
@@ -2961,7 +3006,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						return;
 					}
 					v3s16 blockpos = getNodeBlockPos(p_under);
-					MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+					MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 					if (!block)
 						return;
 					block->setChangedFlag();
@@ -2976,8 +3021,12 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						client->SetBlocksNotSent(modified_blocks);
 						client->SetBlockNotSent(blockpos);
 					}
-				}else if (wieldcontent == CONTENT_CRAFTITEM_IRON_BOTTLE) {
-					if (cmeta->m_water_level && cmeta->m_water_hot && wielditem->getCount() == 1) {
+					block->ResetCurrent();
+				}
+				else if (wieldcontent == CONTENT_CRAFTITEM_IRON_BOTTLE)
+				{
+					if (cmeta->m_water_level && cmeta->m_water_hot && wielditem->getCount() == 1)
+					{
 						InventoryItem* const itm = InventoryItem::create(CONTENT_CRAFTITEM_IRON_BOTTLE_WATER,1,0);
 						InventoryList* const mlist = player->inventory.getList("main");
 						InventoryItem* const old = mlist->changeItem(item_i,itm);
@@ -2986,7 +3035,7 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						cmeta->m_water_level--;
 						SendInventory(player->peer_id);
 						v3s16 blockpos = getNodeBlockPos(p_under);
-						MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+						MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 						if (!block)
 							return;
 						block->setChangedFlag();
@@ -3001,9 +3050,14 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 							client->SetBlocksNotSent(modified_blocks);
 							client->SetBlockNotSent(blockpos);
 						}
+						block->ResetCurrent();
 					}
-				}else if (wieldcontent == CONTENT_CRAFTITEM_GLASS_BOTTLE) {
-					if (cmeta->m_water_level && cmeta->m_water_heated && !cmeta->m_water_hot && wielditem->getCount() == 1) {
+				}
+				else if (wieldcontent == CONTENT_CRAFTITEM_GLASS_BOTTLE)
+				{
+					if (cmeta->m_water_level && cmeta->m_water_heated
+							&& !cmeta->m_water_hot && wielditem->getCount() == 1)
+					{
 						InventoryItem* const itm = InventoryItem::create(CONTENT_CRAFTITEM_GLASS_BOTTLE_WATER,1,0);
 						InventoryList* const mlist = player->inventory.getList("main");
 						InventoryItem* const old = mlist->changeItem(item_i,itm);
@@ -3027,9 +3081,12 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 							client->SetBlocksNotSent(modified_blocks);
 							client->SetBlockNotSent(blockpos);
 						}
+						block->ResetCurrent();
 					}
 				}
-			}else if (selected_content == CONTENT_INCINERATOR) {
+			}
+			else if (selected_content == CONTENT_INCINERATOR)
+			{
 				meta = m_env.getMap().getNodeMetadata(p_under);
 				if (!meta)
 					return;
@@ -3127,10 +3184,13 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 							meta->setOwner(owner);
 					}
 					v3s16 blockpos = getNodeBlockPos(p_under);
-					MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+					MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 					if (block)
+					{
 						block->setChangedFlag();
-
+						block->ResetCurrent();
+					}
+					
 					for(core::map<u16, RemoteClient*>::Iterator
 						i = m_clients.getIterator();
 						i.atEnd()==false; i++)
@@ -3140,7 +3200,10 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						client->SetBlockNotSent(blockpos);
 					}
 				}
-			}else if (wieldcontent == CONTENT_CRAFTITEM_FERTILIZER && selected_node_features.fertilizer_affects) {
+			}
+			else if (wieldcontent == CONTENT_CRAFTITEM_FERTILIZER
+					&& selected_node_features.fertilizer_affects)
+			{
 				selected_node.envticks = 1024;
 				// send the node
 				core::list<u16> far_players;
@@ -3172,8 +3235,11 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				v3s16 blockpos = getNodeBlockPos(p_under);
 				MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 				if (block)
+				{
 					block->setChangedFlag();
-
+					block->ResetCurrent();
+				}
+				
 				for(core::map<u16, RemoteClient*>::Iterator
 					i = m_clients.getIterator();
 					i.atEnd()==false; i++)
@@ -4180,13 +4246,11 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						continue;
 					client->SetBlocksNotSent(modified_blocks);
 				}
-			}else if (
-				(
-					wielded_tool_features.param_type == CPT_DROP
-					|| wielded_craft_features->param_type == CPT_DROP
-				)
-				&& wielditem->getData() != 0
-			) {
+			}
+			else if ((wielded_tool_features.param_type == CPT_DROP
+					|| wielded_craft_features->param_type == CPT_DROP)
+				&& wielditem->getData() != 0)
+			{
 				v3s16 blockpos = getNodeBlockPos(p_over);
 
 				/*
@@ -4194,16 +4258,20 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					can properly be added to the static list too
 				*/
 				MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
-				if (block==NULL) {
+				if (!block)
+				{
 					infostream<<"Error while placing object: "
 							"block not found"<<std::endl;
 					return;
 				}
 
-				if (!config_get_bool("world.player.inventory.droppable")) {
+				if (!config_get_bool("world.player.inventory.droppable"))
+				{
 					InventoryList* const mlist = player->inventory.getList("main");
 					mlist->deleteItem(item_i);
-				}else if ((getPlayerPrivs(player) & PRIV_BUILD) == 0) {
+				}
+				else if ((getPlayerPrivs(player) & PRIV_BUILD) == 0)
+				{
 					infostream<<"Not allowing player to drop item: no build privs"<<std::endl;
 					return;
 				}
@@ -4221,20 +4289,24 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				*/
 				ServerActiveObject* const obj = wielditem->createSAO(&m_env, 0, pos);
 
-				if (obj == NULL) {
+				if (obj == NULL)
+				{
 					InventoryItem *nitem;
-					if (!config_get_bool("world.player.inventory.creative")) {
+					if (!config_get_bool("world.player.inventory.creative"))
+					{
 						// Delete the right amount of items from the slot
 						InventoryList* const ilist = player->inventory.getList("main");
 						nitem = ilist->changeItem(item_i,NULL);
 						// Send inventory
 						UpdateCrafting(peer_id);
 						SendInventory(peer_id);
-					}else{
-						nitem = wielditem->clone();
 					}
+					else
+						nitem = wielditem->clone();
 					m_env.dropToParcel(p_over,nitem);
-				}else{
+				}
+				else
+				{
 					actionstream<<player->getName()<<" places "<<item->getName()
 							<<" at "<<PP(p_over)<<std::endl;
 
@@ -4255,7 +4327,10 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 						SendInventory(peer_id);
 					}
 				}
-			}else if (wielded_craft_features->teleports > -2) {
+				block->ResetCurrent();
+			}
+			else if (wielded_craft_features->teleports > -2)
+			{
 				s8 dest = wielded_craft_features->teleports;
 				/*
 					If in creative mode, item dropping is disabled unless
@@ -4272,7 +4347,8 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					InventoryList* const ilist = player->inventory.getList("main");
 
 					// Delete item if all gone
-					if (item->getCount() <= dropcount) {
+					if (item->getCount() <= dropcount)
+					{
 						if (item->getCount() < dropcount)
 							infostream<<"WARNING: Server: dropped more items"
 									<<" than the slot contains"<<std::endl;
@@ -4298,7 +4374,8 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 			/*
 				Place other item (not a block)
 			*/
-			else{
+			else
+			{
 				v3s16 blockpos = getNodeBlockPos(p_over);
 
 				/*
@@ -4306,16 +4383,20 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					can properly be added to the static list too
 				*/
 				MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
-				if (block==NULL) {
+				if (!block)
+				{
 					infostream<<"Error while placing object: "
 							"block not found"<<std::endl;
 					return;
 				}
 
-				if (!config_get_bool("world.player.inventory.droppable")) {
+				if (!config_get_bool("world.player.inventory.droppable"))
+				{
 					InventoryList *mlist = player->inventory.getList("main");
 					mlist->deleteItem(item_i);
-				}else if ((getPlayerPrivs(player) & PRIV_BUILD) == 0) {
+				}
+				else if ((getPlayerPrivs(player) & PRIV_BUILD) == 0)
+				{
 					infostream<<"Not allowing player to drop item: no build privs"<<std::endl;
 					return;
 				}
@@ -4334,27 +4415,34 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 				ServerActiveObject *obj = NULL;
 				/* createSAO will drop all craft items, we may not want that */
 				if (wielded_craft_features->content == wieldcontent
-						&& wielded_craft_features->drop_item == CONTENT_IGNORE) {
+						&& wielded_craft_features->drop_item == CONTENT_IGNORE)
+				{
 				    InventoryItem* const ditem = InventoryItem::create(wieldcontent,item->getDropCount());
 				    obj = ditem->createSAO(&m_env, 0, pos);
 				    delete ditem;
-				}else{
+				}
+				else
+				{
 				    InventoryItem* const ditem = ilist->getItem(item_i);
 
 				    if(ditem)
 					obj = ditem->createSAO(&m_env, 0, pos);
 				}
 
-				if (obj == NULL) {
+				if (obj == NULL)
+				{
 					InventoryItem* nitem = NULL;
-					if (!config_get_bool("world.player.inventory.creative")) {
+					if (!config_get_bool("world.player.inventory.creative"))
+					{
 						// Delete the right amount of items from the slot
 						InventoryList* const ilist = player->inventory.getList("main");
 						nitem = ilist->changeItem(item_i,NULL);
 						// Send inventory
 						UpdateCrafting(peer_id);
 						SendInventory(peer_id);
-					}else{
+					}
+					else
+					{
 					/* BUG PB : Get again, it can have disapperead. */
 					    InventoryItem* const wielditem = (InventoryItem*) player->getWieldItem();
 
@@ -4363,7 +4451,10 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 					}
 					if(nitem)
 					    m_env.dropToParcel(p_over,nitem);
-				}else{
+					block->ResetCurrent();
+				}
+				else
+				{
 					actionstream<<player->getName()<<" places "<<item->getName()
 							<<" at "<<PP(p_over)<<std::endl;
 
@@ -4372,7 +4463,8 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 
 					infostream<<"Placed object"<<std::endl;
 
-					if (!config_get_bool("world.player.inventory.creative")) {
+					if (!config_get_bool("world.player.inventory.creative"))
+					{
 						// Delete the right amount of items from the slot
 						u16 dropcount = item->getDropCount();
 						InventoryList* const ilist = player->inventory.getList("main");
@@ -4912,12 +5004,16 @@ void Server::ProcessData(u8 *data, u32 datasize, u16 peer_id)
 		if (!meta)
 			return;
 
-		if (meta->receiveFields(formname,fields,player)) {
+		if (meta->receiveFields(formname,fields,player))
+		{
 			v3s16 blockpos = getNodeBlockPos(p);
-			MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+			MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 			if (block)
+			{
 				block->setChangedFlag();
-
+				block->ResetCurrent();
+			}
+			
 			for(core::map<u16, RemoteClient*>::Iterator
 				i = m_clients.getIterator();
 				i.atEnd()==false; i++)
@@ -4979,9 +5075,11 @@ Inventory* Server::getInventory(InventoryContext *c, std::string id)
 	infostream<<__FUNCTION_NAME<<": unknown id "<<id<<std::endl;
 	return NULL;
 }
+
 void Server::inventoryModified(InventoryContext *c, std::string id)
 {
-	if (id == "current_player") {
+	if (id == "current_player")
+	{
 		assert(c->current_player);
 		// Send inventory
 		UpdateCrafting(c->current_player->peer_id);
@@ -4992,21 +5090,25 @@ void Server::inventoryModified(InventoryContext *c, std::string id)
 	Strfnd fn(id);
 	std::string id0 = fn.next(":");
 
-	if (id0 == "nodemeta") {
+	if (id0 == "nodemeta")
+	{
 		v3s16 p;
 		p.X = mystoi(fn.next(","));
 		p.Y = mystoi(fn.next(","));
 		p.Z = mystoi(fn.next(","));
 		v3s16 blockpos = getNodeBlockPos(p);
 
-		NodeMetadata *meta = m_env.getMap().getNodeMetadata(p);
+		NodeMetadata* const meta = m_env.getMap().getNodeMetadata(p);
 		if (meta)
 			meta->inventoryModified();
 
-		MapBlock *block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
+		MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(blockpos);
 		if (block)
+		{
 			block->raiseModified(MOD_STATE_WRITE_NEEDED);
-
+			block->ResetCurrent();
+		}
+		
 		setBlockNotSent(blockpos);
 		return;
 	}
@@ -5707,23 +5809,30 @@ void Server::SendBlocks(float dtime)
 	// Lowest is most important.
 	queue.sort();
 
-	for (u32 i=0; i<queue.size(); i++) {
+	for (u32 i=0; i<queue.size(); i++)
+	{
 		//TODO: Calculate limit dynamically
 		if (total_sending >= max)
 			break;
 
 		PrioritySortedBlockTransfer q = queue[i];
 
-		MapBlock *block = NULL;
-		try{
+		MapBlock* block = NULL;
+		try
+		{
 			block = m_env.getMap().getBlockNoCreate(q.pos);
-		}catch (InvalidPositionException &e) {
+		}
+		catch (InvalidPositionException &e)
+		{
 			continue;
 		}
 
-		RemoteClient *client = getClient(q.peer_id);
+		RemoteClient* const client = getClient(q.peer_id);
 
 		SendBlockNoLock(q.peer_id, block, client->serialization_version);
+
+		if(block)
+		    block->ResetCurrent();
 
 		client->SentBlock(q.pos);
 

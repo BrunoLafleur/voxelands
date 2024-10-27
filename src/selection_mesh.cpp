@@ -64,12 +64,14 @@ static void selection_generate(Client &client)
 		v3s16 bp = i->first;
 		std::map<v3s16,SelectedNode> bselected = i->second;
 		MeshMakeData data;
-		MapBlock *block = map.getBlockNoCreateNoEx(bp);
+		MapBlock* const block = map.getBlockNoCreateNoEx(bp);
 		data.m_selected = bselected;
 		data.m_env = &client.getEnv();
 		data.fill(dn_ratio,block);
 		SelectionMesh *mesh = new SelectionMesh(&data);
 		meshes.push_back(mesh);
+		if(block)
+		    block->ResetCurrent();
 	}
 }
 
@@ -122,10 +124,10 @@ void selection_draw(video::IVideoDriver* driver, Client &client, v3s16 camera_of
 	bool anim_textures = config_get_bool("client.graphics.texture.animations");
 
 	for (std::vector<SelectionMesh*>::iterator i = meshes.begin(); i != meshes.end(); i++) {
-			SelectionMesh *mesh = *i;
+			SelectionMesh* const mesh = *i;
 		if (!mesh || !mesh->getMesh())
 			continue;
-		scene::SMesh *m = mesh->getMesh();
+		scene::SMesh* const m = mesh->getMesh();
 		if (!m)
 			continue;
 		if (cos_changed)
@@ -304,7 +306,8 @@ void SelectionMesh::generate(MeshMakeData *data)
 		}
 	}
 
-	scene::SMesh *mesh = new scene::SMesh();
+	scene::SMesh* const mesh = new scene::SMesh();
+	
 	for (u32 i=0; i<data->m_meshdata.size(); i++) {
 		MeshData &d = data->m_meshdata[i];
 

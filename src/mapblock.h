@@ -39,8 +39,9 @@
 #include "voxel.h"
 #include "nodemetadata.h"
 #include "staticobject.h"
+
 #ifndef SERVER
-	#include "mapblock_mesh.h"
+# include "mapblock_mesh.h"
 #endif
 
 class Map;
@@ -99,7 +100,7 @@ enum
 
 class NodeContainer
 {
-public:
+    public:
 	virtual bool isValidPosition(v3s16 p) = 0;
 	virtual MapNode getNode(v3s16 p) = 0;
 	virtual void setNode(v3s16 p, MapNode & n) = 0;
@@ -123,8 +124,9 @@ public:
 
 class MapBlock /*: public NodeContainer*/
 {
-public:
-	MapBlock(Map *parent, v3s16 pos, bool dummy=false);
+    public:
+	
+	MapBlock(Map* const parent,const v3s16 pos,const bool dummy = false);
 	~MapBlock();
 
 	/*virtual u16 nodeContainerId() const
@@ -132,7 +134,7 @@ public:
 		return NODECONTAINER_ID_MAPBLOCK;
 	}*/
 
-	Map * getParent()
+	Map* getParent()
 	{
 		return m_parent;
 	}
@@ -141,12 +143,13 @@ public:
 	{
 		if(data != NULL)
 			delete[] data;
-		u32 l = MAP_BLOCKSIZE * MAP_BLOCKSIZE * MAP_BLOCKSIZE;
-		data = new MapNode[l];
-		for(u32 i=0; i<l; i++){
+				
+		data = new MapNode[MAP_BLOCKSIZE3];
+		
+		for(u32 i=0; i<MAP_BLOCKSIZE3; i++)
 			//data[i] = MapNode();
 			data[i] = MapNode(CONTENT_IGNORE);
-		}
+		
 		raiseModified(MOD_STATE_WRITE_NEEDED);
 	}
 
@@ -156,7 +159,7 @@ public:
 
 	bool isDummy()
 	{
-		return (data == NULL);
+		return data == NULL;
 	}
 	void unDummify()
 	{
@@ -289,7 +292,8 @@ public:
 	{
 		return core::aabbox3d<s16>(getPosRelative(),
 				getPosRelative()
-				+ v3s16(MAP_BLOCKSIZE, MAP_BLOCKSIZE, MAP_BLOCKSIZE)
+				+ v3s16(MAP_BLOCKSIZE, MAP_BLOCKSIZE,
+						MAP_BLOCKSIZE)
 				- v3s16(1,1,1));
 	}
 
@@ -301,11 +305,9 @@ public:
 	{
 		if (data == NULL)
 			return false;
-		return (
-			x >= 0 && x < MAP_BLOCKSIZE
-			&& y >= 0 && y < MAP_BLOCKSIZE
-			&& z >= 0 && z < MAP_BLOCKSIZE
-		);
+		return x >= 0 && x < MAP_BLOCKSIZE
+		    && y >= 0 && y < MAP_BLOCKSIZE
+		    && z >= 0 && z < MAP_BLOCKSIZE;
 	}
 
 	MapNode getNode(s16 x, s16 y, s16 z, bool *valid_position)
@@ -313,7 +315,7 @@ public:
 		*valid_position = isValidPosition(x, y, z);
 		if (!*valid_position)
 			return MapNode(CONTENT_IGNORE);
-		return data[z*MAP_BLOCKSIZE*MAP_BLOCKSIZE + y*MAP_BLOCKSIZE + x];
+		return data[z * MAP_BLOCKSIZE2 + y * MAP_BLOCKSIZE + x];
 	}
 
 	MapNode getNode(v3s16 p, bool *valid_position)
@@ -334,7 +336,7 @@ public:
 	{
 		if (!isValidPosition(x,y,z))
 			throw InvalidPositionException();
-		data[z*MAP_BLOCKSIZE*MAP_BLOCKSIZE + y*MAP_BLOCKSIZE + x] = n;
+		data[z * MAP_BLOCKSIZE2 + y * MAP_BLOCKSIZE + x] = n;
 		raiseModified(MOD_STATE_WRITE_NEEDED);
 	}
 
@@ -347,7 +349,7 @@ public:
 	{
 		if (!isValidPosition(p.X,p.Y,p.Z))
 			return;
-		data[p.Z*MAP_BLOCKSIZE*MAP_BLOCKSIZE + p.Y*MAP_BLOCKSIZE + p.X].envticks++;
+		data[p.Z * MAP_BLOCKSIZE2 + p.Y * MAP_BLOCKSIZE + p.X].envticks++;
 	}
 
 	/*
@@ -359,7 +361,7 @@ public:
 		*valid_position = isValidPosition(x, y, z);
 		if (!*valid_position)
 			return MapNode(CONTENT_IGNORE);
-		return data[z*MAP_BLOCKSIZE*MAP_BLOCKSIZE + y*MAP_BLOCKSIZE + x];
+		return data[z * MAP_BLOCKSIZE2 + y * MAP_BLOCKSIZE + x];
 	}
 
 	MapNode getNodeNoCheck(v3s16 p, bool *valid_position)
@@ -371,7 +373,7 @@ public:
 	{
 		if(data == NULL)
 			throw InvalidPositionException();
-		data[z*MAP_BLOCKSIZE*MAP_BLOCKSIZE + y*MAP_BLOCKSIZE + x] = n;
+		data[z * MAP_BLOCKSIZE2 + y * MAP_BLOCKSIZE + x] = n;
 		raiseModified(MOD_STATE_WRITE_NEEDED);
 	}
 
@@ -493,6 +495,12 @@ public:
 		return m_usage_timer;
 	}
 
+	void SetCurrent();
+	
+	void ResetCurrent();
+
+	int GetCurrent();
+
 	/*
 		Serialization
 	*/
@@ -503,13 +511,15 @@ public:
 	// Used after the basic ones when writing on disk (serverside)
 	void serializeDiskExtra(std::ostream &os, u8 version);
 	void deSerializeDiskExtra(std::istream &is, u8 version);
+	
+    public:
 
 	// Used by the server env for mob spawning
 	bool has_spawn_area;
 	v3s16 spawn_area;
 	u32 last_spawn;
 
-private:
+    private:
 	/*
 		Private methods
 	*/
@@ -518,28 +528,29 @@ private:
 		Used only internally, because changes can't be tracked
 	*/
 
-	MapNode & getNodeRef(s16 x, s16 y, s16 z)
+	MapNode& getNodeRef(s16 x, s16 y, s16 z) const
 	{
 		if(data == NULL)
 			throw InvalidPositionException();
 		if(x < 0 || x >= MAP_BLOCKSIZE) throw InvalidPositionException();
 		if(y < 0 || y >= MAP_BLOCKSIZE) throw InvalidPositionException();
 		if(z < 0 || z >= MAP_BLOCKSIZE) throw InvalidPositionException();
-		return data[z*MAP_BLOCKSIZE*MAP_BLOCKSIZE + y*MAP_BLOCKSIZE + x];
+		return data[z * MAP_BLOCKSIZE2 + y * MAP_BLOCKSIZE + x];
 	}
-	MapNode & getNodeRef(v3s16 &p)
+	MapNode& getNodeRef(v3s16 &p) const
 	{
 		return getNodeRef(p.X, p.Y, p.Z);
 	}
 
-public:
+    public:
 	/*
 		Public member variables
 	*/
 
 #ifndef SERVER // Only on client
-	MapBlockMesh *mesh;
+	MapBlockMesh* mesh;
 	JMutex mesh_mutex;
+	volatile int mesh_current;
 
 	std::map<v3s16,MapBlockSound> m_sounds;
 #endif
@@ -548,13 +559,13 @@ public:
 	StaticObjectList m_static_objects;
 	std::list<u16> m_active_objects;
 
-private:
+    private:
 	/*
 		Private member variables
 	*/
 
 	// NOTE: Lots of things rely on this being the Map
-	Map *m_parent;
+	Map* m_parent;
 	// Position in blocks on parent
 	v3s16 m_pos;
 
@@ -564,7 +575,7 @@ private:
 		If NULL, block is a dummy block.
 		Dummy blocks are used for caching not-found-on-disk blocks.
 	*/
-	MapNode * data;
+	MapNode* data;
 
 	/*
 		- On the server, this is used for telling whether the
@@ -621,13 +632,12 @@ private:
 
 inline bool blockpos_over_limit(v3s16 p)
 {
-	return
-	  (p.X < -MAP_GENERATION_LIMIT / MAP_BLOCKSIZE
-	|| p.X >  MAP_GENERATION_LIMIT / MAP_BLOCKSIZE
-	|| p.Y < -MAP_GENERATION_LIMIT / MAP_BLOCKSIZE
-	|| p.Y >  MAP_GENERATION_LIMIT / MAP_BLOCKSIZE
-	|| p.Z < -MAP_GENERATION_LIMIT / MAP_BLOCKSIZE
-	|| p.Z >  MAP_GENERATION_LIMIT / MAP_BLOCKSIZE);
+	return p.X < -MAP_GENERATION_LIMIT / MAP_BLOCKSIZE
+		     || p.X >  MAP_GENERATION_LIMIT / MAP_BLOCKSIZE
+	    || p.Y < -MAP_GENERATION_LIMIT / MAP_BLOCKSIZE
+		     || p.Y >  MAP_GENERATION_LIMIT / MAP_BLOCKSIZE
+	    || p.Z < -MAP_GENERATION_LIMIT / MAP_BLOCKSIZE
+		     || p.Z >  MAP_GENERATION_LIMIT / MAP_BLOCKSIZE;
 }
 
 /*

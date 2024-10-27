@@ -162,16 +162,14 @@ struct ClientEvent
 
 class Client : public con::PeerHandler, public InventoryManager
 {
-public:
+ public:
 	/*
 		NOTE: Nothing is thread-safe here.
 	*/
 
-	Client(
-		IrrlichtDevice *device,
-		std::string password,
-		MapDrawControl &control
-	);
+	Client(IrrlichtDevice* const device,
+		const std::string password,
+		MapDrawControl& control);
 
 	~Client();
 	/*

@@ -362,7 +362,7 @@ static scene::IAnimatedMesh* extrudeARGB(u32 twidth, u32 theight, u8 *data)
 scene::IAnimatedMesh* createExtrudedMesh(video::ITexture *texture,
 		video::IVideoDriver *driver, v3f scale)
 {
-	scene::IAnimatedMesh *mesh = NULL;
+	scene::IAnimatedMesh* mesh = NULL;
 	core::dimension2d<u32> size = texture->getSize();
 	video::ECOLOR_FORMAT format = texture->getColorFormat();
 	if (format == video::ECF_A8R8G8B8) {
@@ -439,7 +439,7 @@ void scaleMesh(scene::IMesh *mesh, v3f scale)
 	mesh->setBoundingBox(bbox);
 }
 
-void translateMesh(scene::IMesh *mesh, v3f vec)
+void translateMesh(scene::IMesh* const mesh,const v3f vec)
 {
 	if (mesh == NULL)
 		return;
@@ -447,29 +447,34 @@ void translateMesh(scene::IMesh *mesh, v3f vec)
 	core::aabbox3d<f32> bbox;
 	bbox.reset(0,0,0);
 
-	u16 mc = mesh->getMeshBufferCount();
-	for (u16 j=0; j<mc; j++) {
-		scene::IMeshBuffer *buf = mesh->getMeshBuffer(j);
+	const u16 mc = mesh->getMeshBufferCount();
+	for (u16 j=0; j<mc; j++)
+	{
+		scene::IMeshBuffer* const buf = mesh->getMeshBuffer(j);
 		if (!buf)
 			continue;
-		u16 vc = buf->getVertexCount();
+		
+		const u16 vc = buf->getVertexCount();
 		if (!vc)
 			continue;
-		video::S3DVertex *vertices = (video::S3DVertex*)buf->getVertices();
+		
+		video::S3DVertex* const vertices =
+		    (video::S3DVertex*)buf->getVertices();
 		if (!vertices)
 			continue;
+		
 		for (u16 i=0; i<vc; i++) {
 			vertices[i].Pos += vec;
 		}
 		buf->recalculateBoundingBox();
 
 		// calculate total bounding box
-		if (j == 0) {
+		if (j == 0)
 			bbox = buf->getBoundingBox();
-		}else{
+		else
 			bbox.addInternalBox(buf->getBoundingBox());
-		}
 	}
+	
 	mesh->setBoundingBox(bbox);
 }
 
@@ -478,20 +483,22 @@ void setMeshColor(scene::IMesh *mesh, const video::SColor &color)
 	if (mesh == NULL)
 		return;
 
-	u16 mc = mesh->getMeshBufferCount();
+	const u16 mc = mesh->getMeshBufferCount();
 	for (u16 j=0; j<mc; j++) {
-		scene::IMeshBuffer *buf = mesh->getMeshBuffer(j);
+		scene::IMeshBuffer* const buf = mesh->getMeshBuffer(j);
 		if (!buf)
 			continue;
+		
 		u16 vc = buf->getVertexCount();
 		if (!vc)
 			continue;
+		
 		video::S3DVertex *vertices = (video::S3DVertex*)buf->getVertices();
 		if (!vertices)
 			continue;
-		for (u16 i=0; i<vc; i++) {
+		
+		for (u16 i=0; i<vc; i++)
 			vertices[i].Color = color;
-		}
 	}
 }
 
@@ -503,17 +510,20 @@ void setMeshColorByNormalXYZ(scene::IMesh *mesh,
 	if (mesh == NULL)
 		return;
 
-	u16 mc = mesh->getMeshBufferCount();
+	const u16 mc = mesh->getMeshBufferCount();
 	for (u16 j=0; j<mc; j++) {
-		scene::IMeshBuffer *buf = mesh->getMeshBuffer(j);
+		scene::IMeshBuffer* const buf = mesh->getMeshBuffer(j);
 		if (!buf)
 			continue;
-		u16 vc = buf->getVertexCount();
+		
+		const u16 vc = buf->getVertexCount();
 		if (!vc)
 			continue;
-		video::S3DVertex *vertices = (video::S3DVertex*)buf->getVertices();
+		
+		video::S3DVertex* const vertices = (video::S3DVertex*)buf->getVertices();
 		if (!vertices)
 			continue;
+		
 		for (u16 i=0; i<vc; i++) {
 			f32 x = fabs(vertices[i].Normal.X);
 			f32 y = fabs(vertices[i].Normal.Y);
@@ -541,7 +551,7 @@ video::ITexture *generateTextureFromMesh(scene::IMesh *mesh,
 		video::SColorf light_color,
 		f32 light_radius)
 {
-	video::IVideoDriver *driver = device->getVideoDriver();
+	video::IVideoDriver* const driver = device->getVideoDriver();
 	if(driver->queryFeature(video::EVDF_RENDER_TO_TARGET) == false)
 	{
 		static bool warned = false;

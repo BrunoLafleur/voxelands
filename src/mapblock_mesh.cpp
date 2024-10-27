@@ -39,16 +39,19 @@
 #include "base64.h"
 #include "sound.h"
 
-void MeshMakeData::fill(u32 daynight_ratio, MapBlock *block)
+void MeshMakeData::fill(const u32 daynight_ratio,MapBlock* const block)
 {
 	m_daynight_ratio = daynight_ratio;
+	
 	if (!block)
 		return;
+	
 	m_blockpos = block->getPos();
+	
 	if (m_env)
-		m_vmanip.m_env = m_env;
+	    m_vmanip.setEnv(m_env);
 
-	m_blockpos_nodes = m_blockpos*MAP_BLOCKSIZE;
+	m_blockpos_nodes = m_blockpos * MAP_BLOCKSIZE;
 
 	/*
 		Copy data
@@ -76,15 +79,18 @@ void MeshMakeData::fill(u32 daynight_ratio, MapBlock *block)
 		*/
 
 		// Get map
-		Map *map = block->getParent();
+		Map* const map = block->getParent();
 
 		for(u16 i=0; i<6; i++)
 		{
 			const v3s16 &dir = g_6dirs[i];
 			v3s16 bp = m_blockpos + dir;
-			MapBlock *b = map->getBlockNoCreateNoEx(bp);
+			MapBlock* const b = map->getBlockNoCreateNoEx(bp);
 			if(b)
+			{
 				b->copyTo(m_vmanip);
+				b->ResetCurrent();
+			}
 		}
 	}
 }
@@ -196,7 +202,7 @@ TileSpec getCrackTile(TileSpec spec, SelectedNode &select)
 
 		// Create new texture name
 		std::ostringstream os;
-		os<<orig_name<<"^[crack"<<select.crack;
+		os << orig_name << "^[crack" << select.crack;
 
 		// Get new texture
 		u32 new_id = g_texturesource->getTextureId(os.str());
@@ -343,12 +349,13 @@ TileSpec getNodeTile(MapNode mn, v3s16 p, v3s16 face_dir, SelectedNode &select, 
 	std::string rot = mn.getTileRotationString(face_dir);
 	if (rot != "") {
 		// Get original texture name
-		u32 orig_id = spec.texture.id;
-		std::string orig_name = g_texturesource->getTextureName(orig_id);
+		const u32 orig_id = spec.texture.id;
+		const std::string orig_name = g_texturesource->getTextureName(orig_id);
 		// new name
-		std::string texture_name = orig_name + rot;
+		const std::string texture_name = orig_name + rot;
 		// Get new texture
-		u32 new_id = g_texturesource->getTextureId(texture_name);
+		const u32 new_id = g_texturesource->getTextureId(texture_name);
+		
 		spec.texture = g_texturesource->getTexture(new_id);
 	}
 
@@ -362,15 +369,16 @@ TileSpec getNodeTile(MapNode mn, v3s16 p, v3s16 face_dir, SelectedNode &select, 
 		*/
 
 		// Get original texture name
-		u32 orig_id = spec.texture.id;
-		std::string orig_name = g_texturesource->getTextureName(orig_id);
+		const u32 orig_id = spec.texture.id;
+		const std::string orig_name = g_texturesource->getTextureName(orig_id);
 
 		// Create new texture name
 		std::ostringstream os;
-		os<<orig_name<<"^[crack"<<select.crack;
+		
+		os << orig_name << "^[crack" << select.crack;
 
 		// Get new texture
-		u32 new_id = g_texturesource->getTextureId(os.str());
+		const u32 new_id = g_texturesource->getTextureId(os.str());
 
 		spec.texture = g_texturesource->getTexture(new_id);
 	}
@@ -384,8 +392,7 @@ TileSpec getNodeTile(MapNode mn, v3s16 p, v3s16 face_dir, SelectedNode &select, 
 */
 TileSpec getMetaTile(MapNode mn, v3s16 p, v3s16 face_dir, SelectedNode &select)
 {
-	TileSpec spec;
-	spec = mn.getMetaTile(face_dir);
+	const TileSpec spec = mn.getMetaTile(face_dir);
 
 	return spec;
 }
@@ -447,26 +454,31 @@ u8 getSmoothLight(v3s16 p, v3s16 corner, VoxelManipulator &vmanip)
 	u8 idl;
 	u8 inl;
 
-	if (dl >= LIGHT_SUN) {
+	if (dl >= LIGHT_SUN)
 		idl = LIGHT_SUN;
-	}else{
+	else
 		idl = ceilf(dl);
-	}
+
 	inl = ceilf(nl);
 
 	return ((inl<<4)&0xF0)|(idl&0x0F);;
 }
 
-MapBlockMesh::MapBlockMesh(MeshMakeData *data, v3s16 camera_offset):
-	m_mesh(NULL),
-	m_farmesh(NULL),
-	m_camera_offset(camera_offset)
+/**
+   MapBlockMesh
+**/
+
+MapBlockMesh::MapBlockMesh(MeshMakeData* const data,const v3s16 camera_offset):
+		isfar(false),m_pos(),m_mesh(NULL),m_farmesh(NULL),
+		m_camera_offset(camera_offset),m_meshdata(),m_fardata(),
+		m_animation_data()
 {
 	generate(data,camera_offset,NULL);
 }
 
 MapBlockMesh::~MapBlockMesh()
 {
+    // PB Lock en amont dans client.cpp
 	m_mesh->drop();
 	m_mesh = NULL;
 	m_farmesh->drop();
@@ -482,7 +494,8 @@ void MapBlockMesh::animate(float time)
 		return;
 
 	for (std::map<u32, AnimationData>::iterator it = m_animation_data.begin();
-				it != m_animation_data.end(); ++it) {
+				it != m_animation_data.end(); ++it)
+	{
 
 		 // Make sure we don't cause an overflow
 		if (it->first >= m_mesh->getMeshBufferCount())
@@ -501,14 +514,17 @@ void MapBlockMesh::animate(float time)
 
 		m_animation_data[it->first].frame = frame;
 
-		u16 mc = m_mesh->getMeshBufferCount();
+		const u16 mc = m_mesh->getMeshBufferCount();
 		if (mc <= it->first)
 			continue;
-		scene::IMeshBuffer *buf = m_mesh->getMeshBuffer(it->first);
+		
+		scene::IMeshBuffer* const buf = m_mesh->getMeshBuffer(it->first);
 
 		// Create new texture name from original
-		if (g_texturesource && frame >= 0) {
+		if (g_texturesource && frame >= 0)
+		{
 			std::ostringstream os(std::ios::binary);
+			
 			os << g_texturesource->getTextureName(tile.texture.id);
 			os << "^[verticalframe:" << (int)tile.animation_frame_count << ":" << frame;
 			// Set the texture
@@ -518,7 +534,8 @@ void MapBlockMesh::animate(float time)
 	}
 }
 
-void MapBlockMesh::generate(MeshMakeData *data, v3s16 camera_offset, JMutex *mutex)
+void MapBlockMesh::generate(MeshMakeData* const data,const v3s16 camera_offset,
+		JMutex* const mutex)
 {
 	DSTACK(__FUNCTION_NAME);
 
@@ -526,7 +543,9 @@ void MapBlockMesh::generate(MeshMakeData *data, v3s16 camera_offset, JMutex *mut
 	data->texture_detail = config_get_int("client.graphics.texture.lod");
 	data->light_detail = config_get_int("client.graphics.light.lod");
 	m_pos = data->m_blockpos;
+	
 	SelectedNode selected;
+	
 	if (!m_animation_data.empty())
 		m_animation_data.clear();
 
@@ -534,168 +553,174 @@ void MapBlockMesh::generate(MeshMakeData *data, v3s16 camera_offset, JMutex *mut
 	for(s16 y=0; y<MAP_BLOCKSIZE; y++)
 	for(s16 x=0; x<MAP_BLOCKSIZE; x++)
 	{
-		v3s16 p(x,y,z);
-
-		MapNode n = data->m_vmanip.getNodeNoEx(data->m_blockpos_nodes+p);
-
+	    const v3s16 p(x,y,z);
+	    MapNode n = data->m_vmanip.getNodeNoEx(data->m_blockpos_nodes + p);
 
 #if USE_AUDIO == 1
-		if (data->m_sounds != NULL) {
-			std::string snd = content_features(n).sound_ambient;
-			std::map<v3s16,MapBlockSound>::iterator i = data->m_sounds->find(p);
-			if (snd != "") {
-				bool add_sound = true;
-				if (i != data->m_sounds->end()) {
-					if (i->second.name == snd && sound_exists(i->second.id)) {
-						add_sound = false;
-					}else{
-						sound_stop_single(i->second.id);
-					}
-				}
-				if (add_sound && content_features(n).liquid_type != LIQUID_NONE) {
-					if (data->m_vmanip.getNodeRO(data->m_blockpos_nodes+p+v3s16(0,1,0)).getContent() != CONTENT_AIR) {
-						add_sound = false;
-					}else if (content_features(n).param2_type != CPT_LIQUID || n.param2 < 4 || n.param2 > 7) {
-						add_sound = false;
-					}else{
-						int adj = 0;
-						for (s16 x=-1; x<2; x++) {
-							for (s16 z=-1; z<2; z++) {
-								if (!x && !z)
-									continue;
-								content_t ac = data->m_vmanip.getNodeRO(data->m_blockpos_nodes+p+v3s16(x,0,z)).getContent();
-								if (
-									ac == content_features(n).liquid_alternative_flowing
-									|| ac == content_features(n).liquid_alternative_source
-								)
-									adj++;
-							}
-						}
-						if (adj > 3)
-							add_sound = false;
-					}
-				}
-				if (add_sound) {
-					v3f pf = intToFloat(p+data->m_blockpos_nodes,BS);
-					v3_t vp = {pf.X,pf.Y,pf.Z};
-					MapBlockSound bsnd;
-					bsnd.id = sound_play_effect((char*)snd.c_str(),1.0,1,&vp);
-					bsnd.name = snd;
-					if (bsnd.id > 0)
-						(*data->m_sounds)[p] = bsnd;
-				}
-			}else if (i != data->m_sounds->end()) {
-				sound_stop_single(i->second.id);
-				data->m_sounds->erase(i);
+	    if (data->m_sounds != NULL)
+	    {
+		std::string snd = content_features(n).sound_ambient;
+		std::map<v3s16,MapBlockSound>::iterator i = data->m_sounds->find(p);
+		if (snd != "")
+		{
+		    bool add_sound = true;
+		    if (i != data->m_sounds->end())
+		    {
+			if (i->second.name == snd && sound_exists(i->second.id)) {
+			    add_sound = false;
+			}else{
+			    sound_stop_single(i->second.id);
 			}
+		    }
+		    if (add_sound && content_features(n).liquid_type != LIQUID_NONE) {
+			if (data->m_vmanip.getNodeRO(data->m_blockpos_nodes+p+v3s16(0,1,0)).getContent() != CONTENT_AIR) {
+			    add_sound = false;
+			}else if (content_features(n).param2_type != CPT_LIQUID || n.param2 < 4 || n.param2 > 7) {
+			    add_sound = false;
+			}else{
+			    int adj = 0;
+			    for (s16 x=-1; x<2; x++) {
+				for (s16 z=-1; z<2; z++) {
+				    if (!x && !z)
+					continue;
+				    const content_t ac = data->m_vmanip.getNodeRO(data->m_blockpos_nodes+p+v3s16(x,0,z)).getContent();
+				    if (ac == content_features(n).liquid_alternative_flowing
+						    || ac == content_features(n).liquid_alternative_source)
+					adj++;
+				}
+			    }
+			    if (adj > 3)
+				add_sound = false;
+			}
+		    }
+		    if (add_sound)
+		    {
+			v3f pf = intToFloat(p+data->m_blockpos_nodes,BS);
+			v3_t vp = {pf.X,pf.Y,pf.Z};
+			MapBlockSound bsnd;
+			bsnd.id = sound_play_effect((char*)snd.c_str(),1.0,1,&vp);
+			bsnd.name = snd;
+			if (bsnd.id > 0)
+			    (*data->m_sounds)[p] = bsnd;
+		    }
 		}
+		else if (i != data->m_sounds->end())
+		{
+		    sound_stop_single(i->second.id);
+		    data->m_sounds->erase(i);
+		}
+	    }
 #endif
-		if (data->light_detail > 1 && !selected.is_coloured)
-			meshgen_preset_smooth_lights(data,p);
-		switch (content_features(n).draw_type) {
-		case CDT_AIRLIKE:
-			break;
-		case CDT_CUBELIKE:
-			meshgen_cubelike(data,p,n,selected);
-			meshgen_farnode(data,p,n);
-			break;
-		case CDT_DIRTLIKE:
-			meshgen_dirtlike(data,p,n,selected);
-			meshgen_farnode(data,p,n);
-			break;
-		case CDT_RAILLIKE:
-			meshgen_raillike(data,p,n,selected);
-			break;
-		case CDT_PLANTLIKE:
-			meshgen_plantlike(data,p,n,selected);
-			break;
-		case CDT_PLANTLIKE_FERN:
-			meshgen_plantlike_fern(data,p,n,selected);
-			break;
-		case CDT_CROPLIKE:
-			meshgen_croplike(data,p,n,selected);
-			break;
-		case CDT_LIQUID:
-			meshgen_liquid(data,p,n,selected);
-			break;
-		case CDT_LIQUID_SOURCE:
-			meshgen_liquid_source(data,p,n,selected);
-			meshgen_farnode(data,p,n);
-			break;
-		case CDT_NODEBOX:
-			meshgen_nodebox(data,p,n,selected,false);
-			break;
-		case CDT_GLASSLIKE:
-			meshgen_glasslike(data,p,n,selected);
-			break;
-		case CDT_TORCHLIKE:
-			meshgen_torchlike(data,p,n,selected);
-			break;
-		case CDT_FENCELIKE:
-			meshgen_fencelike(data,p,n,selected);
-			break;
-		case CDT_FIRELIKE:
-			meshgen_firelike(data,p,n,selected);
-			break;
-		case CDT_WALLLIKE:
-			meshgen_walllike(data,p,n,selected);
-			meshgen_farnode(data,p,n);
-			break;
-		case CDT_ROOFLIKE:
-			meshgen_rooflike(data,p,n,selected);
-			meshgen_farnode(data,p,n);
-			break;
-		case CDT_LEAFLIKE:
-			meshgen_leaflike(data,p,n,selected);
-			meshgen_farnode(data,p,n);
-			break;
-		case CDT_NODEBOX_META:
-			meshgen_nodebox(data,p,n,selected,true);
-			break;
-		case CDT_WIRELIKE:
-			meshgen_wirelike(data,p,n,selected,false);
-			break;
-		case CDT_3DWIRELIKE:
-			meshgen_wirelike(data,p,n,selected,true);
-			break;
-		case CDT_STAIRLIKE:
-			meshgen_stairlike(data,p,n,selected);
-			break;
-		case CDT_SLABLIKE:
-			meshgen_slablike(data,p,n,selected);
-			break;
-		case CDT_TRUNKLIKE:
-			meshgen_trunklike(data,p,n,selected);
-			meshgen_farnode(data,p,n);
-			break;
-		case CDT_FLAGLIKE:
-			meshgen_flaglike(data,p,n,selected);
-			break;
-		case CDT_MELONLIKE:
-			meshgen_melonlike(data,p,n,selected);
-			meshgen_farnode(data,p,n);
-			break;
-		case CDT_CAMPFIRELIKE:
-			meshgen_campfirelike(data,p,n,selected);
-			break;
-		case CDT_BUSHLIKE:
-			meshgen_bushlike(data,p,n,selected);
-			break;
-		default:;
-		}
+	    if (data->light_detail > 1 && !selected.is_coloured)
+		meshgen_preset_smooth_lights(data,p);
+	    
+	    switch (content_features(n).draw_type)
+	    {
+	      case CDT_AIRLIKE:
+		break;
+	      case CDT_CUBELIKE:
+		meshgen_cubelike(data,p,n,selected);
+		meshgen_farnode(data,p,n);
+		break;
+	      case CDT_DIRTLIKE:
+		meshgen_dirtlike(data,p,n,selected);
+		meshgen_farnode(data,p,n);
+		break;
+	      case CDT_RAILLIKE:
+		meshgen_raillike(data,p,n,selected);
+		break;
+	      case CDT_PLANTLIKE:
+		meshgen_plantlike(data,p,n,selected);
+		break;
+	      case CDT_PLANTLIKE_FERN:
+		meshgen_plantlike_fern(data,p,n,selected);
+		break;
+	      case CDT_CROPLIKE:
+		meshgen_croplike(data,p,n,selected);
+		break;
+	      case CDT_LIQUID:
+		meshgen_liquid(data,p,n,selected);
+		break;
+	      case CDT_LIQUID_SOURCE:
+		meshgen_liquid_source(data,p,n,selected);
+		meshgen_farnode(data,p,n);
+		break;
+	      case CDT_NODEBOX:
+		meshgen_nodebox(data,p,n,selected,false);
+		break;
+	      case CDT_GLASSLIKE:
+		meshgen_glasslike(data,p,n,selected);
+		break;
+	      case CDT_TORCHLIKE:
+		meshgen_torchlike(data,p,n,selected);
+		break;
+	      case CDT_FENCELIKE:
+		meshgen_fencelike(data,p,n,selected);
+		break;
+	      case CDT_FIRELIKE:
+		meshgen_firelike(data,p,n,selected);
+		break;
+	      case CDT_WALLLIKE:
+		meshgen_walllike(data,p,n,selected);
+		meshgen_farnode(data,p,n);
+		break;
+	      case CDT_ROOFLIKE:
+		meshgen_rooflike(data,p,n,selected);
+		meshgen_farnode(data,p,n);
+		break;
+	      case CDT_LEAFLIKE:
+		meshgen_leaflike(data,p,n,selected);
+		meshgen_farnode(data,p,n);
+		break;
+	      case CDT_NODEBOX_META:
+		meshgen_nodebox(data,p,n,selected,true);
+		break;
+	      case CDT_WIRELIKE:
+		meshgen_wirelike(data,p,n,selected,false);
+		break;
+	      case CDT_3DWIRELIKE:
+		meshgen_wirelike(data,p,n,selected,true);
+		break;
+	      case CDT_STAIRLIKE:
+		meshgen_stairlike(data,p,n,selected);
+		break;
+	      case CDT_SLABLIKE:
+		meshgen_slablike(data,p,n,selected);
+		break;
+	      case CDT_TRUNKLIKE:
+		meshgen_trunklike(data,p,n,selected);
+		meshgen_farnode(data,p,n);
+		break;
+	      case CDT_FLAGLIKE:
+		meshgen_flaglike(data,p,n,selected);
+		break;
+	      case CDT_MELONLIKE:
+		meshgen_melonlike(data,p,n,selected);
+		meshgen_farnode(data,p,n);
+		break;
+	      case CDT_CAMPFIRELIKE:
+		meshgen_campfirelike(data,p,n,selected);
+		break;
+	      case CDT_BUSHLIKE:
+		meshgen_bushlike(data,p,n,selected);
+		break;
+	      default:;
+	    }
 	}
 
-	scene::SMesh *mesh = new scene::SMesh();
-	scene::SMesh *fmesh = new scene::SMesh();
+	scene::SMesh* const mesh = new scene::SMesh();
+	scene::SMesh* const fmesh = new scene::SMesh();
 	
 	if (mutex != NULL)
 		mutex->Lock();
 
-	for (u32 i=0; i<data->m_meshdata.size(); i++) {
+	for (u32 i=0; i<data->m_meshdata.size(); i++)
+	{
 		MeshData &d = data->m_meshdata[i];
 
 		// - Texture animation
-		if (d.tile.material_flags & MATERIAL_FLAG_ANIMATION_VERTICAL_FRAMES) {
+		if (d.tile.material_flags & MATERIAL_FLAG_ANIMATION_VERTICAL_FRAMES)
+		{
 			// Add to MapBlockMesh in order to animate these tiles
 			AnimationData anim_data;
 			anim_data.tile = d.tile;
@@ -708,17 +733,21 @@ void MapBlockMesh::generate(MeshMakeData *data, v3s16 camera_offset, JMutex *mut
 		// it's a typedeffed CMeshBuffer<video::S3DVertex>
 		scene::SMeshBuffer* const buf = new scene::SMeshBuffer();
 
-		if(buf) {
+		if(buf)
+		{
 		// Set material
 		    buf->Material = d.tile.getMaterial();
 		// Add to mesh
 		    mesh->addMeshBuffer(buf);
 		// Mesh grabbed it
 		    buf->drop();
-		    buf->append(d.vertices.data(), d.vertices.size(), d.indices.data(), d.indices.size());
+		    buf->append(d.vertices.data(), d.vertices.size(),
+				    d.indices.data(), d.indices.size());
 		}
 	}
-	for (u32 i=0; i<data->m_fardata.size(); i++) {
+	
+	for (u32 i=0; i<data->m_fardata.size(); i++)
+	{
 		MeshData &d = data->m_fardata[i];
 		// Create meshbuffer
 		// This is a "Standard MeshBuffer",
@@ -732,15 +761,16 @@ void MapBlockMesh::generate(MeshMakeData *data, v3s16 camera_offset, JMutex *mut
 		    fmesh->addMeshBuffer(buf);
 		// Mesh grabbed it
 		    buf->drop();
-		    buf->append(d.vertices.data(), d.vertices.size(), d.indices.data(), d.indices.size());
+		    buf->append(d.vertices.data(), d.vertices.size(),
+				    d.indices.data(), d.indices.size());
 		}
 	}
 
 	if (mutex != NULL)
 		mutex->Unlock();
 
-	translateMesh(mesh, intToFloat(data->m_blockpos * MAP_BLOCKSIZE - camera_offset, BS));
-	translateMesh(fmesh, intToFloat(data->m_blockpos * MAP_BLOCKSIZE - camera_offset, BS));
+	translateMesh(mesh,intToFloat(data->m_blockpos * MAP_BLOCKSIZE - camera_offset,BS));
+	translateMesh(fmesh,intToFloat(data->m_blockpos * MAP_BLOCKSIZE - camera_offset,BS));
 
 	if (mutex != NULL)
 		mutex->Lock();
@@ -770,44 +800,54 @@ void MapBlockMesh::refresh(u32 daynight_ratio)
 	if (m_mesh == NULL)
 		return;
 
-	u16 mc = m_mesh->getMeshBufferCount();
-	for (u16 j=0; j<mc; j++) {
-		scene::IMeshBuffer *buf = m_mesh->getMeshBuffer(j);
+	const u16 mc = m_mesh->getMeshBufferCount();
+	for (u16 j=0; j<mc; j++)
+	{
+		scene::IMeshBuffer* const buf = m_mesh->getMeshBuffer(j);
 		if (buf == 0)
 			continue;
-		u16 vc = buf->getVertexCount();
+		
+		const u16 vc = buf->getVertexCount();
 		if (!vc)
 			continue;
-		video::S3DVertex *vertices = (video::S3DVertex*)buf->getVertices();
+		
+		video::S3DVertex* const vertices =
+		    (video::S3DVertex*)buf->getVertices();
 		if (vertices == 0)
 			continue;
-		u32 *c = m_meshdata[j].colours.data();
-		for (u16 i=0; i<vc; i++) {
+		
+		u32* const c = m_meshdata[j].colours.data();		
+		for (u16 i=0; i<vc; i++)
 			vertices[i].Color = blend_light(c[i],daynight_ratio);
-		}
 	}
-	mc = m_farmesh->getMeshBufferCount();
-	for (u16 j=0; j<mc; j++) {
-		scene::IMeshBuffer *buf = m_farmesh->getMeshBuffer(j);
+	
+	const u16 fmc = m_farmesh->getMeshBufferCount();
+	for (u16 j=0; j<fmc; j++)
+	{
+		scene::IMeshBuffer* const buf = m_farmesh->getMeshBuffer(j);
 		if (buf == 0)
 			continue;
-		u16 vc = buf->getVertexCount();
+		
+		const u16 vc = buf->getVertexCount();
 		if (!vc)
 			continue;
-		video::S3DVertex *vertices = (video::S3DVertex*)buf->getVertices();
+		
+		video::S3DVertex* const vertices =
+		    (video::S3DVertex*)buf->getVertices();
 		if (vertices == 0)
 			continue;
-		for (u16 i=0; i<vc; i++) {
+		
+		for (u16 i=0; i<vc; i++)
 			vertices[i].Color = blend_light(0x0F,daynight_ratio);
-		}
 	}
 }
 
 void MapBlockMesh::updateCameraOffset(v3s16 camera_offset)
 {
-	if (camera_offset != m_camera_offset) {
-		translateMesh(m_mesh, intToFloat(m_camera_offset-camera_offset, BS));
-		translateMesh(m_farmesh, intToFloat(m_camera_offset-camera_offset, BS));
-		m_camera_offset = camera_offset;
+	if (camera_offset != m_camera_offset)
+	{
+	    translateMesh(m_mesh,intToFloat(m_camera_offset-camera_offset,BS));
+	    translateMesh(m_farmesh,intToFloat(m_camera_offset-camera_offset,BS));
+	    m_camera_offset = camera_offset;
 	}
 }

@@ -145,7 +145,7 @@ const v3s16 g_27dirs[27] =
 	v3s16(0,0,0),
 };
 
-static unsigned long next = 1;
+static __thread unsigned long next = 1;
 
 /* RAND_MAX assumed to be 32767 */
 int myrand(void)

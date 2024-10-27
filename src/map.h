@@ -104,7 +104,7 @@ struct MapEditEvent
 
 	MapEditEvent * clone()
 	{
-		MapEditEvent *event = new MapEditEvent();
+		MapEditEvent* const event = new MapEditEvent();
 		event->type = type;
 		event->p = p;
 		event->n = n;
@@ -122,7 +122,7 @@ struct MapEditEvent
 
 class MapEventReceiver
 {
-public:
+    public:
 	virtual ~MapEventReceiver() {};
 	
 	// event shall be deleted by caller after the call.
@@ -131,7 +131,7 @@ public:
 
 class Map /*: public NodeContainer*/
 {
-public:
+    public:
 
 	Map(std::ostream &dout);
 	virtual ~Map();
@@ -159,12 +159,10 @@ public:
 	// event shall be deleted by caller after the call.
 	void dispatchEvent(MapEditEvent *event);
 
-	// On failure returns NULL
-	MapSector * getSectorNoGenerateNoExNoLock(v2s16 p2d);
 	// Same as the above (there exists no lock anymore)
-	MapSector * getSectorNoGenerateNoEx(v2s16 p2d);
+	MapSector* getSectorNoGenerateNoEx(v2s16 p2d);
 	// On failure throws InvalidPositionException
-	MapSector * getSectorNoGenerate(v2s16 p2d);
+	MapSector* getSectorNoGenerate(v2s16 p2d);
 	// Gets an existing sector or creates an empty one
 	//MapSector * getSectorCreate(v2s16 p2d);
 
@@ -172,17 +170,19 @@ public:
 		This is overloaded by ClientMap and ServerMap to allow
 		their differing fetch methods.
 	*/
-	virtual MapSector * emergeSector(v2s16 p){ return NULL; }
-	virtual MapSector * emergeSector(v2s16 p,
-			core::map<v3s16, MapBlock*> &changed_blocks){ return NULL; }
+	virtual MapSector* emergeSector(v2s16 p){ return NULL; }
+	virtual MapSector* emergeSector(v2s16 p,
+			core::map<v3s16, MapBlock*> &changed_blocks)
+		{ return NULL; }
 
-	// Returns InvalidPositionException if not found
-	MapBlock * getBlockNoCreate(v3s16 p);
 	// Returns NULL if not found
-	MapBlock * getBlockNoCreateNoEx(v3s16 p);
-
+	MapBlock* getBlockNoCreateNoEx(v3s16 p);
+	// Returns InvalidPositionException if not found
+	MapBlock* getBlockNoCreate(v3s16 p);
+	
 	/* Server overrides */
-	virtual MapBlock * emergeBlock(v3s16 p, bool allow_generate=true, bool *was_generated=NULL)
+	virtual MapBlock* emergeBlock(v3s16 p, bool allow_generate=true,
+			bool *was_generated=NULL)
 	{ return getBlockNoCreateNoEx(p); }
 
 	// Returns InvalidPositionException if not found
@@ -233,7 +233,8 @@ public:
 		These handle lighting but not faces.
 	*/
 	void addNodeAndUpdate(v3s16 p, MapNode n,
-			core::map<v3s16, MapBlock*> &modified_blocks, std::string &player_name);
+			core::map<v3s16, MapBlock*> &modified_blocks,
+			std::string &player_name);
 	void removeNodeAndUpdate(v3s16 p,
 			core::map<v3s16, MapBlock*> &modified_blocks);
 
@@ -305,18 +306,22 @@ public:
 	void setNodeMetadata(v3s16 p, NodeMetadata *meta);
 	void removeNodeMetadata(v3s16 p);
 	void nodeMetadataStep(float dtime,
-			core::map<v3s16, MapBlock*> &changed_blocks, ServerEnvironment *env);
+			core::map<v3s16, MapBlock*> &changed_blocks,
+			ServerEnvironment *env);
 
-	/*
-		Misc.
-	*/
-	core::map<v2s16, MapSector*> *getSectorsPtr(){return &m_sectors;}
-
+    protected:
+	
+	// On failure returns NULL
+	MapSector* getSectorNoGenerateNoExNoLock(v2s16 p2d);
+	
+        // Returns NULL if not found
+	MapBlock* getBlockNoCreateNoExNoLock(v3s16 p3d);
+	
 	/*
 		Variables
 	*/
 
-protected:
+    protected:
 
 	std::ostream &m_dout;
 
@@ -326,7 +331,7 @@ protected:
 	JMutex m_sectors_mutex;
 
 	// Be sure to set this to NULL when the cached sector is deleted
-	MapSector *m_sector_cache;
+	MapSector* m_sector_cache;
 	v2s16 m_sector_cache_p;
 
 	// Queued transforming water nodes
@@ -341,7 +346,7 @@ protected:
 
 class ServerMap : public Map
 {
-public:
+    public:
 	ServerMap();
 	~ServerMap();
 
@@ -384,7 +389,8 @@ public:
 		- Load from disk
 		- Generate
 	*/
-	MapBlock * emergeBlock(v3s16 p, bool allow_generate=true, bool *was_generated=NULL);
+	MapBlock * emergeBlock(v3s16 p, bool allow_generate = true,
+			bool* was_generated = NULL);
 
 	// Helper for placing objects on ground level
 	s16 findGroundLevel(v2s16 p2d);
@@ -422,7 +428,7 @@ public:
 	uint64_t getSeed(){ return m_seed; }
 	MapGenType getType() {return m_type;}
 
-private:
+    private:
 	// Seed used for all kinds of randomness
 	uint64_t m_seed;
 	MapGenType m_type;
@@ -478,13 +484,11 @@ class Client;
 class ClientMap : public Map, public scene::ISceneNode
 {
 public:
-	ClientMap(
-			Client *client,
-			MapDrawControl &control,
-			scene::ISceneNode* parent,
-			scene::ISceneManager* mgr,
-			s32 id
-	);
+	ClientMap(Client* const client,
+		        MapDrawControl& control,
+			scene::ISceneNode* const parent,
+			scene::ISceneManager* const mgr,
+			s32 id);
 
 	virtual ~ClientMap();
 

@@ -68,9 +68,8 @@ QueuedMeshUpdate::~QueuedMeshUpdate()
 	MeshUpdateQueue
 */
 
-MeshUpdateQueue::MeshUpdateQueue()
+MeshUpdateQueue::MeshUpdateQueue() : m_queue(NULL),m_mutex()
 {
-	m_queue = NULL;
 	m_mutex.Init();
 }
 
@@ -79,8 +78,9 @@ MeshUpdateQueue::~MeshUpdateQueue()
 	QueuedMeshUpdate *i;
 	JMutexAutoLock lock(m_mutex);
 
-	while (m_queue != NULL) {
-		i = (QueuedMeshUpdate*)list_pull(&m_queue);
+	while (m_queue != NULL)
+	{
+		i = (QueuedMeshUpdate*) list_pull(&m_queue);
 		delete i;
 	}
 }
@@ -101,12 +101,18 @@ void MeshUpdateQueue::addBlock(v3s16 p, MeshMakeData *data, bool ack_block_to_se
 		If it is, update the data and quit.
 	*/
 	QueuedMeshUpdate* q = m_queue;
-	while (q) {
-		if (q->p == p) {
-			if (q->data && data->m_refresh_only) {
-				q->data->m_daynight_ratio = data->m_daynight_ratio;
+	while (q)
+	{
+		if (q->p == p)
+		{
+			if (q->data && data->m_refresh_only)
+			{
+				q->data->m_daynight_ratio =
+				    data->m_daynight_ratio;
 				delete data;
-			}else{
+			}
+			else
+			{
 				if (q->data)
 					delete q->data;
 				q->data = data;
@@ -153,46 +159,58 @@ void * MeshUpdateThread::Thread()
 
 	BEGIN_DEBUG_EXCEPTION_HANDLER
 
-	while (getRun()) {
-		QueuedMeshUpdate* const q = m_queue_in.pop();
-		if (q == NULL) {
-			sleep_ms(3);
-			continue;
+	while (getRun())
+	{
+	    QueuedMeshUpdate* const q = m_queue_in.pop();
+	    if (q == NULL)
+	    {
+		sleep_ms(3);
+		continue;
+	    }
+
+	    ScopeProfiler sp(g_profiler, "Client: Mesh making");
+	    MapBlock* const block =
+		m_env->getMap().getBlockNoCreateNoEx(q->p);
+
+	    if (q->data && q->data->m_refresh_only)
+	    {
+		if (block)
+		{
+		    JMutexAutoLock lock(block->mesh_mutex);
+		    if(block->mesh)
+			block->mesh->refresh(q->data->m_daynight_ratio);
 		}
-
-		ScopeProfiler sp(g_profiler, "Client: Mesh making");
-
-		if (q->data && q->data->m_refresh_only) {
-			MapBlock* const block = m_env->getMap().getBlockNoCreateNoEx(q->p);
-			if (block && block->mesh) {
-				{
-					JMutexAutoLock lock(block->mesh_mutex);
-					block->mesh->refresh(q->data->m_daynight_ratio);
-				}
-			}
-		}else{
-			MapBlock* const block = m_env->getMap().getBlockNoCreateNoEx(q->p);
-			if (block && block->mesh) {
-				block->mesh->generate(q->data, m_camera_offset, &block->mesh_mutex);
-				if (q->ack_block_to_server) {
-					MeshUpdateResult r;
-					r.p = q->p;
-					r.mesh = NULL;
-					r.ack_block_to_server = true;
-					m_queue_out.push_back(r);
-				}
-			}else if (block) {
-				MapBlockMesh* const mesh_new = new MapBlockMesh(q->data, m_camera_offset);
-				MeshUpdateResult r;
-				r.p = q->p;
-				r.mesh = mesh_new;
-				r.ack_block_to_server = q->ack_block_to_server;
-
-				m_queue_out.push_back(r);
-			}
+	    }
+	    else if (block)
+	    {
+		if(block->mesh)
+		{
+		    block->mesh->generate(q->data, m_camera_offset,
+				    &block->mesh_mutex);
+		    if (q->ack_block_to_server)
+		    {
+			MeshUpdateResult r;
+			r.p = q->p;
+			r.mesh = NULL;
+			r.ack_block_to_server = true;
+			m_queue_out.push_back(r);
+		    }
 		}
+		else
+		{
+		    MapBlockMesh* const mesh_new =
+			new MapBlockMesh(q->data, m_camera_offset);
+		    MeshUpdateResult r;
+		    r.p = q->p;
+		    r.mesh = mesh_new;
+		    r.ack_block_to_server = q->ack_block_to_server;
+		    m_queue_out.push_back(r);
+		}
+	    }
 
-		delete q;
+	    if(block)
+		block->ResetCurrent();
+	    delete q;
 	}
 
 	END_DEBUG_EXCEPTION_HANDLER(errorstream)
@@ -200,14 +218,13 @@ void * MeshUpdateThread::Thread()
 	return NULL;
 }
 
-Client::Client(
-		IrrlichtDevice *device,
-		std::string password,
-		MapDrawControl &control):
+Client::Client(IrrlichtDevice* const device,
+		const std::string password,
+		MapDrawControl& control) :
 	m_mesh_update_thread(),
 	m_env(
 		this,
-		new ClientMap(this, control,
+		new ClientMap(this,control,
 			device->getSceneManager()->getRootSceneNode(),
 			device->getSceneManager(), 666),
 		device->getSceneManager()
@@ -487,11 +504,13 @@ void Client::step(float dtime)
 		/*
 			Get events
 		*/
-		for (;;) {
+		for (;;)
+		{
 			ClientEnvEvent event = m_env.getClientEvent();
-			if (event.type == CEE_NONE) {
+			if (event.type == CEE_NONE)
 				break;
-			}else if (event.type == CEE_PLAYER_DAMAGE && getServerDamage()) {
+			else if (event.type == CEE_PLAYER_DAMAGE && getServerDamage())
+			{
 				if (m_ignore_damage_timer <= 0) {
 					s8 damage = event.player_damage.amount;
 					sendDamage(damage,0,0);
@@ -502,8 +521,11 @@ void Client::step(float dtime)
 					event.player_damage.amount = damage;
 					m_client_event_queue.push_back(event);
 				}
-			}else if (event.type == CEE_PLAYER_SUFFOCATE && getServerSuffocation()) {
-				if (m_ignore_damage_timer <= 0) {
+			}
+			else if (event.type == CEE_PLAYER_SUFFOCATE && getServerSuffocation())
+			{
+				if (m_ignore_damage_timer <= 0)
+				{
 					s8 damage = event.player_damage.amount;
 					sendDamage(0,damage,0);
 
@@ -519,8 +541,11 @@ void Client::step(float dtime)
 					event.player_damage.amount = damage;
 					m_client_event_queue.push_back(event);
 				}
-			}else if (event.type == CEE_PLAYER_HUNGER && getServerHunger()) {
-				if (m_ignore_damage_timer <= 0) {
+			}
+			else if (event.type == CEE_PLAYER_HUNGER && getServerHunger())
+			{
+				if (m_ignore_damage_timer <= 0)
+				{
 					s8 damage = event.player_damage.amount;
 					sendDamage(0,0,damage);
 
@@ -536,9 +561,9 @@ void Client::step(float dtime)
 					event.player_damage.amount = damage;
 					m_client_event_queue.push_back(event);
 				}
-			}else if (event.type == CEE_PLAYER_WEARCLOTHES && getServerDamage()) {
-				sendClothesWear(event.player_wear.amount);
 			}
+			else if (event.type == CEE_PLAYER_WEARCLOTHES && getServerDamage())
+				sendClothesWear(event.player_wear.amount);
 		}
 	}
 
@@ -546,9 +571,10 @@ void Client::step(float dtime)
 		Print some info
 	*/
 	{
-		float &counter = m_avg_rtt_timer;
+		float& counter = m_avg_rtt_timer;
 		counter += dtime;
-		if (counter >= 10) {
+		if (counter >= 10)
+		{
 			counter = 0.0;
 			//JMutexAutoLock lock(m_con_mutex); //bulk comment-out
 			// connectedAndInitialized() is true, peer exists.
@@ -561,9 +587,10 @@ void Client::step(float dtime)
 		Send player position to server
 	*/
 	{
-		float &counter = m_playerpos_send_timer;
+		float& counter = m_playerpos_send_timer;
 		counter += dtime;
-		if (counter >= 0.2) {
+		if (counter >= 0.2)
+		{
 			counter = 0.0;
 			sendPlayerPos();
 		}
@@ -582,59 +609,67 @@ void Client::step(float dtime)
 				<<m_mesh_update_thread.m_queue_out.size()
 				<<std::endl;*/
 
-		while (m_mesh_update_thread.m_queue_out.size() > 0) {
-			MeshUpdateResult r = m_mesh_update_thread.m_queue_out.pop_front();
-			MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(r.p);
-			if (block) {
-				if (r.mesh != NULL) {
-					JMutexAutoLock lock(block->mesh_mutex);
+	    while (m_mesh_update_thread.m_queue_out.size() > 0)
+	    {
+		MeshUpdateResult r = m_mesh_update_thread.m_queue_out.pop_front();
+		MapBlock* const block = m_env.getMap().getBlockNoCreateNoEx(r.p);
+		if (block)
+		{
+		    if (r.mesh != NULL)
+		    {
+			JMutexAutoLock lock(block->mesh_mutex);
+			MapBlockMesh* const mesh_old = block->mesh;
+					
+			block->mesh = r.mesh;
+			block->setMeshExpired(false);
 
-					MapBlockMesh *mesh_old = block->mesh;
-					block->mesh = r.mesh;
-					block->setMeshExpired(false);
-
-					if (mesh_old != NULL)
-						delete mesh_old;
-				}else{
-					block->setMeshExpired(false);
-				}
-			}
-			if (r.ack_block_to_server) {
-				/*infostream<<"Client: ACK block ("<<r.p.X<<","<<r.p.Y
-						<<","<<r.p.Z<<")"<<std::endl;*/
-				/*
-					Acknowledge block
-				*/
-				/*
-					[0] u16 command
-					[2] u8 count
-					[3] v3s16 pos_0
-					[3+6] v3s16 pos_1
-					...
-				*/
-				u32 replysize = 2+1+6;
-				SharedBuffer<u8> reply(replysize);
-				writeU16(&reply[0], TOSERVER_GOTBLOCKS);
-				reply[2] = 1;
-				writeV3S16(&reply[3], r.p);
-				// Send as reliable
-				m_con.Send(PEER_ID_SERVER, 1, reply, true);
-			}
+			if (mesh_old != NULL)
+			    delete mesh_old;
+		    }
+		    else
+			block->setMeshExpired(false);
+		    
+		    block->ResetCurrent();
 		}
+		
+		if (r.ack_block_to_server)
+		{
+		/*infostream<<"Client: ACK block ("<<r.p.X<<","<<r.p.Y
+		  <<","<<r.p.Z<<")"<<std::endl;*/
+		/*
+		  Acknowledge block
+		*/
+		/*
+		  [0] u16 command
+		  [2] u8 count
+		  [3] v3s16 pos_0
+		  [3+6] v3s16 pos_1
+		  ...
+		*/
+		    const u32 replysize = 2+1+6;
+		    SharedBuffer<u8> reply(replysize);
+				
+		    writeU16(&reply[0], TOSERVER_GOTBLOCKS);
+		    reply[2] = 1;
+		    writeV3S16(&reply[3], r.p);
+		// Send as reliable
+		    m_con.Send(PEER_ID_SERVER, 1, reply, true);
+		}
+	    }
 	}
 }
 
 // Virtual methods from con::PeerHandler
 void Client::peerAdded(con::Peer *peer)
 {
-	infostream<<"Client::peerAdded(): peer->id="
-			<<peer->id<<std::endl;
+	infostream << "Client::peerAdded(): peer->id="
+			<< peer->id << std::endl;
 }
 void Client::deletingPeer(con::Peer *peer, bool timeout)
 {
-	infostream<<"Client::deletingPeer(): "
+	infostream << "Client::deletingPeer(): "
 			"Server Peer is getting deleted "
-			<<"(timeout="<<timeout<<")"<<std::endl;
+			<< "(timeout=" << timeout << ")" << std::endl;
 }
 
 void Client::ReceiveAll()
@@ -651,9 +686,9 @@ void Client::ReceiveAll()
 		}
 		catch(con::InvalidIncomingDataException &e)
 		{
-			infostream<<"Client::ReceiveAll(): "
+			infostream << "Client::ReceiveAll(): "
 					"InvalidIncomingDataException: what()="
-					<<e.what()<<std::endl;
+					<< e.what() << std::endl;
 		}
 	}
 }
@@ -855,34 +890,31 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 		std::string datastring((char*)&data[8], datasize-8);
 		std::istringstream istr(datastring, std::ios_base::binary);
 
-		MapSector *sector;
-		MapBlock *block;
-
-		v2s16 p2d(p.X, p.Z);
-		sector = m_env.getMap().emergeSector(p2d);
+		const v2s16 p2d(p.X, p.Z);
+		MapSector* const sector = m_env.getMap().emergeSector(p2d);
 
 		if (sector->getPos() != p2d)
-			return;
+		    return;
 
 		//TimeTaker timer("MapBlock deSerialize");
 		// 0ms
 
-		block = sector->getBlockNoCreateNoEx(p.Y);
-		if (block) {
-			/*
-				Update an existing block
-			*/
-			//infostream<<"Updating"<<std::endl;
-			block->deSerialize(istr, ser_version);
-		}else{
-			/*
-				Create a new block
-			*/
-			//infostream<<"Creating new"<<std::endl;
-			block = new MapBlock(&m_env.getMap(), p);
-			block->deSerialize(istr, ser_version);
-			sector->insertBlock(block);
-
+		MapBlock* block = sector->getBlockNoCreateNoEx(p.Y);
+		if (block)
+		/*
+		  Update an existing block
+		*/
+		//infostream<<"Updating"<<std::endl;
+		    block->deSerialize(istr, ser_version);
+		else
+		{
+		/*
+		  Create a new block
+		*/
+		//infostream<<"Creating new"<<std::endl;
+		    block = new MapBlock(&m_env.getMap(), p);
+		    block->deSerialize(istr, ser_version);
+		    sector->insertBlock(block);
 		}
 
 		/*
@@ -917,7 +949,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 		u16 our_peer_id = m_con.GetPeerID();
 
 		// Cancel if we don't have a peer id
-		if (our_peer_id == PEER_ID_INEXISTENT) {
+		if (our_peer_id == PEER_ID_INEXISTENT)
+		{
 			infostream<<"TOCLIENT_PLAYERINFO cancelled: we have no peer id"<<std::endl;
 			return;
 		}
@@ -934,7 +967,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 			// peer_ids
 			array_t players_alive;
 			array_init(&players_alive,ARRAY_TYPE_INT);
-			for (u16 i=0; i<player_count; i++) {
+			for (u16 i=0; i<player_count; i++)
+			{
 				u16 peer_id = readU16(is);
 
 				array_push_int(&players_alive,peer_id);
@@ -942,9 +976,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 				is.read(pname,PLAYERNAME_SIZE);
 				pname[PLAYERNAME_SIZE-1] = '\0';
 				chardef = deSerializeString(is);
-				for (u16 j=1; j<field_count; j++) {
+				for (u16 j=1; j<field_count; j++)
 					std::string dump = deSerializeString(is);
-				}
 
 				// Don't update the info of the local player
 				if (peer_id == our_peer_id)
@@ -953,7 +986,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 				Player* player = m_env.getPlayer(peer_id);
 
 				// Create a player if it doesn't exist
-				if (player == NULL) {
+				if (player == NULL)
+				{
 					player = new RemotePlayer(
 						m_device->getSceneManager()->getRootSceneNode(),
 						m_device,
@@ -975,7 +1009,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 			array_t* const players = m_env.getPlayers();
 			Player *player;
 			uint32_t i;
-			for (i=0; i<players->length; i++) {
+			for (i=0; i<players->length; i++)
+			{
 				player = (Player*)array_get_ptr(players,i);
 				if (!player)
 					continue;
@@ -1011,7 +1046,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 		if (energy_effect > player->energy_effectf)
 			player->energy_effectf = energy_effect;
 		player->cold_effectf += readU16(is);
-		if (m_server_damage) {
+		if (m_server_damage)
+		{
 			if (!player->health)
 				player->setEnergy(hp);
 			player->health = hp;
@@ -1051,13 +1087,15 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 			assert(player != NULL);
 
 			u16 list_count = readU16(is);
-			for (int i=0; i<list_count; i++) {
+			for (int i=0; i<list_count; i++)
+			{
 				std::string name = deSerializeString(is);
 				u16 slots = readU16(is);
 				InventoryList *l = player->inventory.getList(name);
 				if (!l)
 					return;
-				for (int k=0; k<slots; k++) {
+				for (int k=0; k<slots; k++)
+				{
 					u16 index = readU16(is);
 					u16 type = readU16(is);
 					u16 count = readU16(is);
@@ -1082,7 +1120,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 
 		u16 playercount = readU16(is);
 
-		for (u16 i=0; i<playercount; i++) {
+		for (u16 i=0; i<playercount; i++)
+		{
 			u16 peer_id = readU16(is);
 			v3f position = readV3F1000(is);
 			v3f speed = readV3F1000(is);
@@ -1125,7 +1164,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 		is.read((char*)buf, 2);
 		u16 playercount = readU16(buf);
 
-		for (u16 i=0; i<playercount; i++) {
+		for (u16 i=0; i<playercount; i++)
+		{
 			is.read((char*)buf, 2);
 			u16 peer_id = readU16(buf);
 			is.read((char*)buf, 12);
@@ -1164,8 +1204,9 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 		*/
 
 		// Read active block count
-		u16 blockcount = readU16(is);
-		if (blockcount != 0) {
+		const u16 blockcount = readU16(is);
+		if (blockcount != 0)
+		{
 			infostream<<"TOCLIENT_OBJECTDATA: blockcount != 0 not supported"<<std::endl;
 			return;
 		}
@@ -1180,22 +1221,26 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 		u16 time_of_day = readU16(&data[2]);
 		time_of_day = time_of_day % 24000;
 		float time_speed = 0;
-		if (datasize >= 2 + 2 + 4 + 4) {
+		if (datasize >= 2 + 2 + 4 + 4)
+		{
 			time = readU32(&data[4]);
 			time_speed = readF1000(&data[8]);
-		}else{
+		}
+		else
+		{
 			// Old message; try to approximate speed of time by ourselves
 			float time_of_day_f = (float)time_of_day / 24000.0;
 			float tod_diff_f = 0;
-			if (time_of_day_f < 0.2 && m_last_time_of_day_f > 0.8) {
+			if (time_of_day_f < 0.2 && m_last_time_of_day_f > 0.8)
 				tod_diff_f = time_of_day_f - m_last_time_of_day_f + 1.0;
-			}else{
+			else
 				tod_diff_f = time_of_day_f - m_last_time_of_day_f;
-			}
+
 			m_last_time_of_day_f = time_of_day_f;
 			float time_diff = m_time_of_day_update_timer;
 			m_time_of_day_update_timer = 0;
-			if (m_time_of_day_set) {
+			if (m_time_of_day_set)
+			{
 				time_speed = 3600.0*24.0 * tod_diff_f / time_diff;
 				infostream<<"Client: Measured time_of_day speed (old format): "
 				<<time_speed<<" tod_diff_f="<<tod_diff_f
@@ -1230,7 +1275,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 		u16 len = readU16(buf);
 
 		std::wstring message;
-		for (u16 i=0; i<len; i++) {
+		for (u16 i=0; i<len; i++)
+		{
 			is.read((char*)buf, 2);
 			message += (wchar_t)readU16(buf);
 		}
@@ -1269,7 +1315,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 		// Read removed objects
 		is.read(buf, 2);
 		u16 removed_count = readU16((u8*)buf);
-		for (u16 i=0; i<removed_count; i++) {
+		for (u16 i=0; i<removed_count; i++)
+		{
 			is.read(buf, 2);
 			u16 id = readU16((u8*)buf);
 			// Remove it
@@ -1279,7 +1326,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 		// Read added objects
 		is.read(buf, 2);
 		u16 added_count = readU16((u8*)buf);
-		for (u16 i=0; i<added_count; i++) {
+		for (u16 i=0; i<added_count; i++)
+		{
 			is.read(buf, 2);
 			u16 id = readU16((u8*)buf);
 			is.read(buf, 1);
@@ -1307,7 +1355,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 		// Throw them in an istringstream
 		std::istringstream is(datastring, std::ios_base::binary);
 
-		while (is.eof() == false) {
+		while (is.eof() == false)
+		{
 			// Read stuff
 			is.read(buf, 2);
 			u16 id = readU16((u8*)buf);
@@ -1317,7 +1366,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 			u16 message_size = readU16((u8*)buf);
 			std::string message;
 			message.reserve(message_size);
-			for (u16 i=0; i<message_size; i++) {
+			for (u16 i=0; i<message_size; i++)
+			{
 				is.read(buf, 1);
 				message.append(buf, 1);
 			}
@@ -1371,27 +1421,32 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 		u16 icount = readU16(is);
 		u16 itm;
 
-		for (u16 i = 0; i < count; ++i) {
+		for (u16 i = 0; i < count; ++i)
+		{
 			u16 peer_id = readU16(is);
 			Player* const player = m_env.getPlayer(peer_id);
 
-			if (player == NULL) {
-				for (int j=0; j<icount; j++) {
+			if (player == NULL)
+			{
+				for (int j=0; j<icount; j++)
 					itm = readU16(is);
-				}
 				infostream<<"Client: ignoring player items "
 					<< " for non-existing peer id " << peer_id
 					<< std::endl;
 				continue;
-			}else if (player->isLocal()) {
-				for (int j=0; j<icount; j++) {
+			}
+			else if (player->isLocal())
+			{
+				for (int j=0; j<icount; j++)
 					itm = readU16(is);
-				}
 				infostream<<"Client: ignoring player items "
 					<< " for local player" << std::endl;
 				continue;
-			}else{
-				for (int j=0; j<icount; j++) {
+			}
+			else
+			{
+				for (int j=0; j<icount; j++)
+				{
 					itm = readU16(is);
 					InventoryList *inv = NULL;
 					switch (j) {
@@ -1425,16 +1480,18 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 					if (itm == CONTENT_IGNORE) {
 						inv->deleteItem(0);
 					}else{
-						InventoryItem *item = inv->changeItem(0, InventoryItem::create(itm,1));
+						InventoryItem* const item = inv->changeItem(0, InventoryItem::create(itm,1));
 						if (item)
 							delete item;
 					}
 				}
 				// for 1409 servers, this stops players appearing naked
-				if (icount == 5) {
+				if (icount == 5)
+				{
 					{
 						InventoryList* const inv = player->inventory.getList("shirt");
-						if (!inv->getItem(0)) {
+						if (!inv->getItem(0))
+						{
 							InventoryItem* const item = inv->changeItem(
 								0,
 								InventoryItem::create(CONTENT_CLOTHESITEM_COTTON_TSHIRT_GREEN,1)
@@ -1445,7 +1502,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 					}
 					{
 						InventoryList* const inv = player->inventory.getList("pants");
-						if (!inv->getItem(0)) {
+						if (!inv->getItem(0))
+						{
 							InventoryItem* const item = inv->changeItem(
 								0,
 								InventoryItem::create(CONTENT_CLOTHESITEM_CANVAS_PANTS_BLUE,1)
@@ -1456,7 +1514,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 					}
 					{
 						InventoryList* const inv = player->inventory.getList("boots");
-						if (!inv->getItem(0)) {
+						if (!inv->getItem(0))
+						{
 							InventoryItem* const item = inv->changeItem(
 								0,
 								InventoryItem::create(CONTENT_CLOTHESITEM_LEATHER_SHOES,1)
@@ -1505,26 +1564,26 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 		v3f pos = readV3F1000(is);
 		std::string ev = deSerializeString(is);
 		switch (type) {
-		case ENV_EVENT_SOUND: // sound
+		  case ENV_EVENT_SOUND: // sound
 			playSoundAt(ev,pos,false);
 			break;
-		case ENV_EVENT_DIG_PARTICLES: // dig particles
+		  case ENV_EVENT_DIG_PARTICLES: // dig particles
 			break;
-		case ENV_EVENT_PUNCH_PARTICLES: // punch particles
+		  case ENV_EVENT_PUNCH_PARTICLES: // punch particles
 			break;
-		case ENV_EVENT_NODE_PARTICLES: // node particles
+		  case ENV_EVENT_NODE_PARTICLES: // node particles
 			break;
-		case ENV_EVENT_SLEEP: // go to sleep
+		  case ENV_EVENT_SLEEP: // go to sleep
 			m_sleeping = true;
 			m_waking = false;
 			m_sleep_state = 0.5;
 			break;
-		case ENV_EVENT_WAKE: // wake up
+		  case ENV_EVENT_WAKE: // wake up
 			m_sleeping = false;
 			m_waking = true;
 			m_sleep_state = 1.0;
 			break;
-		default:
+		  default:
 			infostream<<"Client: unknown env_event: "<<type<<": "<<ev<<std::endl;
 		}
 	}
@@ -1546,7 +1605,8 @@ void Client::Send(u16 channelnum, SharedBuffer<u8> data, bool reliable)
 void Client::groundAction(u8 action, v3s16 nodepos_undersurface,
 		v3s16 nodepos_oversurface, u16 item)
 {
-	if(connectedAndInitialized() == false){
+	if(connectedAndInitialized() == false)
+	{
 		infostream<<"Client::groundAction() "
 				"cancelled (not connected)"
 				<<std::endl;
@@ -1574,8 +1634,10 @@ void Client::groundAction(u8 action, v3s16 nodepos_undersurface,
 	writeV3S16(&data[9], nodepos_oversurface);
 	writeU16(&data[15], item);
 	Send(0, data, true);
-	if (action == 3) {
-		content_t c = m_env.getMap().getNodeNoEx(nodepos_undersurface).getContent();
+	if (action == 3)
+	{
+		const content_t c = m_env.getMap().getNodeNoEx(
+				nodepos_undersurface).getContent();
 		playDigSound(c);
 	}
 }
@@ -1652,8 +1714,10 @@ void Client::clickActiveObject(u8 button, u16 id, u16 item_i)
 		return;
 
 	ClientActiveObject* const obj = m_env.getActiveObject(id);
-	if (obj) {
-		if (button == 0) {
+	if (obj)
+	{
+		if (button == 0)
+		{
 			content_t punch_item = CONTENT_IGNORE;
 
 			InventoryList* const mlist = player->inventory.getList("main");
@@ -2193,7 +2257,7 @@ float Client::getEnergy()
 
 void Client::addUpdateMeshTask(v3s16 p, bool ack_to_server, bool refresh_only)
 {
-	MapBlock *b = m_env.getMap().getBlockNoCreateNoEx(p);
+	MapBlock* const b = m_env.getMap().getBlockNoCreateNoEx(p);
 	if (b == NULL)
 		return;
 
@@ -2201,18 +2265,18 @@ void Client::addUpdateMeshTask(v3s16 p, bool ack_to_server, bool refresh_only)
 		Create a task to update the mesh of the block
 	*/
 
-	MeshMakeData *data = new MeshMakeData();
+	MeshMakeData* data = new MeshMakeData();
 	data->m_env = &m_env;
 
-	if (refresh_only) {
-		data->m_daynight_ratio = m_env.getDayNightRatio();
-		data->m_refresh_only = true;
-	}else{
-		{
-			data->fill(m_env.getDayNightRatio(), b);
-		}
-
-		data->m_sounds = &b->m_sounds;
+	if (refresh_only)
+	{
+	    data->m_daynight_ratio = m_env.getDayNightRatio();
+	    data->m_refresh_only = true;
+	}
+	else
+	{
+	    data->fill(m_env.getDayNightRatio(), b);
+	    data->m_sounds = &b->m_sounds;
 	}
 
 	// Add task to queue
@@ -2223,6 +2287,7 @@ void Client::addUpdateMeshTask(v3s16 p, bool ack_to_server, bool refresh_only)
 		be marked as expired again if the data changes
 	*/
 	b->setMeshExpired(false);
+	b->ResetCurrent();
 }
 
 void Client::addUpdateMeshTaskWithEdge(v3s16 blockpos, bool ack_to_server)

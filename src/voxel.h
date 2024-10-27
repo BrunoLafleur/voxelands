@@ -79,7 +79,7 @@ public:
 		Modifying methods
 	*/
 
-	void addArea(VoxelArea &a)
+	void addArea(const VoxelArea& a)
 	{
 		if(getExtent() == v3s16(0,0,0))
 		{
@@ -343,7 +343,8 @@ class Environment;
 
 class VoxelManipulator /*: public NodeContainer*/
 {
-public:
+    public:
+	
 	VoxelManipulator();
 	virtual ~VoxelManipulator();
 
@@ -393,7 +394,7 @@ public:
 
 		return m_data[m_area.index(p)];
 	}
-	MapNode getNodeNoExNoEmerge(v3s16 p)
+	MapNode getNodeNoExNoEmerge(v3s16 p) const
 	{
 		if(m_area.contains(p) == false)
 			return MapNode(CONTENT_IGNORE);
@@ -482,22 +483,26 @@ public:
 		Control
 	*/
 
+	void setEnv(Environment* const env) {
+		m_env = env;
+	}
+			
 	virtual void clear();
 
 	void print(std::ostream &o, VoxelPrintMode mode=VOXELPRINT_MATERIAL);
 
-	void addArea(VoxelArea area);
+	void addArea(const VoxelArea area);
 
 	/*
 		Copy data and set flags to 0
 		dst_area.getExtent() <= src_area.getExtent()
 	*/
-	void copyFrom(MapNode *src, VoxelArea src_area,
-			v3s16 from_pos, v3s16 to_pos, v3s16 size);
+	void copyFrom(const MapNode* const src,const VoxelArea src_area,
+			const v3s16 from_pos,const v3s16 to_pos,const v3s16 size);
 
 	// Copy data
-	void copyTo(MapNode *dst, VoxelArea dst_area,
-			v3s16 dst_pos, v3s16 from_pos, v3s16 size);
+	void copyTo(MapNode* const dst,const VoxelArea dst_area,
+			const v3s16 dst_pos,const v3s16 from_pos,const v3s16 size);
 
 	/*
 		Algorithms
@@ -532,10 +537,11 @@ public:
 		addArea(a);
 	}
 
-	/*
+    /********************************************
 		Member variables
-	*/
-
+    *********************************************/
+    public:
+	
 	/*
 		The area that is stored in m_data.
 		addInternalBox should not be used if getExtent() == v3s16(0,0,0)
@@ -552,8 +558,11 @@ public:
 	/*
 		Flags of all nodes
 	*/
+
 	u8 *m_flags;
 
+    private:
+	
 	Environment *m_env;
 
 	//TODO: Use these or remove them
@@ -565,8 +574,6 @@ public:
 		Some settings
 	*/
 	//bool m_disable_water_climb;
-
-private:
 };
 
 #endif

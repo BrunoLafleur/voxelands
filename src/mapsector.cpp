@@ -29,10 +29,12 @@
 #include "exceptions.h"
 #include "mapblock.h"
 
-MapSector::MapSector(Map *parent, v2s16 pos):
+MapSector::MapSector(Map* const parent,const v2s16 pos):
+		m_blocks(),
 		m_parent(parent),
 		m_pos(pos),
-		m_block_cache(NULL)
+		m_block_cache(NULL),
+		m_block_cache_y(0)
 {
 }
 
@@ -48,9 +50,8 @@ void MapSector::deleteBlocks()
 
 	// Delete all
 	core::map<s16, MapBlock*>::Iterator i = m_blocks.getIterator();
-	for (; i.atEnd() == false; i++) {
+	for (; i.atEnd() == false; i++)
 		delete i.getNode()->getValue();
-	}
 
 	// Clear container
 	m_blocks.clear();
@@ -85,16 +86,16 @@ MapBlock * MapSector::createBlankBlockNoInsert(s16 y)
 {
 	assert(getBlockBuffered(y) == NULL);
 
-	v3s16 blockpos_map(m_pos.X, y, m_pos.Y);
+	const v3s16 blockpos_map(m_pos.X, y, m_pos.Y);
 
-	MapBlock *block = new MapBlock(m_parent, blockpos_map);
+	MapBlock* const block = new MapBlock(m_parent, blockpos_map);
 
 	return block;
 }
 
 MapBlock * MapSector::createBlankBlock(s16 y)
 {
-	MapBlock *block = createBlankBlockNoInsert(y);
+	MapBlock* const block = createBlankBlockNoInsert(y);
 
 	m_blocks.insert(y, block);
 
@@ -103,13 +104,12 @@ MapBlock * MapSector::createBlankBlock(s16 y)
 
 void MapSector::insertBlock(MapBlock *block)
 {
-	s16 block_y = block->getPos().Y;
-
-	MapBlock *block2 = getBlockBuffered(block_y);
+	const s16 block_y = block->getPos().Y;
+	MapBlock* const block2 = getBlockBuffered(block_y);
 	if (block2 != NULL)
 		throw AlreadyExistsException("Block already exists");
 
-	v2s16 p2d(block->getPos().X, block->getPos().Z);
+	const v2s16 p2d(block->getPos().X, block->getPos().Z);
 	assert(p2d == m_pos);
 
 	// Insert into container
@@ -118,7 +118,7 @@ void MapSector::insertBlock(MapBlock *block)
 
 void MapSector::deleteBlock(MapBlock *block)
 {
-	s16 block_y = block->getPos().Y;
+	const s16 block_y = block->getPos().Y;
 
 	// Clear from cache
 	m_block_cache = NULL;
@@ -133,12 +133,11 @@ void MapSector::deleteBlock(MapBlock *block)
 void MapSector::getBlocks(core::list<MapBlock*> &dest)
 {
 	core::list<MapBlock*> ref_list;
-
-	core::map<s16, MapBlock*>::Iterator bi;
-
-	bi = m_blocks.getIterator();
-	for (; bi.atEnd() == false; bi++) {
-		MapBlock *b = bi.getNode()->getValue();
+	core::map<s16, MapBlock*>::Iterator bi = m_blocks.getIterator();
+	
+	for (; bi.atEnd() == false; bi++)
+	{
+		MapBlock* const b = bi.getNode()->getValue();
 		dest.push_back(b);
 	}
 }
@@ -147,7 +146,7 @@ void MapSector::getBlocks(core::list<MapBlock*> &dest)
 	ServerMapSector
 */
 
-ServerMapSector::ServerMapSector(Map *parent, v2s16 pos):
+ServerMapSector::ServerMapSector(Map *parent, v2s16 pos) :
 		MapSector(parent, pos)
 {
 }
@@ -210,8 +209,7 @@ ServerMapSector* ServerMapSector::deSerialize(
 	*/
 
 	ServerMapSector *sector = NULL;
-
-	core::map<v2s16, MapSector*>::Node *n = sectors.find(p2d);
+	core::map<v2s16, MapSector*>::Node* const n = sectors.find(p2d);
 
 	if (n != NULL) {
 		dstream<<"WARNING: deSerializing existent sectors not supported "

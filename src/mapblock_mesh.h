@@ -96,7 +96,7 @@ struct MeshMakeData
 		Copy central data directly from block, and other data from
 		parent of block.
 	*/
-	void fill(u32 daynight_ratio, MapBlock *block);
+	void fill(const u32 daynight_ratio,MapBlock* const block);
 
 	void startSingle(v3s16 pos, TileSpec tile)
 	{
@@ -224,12 +224,18 @@ struct AnimationData
 	int frame;
 };
 
+/**
+   MapBlockMesh
+**/
+
 class MapBlockMesh
 {
-public:
-	MapBlockMesh(MeshMakeData *data, v3s16 camera_offset);
+    public:
+	
+	MapBlockMesh(MeshMakeData* const data,const v3s16 camera_offset);
 	~MapBlockMesh();
 
+    // Appele par map.cpp, mutex.
 	scene::SMesh* getMesh()
 	{
 		return m_mesh;
@@ -240,7 +246,7 @@ public:
 		return m_farmesh;
 	}
 
-	void generate(MeshMakeData *data, v3s16 camera_offset, JMutex *mutex);
+	void generate(MeshMakeData* const data,const v3s16 camera_offset,JMutex* const mutex);
 	void refresh(u32 daynight_ratio);
 	void animate(float time);
 
@@ -252,10 +258,12 @@ public:
 	void updateCameraOffset(v3s16 camera_offset);
 
 	bool isfar;
-private:
+	
+    private:
+
 	v3s16 m_pos;
-	scene::SMesh *m_mesh;
-	scene::SMesh *m_farmesh;
+	scene::SMesh* m_mesh;
+	scene::SMesh* m_farmesh;
 	v3s16 m_camera_offset;
 	std::vector<MeshData> m_meshdata;
 	std::vector<MeshData> m_fardata;

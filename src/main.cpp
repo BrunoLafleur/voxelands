@@ -798,7 +798,7 @@ int main(int argc, char *argv[])
 		// Create time getter
 		g_timegetter = new SimpleTimeGetter();
 
-		const char* v = config_get("server.world");
+		const char* const v = config_get("server.world");
 		world_init(v);
 
 		// Create server
@@ -858,7 +858,7 @@ int main(int argc, char *argv[])
 	params.EventReceiver = &receiver;
 	params.HighPrecisionFPU = config_get_bool("client.video.hpfpu");
 
-	IrrlichtDevice * device = createDeviceEx(params);
+	IrrlichtDevice* const device = createDeviceEx(params);
 
 	if (device == 0)
 		return 1; // could not create selected driver.

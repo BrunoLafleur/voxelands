@@ -43,7 +43,7 @@ class Map;
 
 class MapSector
 {
-public:
+    public:
 
 	MapSector(Map *parent, v2s16 pos);
 	virtual ~MapSector();
@@ -67,7 +67,7 @@ public:
 
 	void getBlocks(core::list<MapBlock*> &dest);
 
-protected:
+    protected:
 
 	// The pile of MapBlocks
 	core::map<s16, MapBlock*> m_blocks;
@@ -90,7 +90,7 @@ protected:
 
 class ServerMapSector : public MapSector
 {
-public:
+    public:
 	ServerMapSector(Map *parent, v2s16 pos);
 	~ServerMapSector();
 
@@ -119,7 +119,7 @@ private:
 #ifndef SERVER
 class ClientMapSector : public MapSector
 {
-public:
+    public:
 	ClientMapSector(Map *parent, v2s16 pos);
 	~ClientMapSector();
 
@@ -128,7 +128,7 @@ public:
 		return MAPSECTOR_CLIENT;
 	}
 
-private:
+    private:
 };
 #endif
 

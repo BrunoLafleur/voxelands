@@ -31,21 +31,24 @@
 #include "main.h"
 #include "light.h"
 #include <sstream>
+
 #ifndef SERVER
-#include "sound.h"
+# include "sound.h"
+# include "xsync.h"
 #endif
 
 /*
 	MapBlock
 */
 
-MapBlock::MapBlock(Map *parent, v3s16 pos, bool dummy):
+MapBlock::MapBlock(Map* const parent,const v3s16 pos,const bool dummy):
 	has_spawn_area(false),
 	spawn_area(0,0,0),
 	last_spawn(0),
 	m_parent(parent),
 	m_pos(pos),
 	m_biome(BIOME_UNKNOWN),
+	data(NULL),
 	m_modified(MOD_STATE_WRITE_NEEDED),
 	is_underground(false),
 	m_lighting_expired(true),
@@ -54,16 +57,15 @@ MapBlock::MapBlock(Map *parent, v3s16 pos, bool dummy):
 	m_timestamp(BLOCK_TIMESTAMP_UNDEFINED),
 	m_usage_timer(0)
 {
-	data = NULL;
 	if (dummy == false)
 		reallocate();
 
-	//m_spawn_timer = -10000;
-
 #ifndef SERVER
-	m_mesh_expired = false;
-	mesh_mutex.Init();
 	mesh = NULL;
+	mesh_mutex.Init();
+	m_mesh_expired = false;
+	mesh_current = 0;
+	X1SyncSet(&mesh_current,0);
 #endif
 }
 
@@ -73,12 +75,13 @@ MapBlock::~MapBlock()
 	{
 		JMutexAutoLock lock(mesh_mutex);
 
-		if (mesh) {
-			delete mesh;
-			mesh = NULL;
+		if (mesh)
+		{
+			delete mesh;mesh = NULL;
 		}
 #if USE_AUDIO == 1
-		for (std::map<v3s16,MapBlockSound>::iterator i = m_sounds.begin(); i != m_sounds.end(); i++) {
+		for (std::map<v3s16,MapBlockSound>::iterator i = m_sounds.begin(); i != m_sounds.end(); i++)
+		{
 			sound_stop_single(i->second.id);
 		}
 #endif
@@ -87,6 +90,29 @@ MapBlock::~MapBlock()
 
 	if (data)
 		delete[] data;
+}
+
+void MapBlock::SetCurrent()
+{
+#ifndef SERVER // Only on client
+	X1SyncBSet(&mesh_current);
+#endif
+}
+
+void MapBlock::ResetCurrent()
+{
+#ifndef SERVER // Only on client
+	X1SyncBReset(&mesh_current);
+#endif
+}
+
+int MapBlock::GetCurrent()
+{
+#ifndef SERVER // Only on client
+	return X1SyncGet(&mesh_current);
+#else
+	return 0;
+#endif
 }
 
 bool MapBlock::isValidPositionParent(v3s16 p)
@@ -99,24 +125,25 @@ bool MapBlock::isValidPositionParent(v3s16 p)
 MapNode MapBlock::getNodeParent(v3s16 p, bool *is_valid_position)
 {
 	if (isValidPosition(p.X,p.Y,p.Z) == false)
-		return m_parent->getNodeNoEx(getPosRelative() + p, is_valid_position);
-	if (data == NULL) {
+		return m_parent->getNodeNoEx(getPosRelative() + p,
+				is_valid_position);
+	if (data == NULL)
+	{
 		if (is_valid_position)
 			*is_valid_position = false;
 		return MapNode(CONTENT_IGNORE);
 	}
 	if (is_valid_position)
 		*is_valid_position = true;
-	return data[p.Z*MAP_BLOCKSIZE*MAP_BLOCKSIZE + p.Y*MAP_BLOCKSIZE + p.X];
+	return data[p.Z * MAP_BLOCKSIZE2 + p.Y * MAP_BLOCKSIZE + p.X];
 }
 
 void MapBlock::setNodeParent(v3s16 p, MapNode & n)
 {
-	if (isValidPosition(p.X,p.Y,p.Z) == false) {
+	if (isValidPosition(p.X,p.Y,p.Z) == false)
 		m_parent->setNode(getPosRelative() + p, n);
-	}else{
-		data[p.Z*MAP_BLOCKSIZE*MAP_BLOCKSIZE + p.Y*MAP_BLOCKSIZE + p.X] = n;
-	}
+	else
+		data[p.Z * MAP_BLOCKSIZE2 + p.Y * MAP_BLOCKSIZE + p.X] = n;
 }
 
 /*
@@ -143,31 +170,35 @@ bool MapBlock::propagateSunlight(core::map<v3s16, bool> & light_sources,
 {
 	// Whether the sunlight at the top of the bottom block is valid
 	bool block_below_is_valid = true;
+	const v3s16 pos_relative = getPosRelative();
 
-	v3s16 pos_relative = getPosRelative();
-
-	for (s16 x=0; x<MAP_BLOCKSIZE; x++) {
-		for (s16 z=0; z<MAP_BLOCKSIZE; z++) {
+	for (s16 x=0; x<MAP_BLOCKSIZE; x++)
+	{
+		for (s16 z=0; z<MAP_BLOCKSIZE; z++)
+		{
 			bool no_sunlight = false;
 			//bool no_top_block = false;
 			// Check if node above block has sunlight
 			bool is_valid_position;
 			MapNode np = getNodeParent(v3s16(x, MAP_BLOCKSIZE, z), &is_valid_position);
-			if (is_valid_position) {
-				if (np.getContent() == CONTENT_IGNORE) {
+			if (is_valid_position)
+			{
+				if (np.getContent() == CONTENT_IGNORE)
 					// Trust heuristics
 					no_sunlight = is_underground;
-				}else if (np.getLight(LIGHTBANK_DAY) != LIGHT_SUN) {
+				else if (np.getLight(LIGHTBANK_DAY) != LIGHT_SUN)
 					no_sunlight = true;
-				}
-			}else{
+			}
+			else
+			{
 				//no_top_block = true;
 
 				// NOTE: This makes over-ground roofed places sunlighted
 				// Assume sunlight, unless is_underground==true
-				if (is_underground) {
+				if (is_underground)
 					no_sunlight = true;
-				}else{
+				else
+				{
 					MapNode n = getNodeNoEx(v3s16(x, MAP_BLOCKSIZE-1, z));
 					//if(n.getContent() == CONTENT_WATER || n.getContent() == CONTENT_WATERSOURCE)
 					if (content_features(n).sunlight_propagates == false)
@@ -185,25 +216,28 @@ bool MapBlock::propagateSunlight(core::map<v3s16, bool> & light_sources,
 
 			u8 current_light = no_sunlight ? 0 : LIGHT_SUN;
 
-			for (; y >= 0; y--) {
+			for (; y >= 0; y--)
+			{
 				v3s16 pos(x, y, z);
-				MapNode &n = getNodeRef(pos);
-				ContentFeatures &f = content_features(n);
+				MapNode& n = getNodeRef(pos);
+				const ContentFeatures& f = content_features(n);
 
-				if (current_light != 0 && (current_light != LIGHT_SUN || !f.sunlight_propagates)) {
-					if (!f.light_propagates) {
+				if (current_light != 0 && (current_light != LIGHT_SUN || !f.sunlight_propagates))
+				{
+					if (!f.light_propagates)
+					{
 						// A solid object is on the way.
 						stopped_to_solid_object = true;
 
 						// Light stops.
 						current_light = 0;
-					}else{
+					}
+					else
 						// Diminish light
 						current_light = diminish_light(current_light);
-					}
 				}
 
-				u8 old_light = n.getLight(LIGHTBANK_DAY);
+				const u8 old_light = n.getLight(LIGHTBANK_DAY);
 
 				if (current_light > old_light || remove_light)
 					n.setLight(LIGHTBANK_DAY, current_light);
@@ -226,24 +260,24 @@ bool MapBlock::propagateSunlight(core::map<v3s16, bool> & light_sources,
 
 				Ignore non-transparent nodes as they always have no light
 			*/
-			try {
-				if (block_below_is_valid) {
+			try
+			{
+				if (block_below_is_valid)
+				{
 					MapNode n = getNodeParent(v3s16(x, -1, z));
-					if (content_features(n).light_propagates) {
-						if (
-							n.getLight(LIGHTBANK_DAY) == LIGHT_SUN
-							&& sunlight_should_go_down == false
-						) {
+					if (content_features(n).light_propagates)
+					{
+						if (n.getLight(LIGHTBANK_DAY) == LIGHT_SUN
+								&& sunlight_should_go_down == false)
 							block_below_is_valid = false;
-						}else if (
-							n.getLight(LIGHTBANK_DAY) != LIGHT_SUN
-							&& sunlight_should_go_down == true
-						) {
+						else if (n.getLight(LIGHTBANK_DAY) != LIGHT_SUN
+								&& sunlight_should_go_down == true)
 							block_below_is_valid = false;
-						}
 					}
 				}
-			}catch(InvalidPositionException &e) {
+			}
+			catch(InvalidPositionException &e)
+			{
 				// Just no block below, no need to panic.
 			}
 		}
@@ -286,9 +320,9 @@ void MapBlock::updateDayNightDiff()
 	/*
 		Check if any lighting value differs
 	*/
-	for(u32 i=0; i<MAP_BLOCKSIZE*MAP_BLOCKSIZE*MAP_BLOCKSIZE; i++)
+	for(u32 i=0; i<MAP_BLOCKSIZE3; i++)
 	{
-		MapNode &n = data[i];
+		const MapNode& n = data[i];
 		if(n.getLight(LIGHTBANK_DAY) != n.getLight(LIGHTBANK_NIGHT))
 		{
 			differs = true;
@@ -303,9 +337,9 @@ void MapBlock::updateDayNightDiff()
 	if(differs)
 	{
 		bool only_air = true;
-		for(u32 i=0; i<MAP_BLOCKSIZE*MAP_BLOCKSIZE*MAP_BLOCKSIZE; i++)
+		for(u32 i=0; i<MAP_BLOCKSIZE3; i++)
 		{
-			MapNode &n = data[i];
+			const MapNode& n = data[i];
 			if(n.getContent() != CONTENT_AIR)
 			{
 				only_air = false;
@@ -374,8 +408,7 @@ void MapBlock::serialize(std::ostream &os, u8 version)
 		if (version > 21)
 			os.write((char*)&m_biome,1);
 
-		u32 nodecount = MAP_BLOCKSIZE*MAP_BLOCKSIZE*MAP_BLOCKSIZE;
-
+		const u32 nodecount = MAP_BLOCKSIZE3;
 		u32 sl = MapNode::serializedLength(version);
 
 		/*
@@ -389,11 +422,9 @@ void MapBlock::serialize(std::ostream &os, u8 version)
 
 		// Create buffer with different parameters sorted
 		SharedBuffer<u8> databuf(nodecount*sl);
-		for (u32 i=0; i<nodecount; i++) {
-			for (u32 k=0; k<sl; k++) {
+		for (u32 i=0; i<nodecount; i++)
+			for (u32 k=0; k<sl; k++)
 				databuf[i+(nodecount*k)] = databuf_nodelist[(i*sl)+k];
-			}
-		}
 
 		/*
 			Compress data to output stream
@@ -418,9 +449,9 @@ void MapBlock::deSerialize(std::istream &is, u8 version)
 		throw VersionMismatchException("ERROR: MapBlock format not supported");
 
 	{
-		u32 nodecount = MAP_BLOCKSIZE*MAP_BLOCKSIZE*MAP_BLOCKSIZE;
-
+		const u32 nodecount = MAP_BLOCKSIZE3;
 		u8 flags;
+		
 		is.read((char*)&flags, 1);
 		is_underground = (flags & 0x01) ? true : false;
 		m_day_night_differs = (flags & 0x02) ? true : false;
@@ -440,11 +471,11 @@ void MapBlock::deSerialize(std::istream &is, u8 version)
 						" other than nodecount*nodelength");
 
 		// deserialize nodes from buffer
-		for (u32 i=0; i<nodecount; i++) {
+		for (u32 i=0; i<nodecount; i++)
+		{
 			SharedBuffer<u8> buf(sl);
-			for (u32 k=0; k<sl; k++) {
+			for (u32 k=0; k<sl; k++)
 				buf[k] = s[i+(nodecount*k)];
-			}
 			data[i].deSerialize(*buf, version);
 		}
 
@@ -452,12 +483,15 @@ void MapBlock::deSerialize(std::istream &is, u8 version)
 			NodeMetadata
 		*/
 		// Ignore errors
-		try{
+		try
+		{
 			std::ostringstream oss(std::ios_base::binary);
 			decompressZlib(is, oss);
 			std::istringstream iss(oss.str(), std::ios_base::binary);
 			m_node_metadata.deSerialize(iss);
-		}catch(SerializationError &e) {
+		}
+		catch(SerializationError &e)
+		{
 			dstream<<"WARNING: MapBlock::deSerialize(): Ignoring an error"
 					<<" while deserializing node metadata"<<std::endl;
 		}
@@ -495,7 +529,8 @@ void MapBlock::deSerializeDiskExtra(std::istream &is, u8 version)
 	{
 		u16 count = readU16(is);
 		// Not supported and length not known if count is not 0
-		if(count != 0){
+		if(count != 0)
+		{
 			dstream<<"WARNING: MapBlock::deSerializeDiskExtra(): "
 					<<"Ignoring stuff coming at and after MBOs"<<std::endl;
 			return;
@@ -506,19 +541,13 @@ void MapBlock::deSerializeDiskExtra(std::istream &is, u8 version)
 		Versions up from 15 have static objects.
 	*/
 	if(version >= 15)
-	{
 		m_static_objects.deSerialize(is);
-	}
 
 	// Timestamp
 	if(version >= 17)
-	{
 		setTimestamp(readU32(is));
-	}
 	else
-	{
 		setTimestamp(BLOCK_TIMESTAMP_UNDEFINED);
-	}
 }
 
 /*
@@ -527,9 +556,7 @@ void MapBlock::deSerializeDiskExtra(std::istream &is, u8 version)
 std::string analyze_block(MapBlock *block)
 {
 	if(block == NULL)
-	{
 		return "NULL";
-	}
 
 	std::ostringstream desc;
 
@@ -540,16 +567,16 @@ std::string analyze_block(MapBlock *block)
 
 	switch(block->getModified())
 	{
-	case MOD_STATE_CLEAN:
+	  case MOD_STATE_CLEAN:
 		desc<<"CLEAN,           ";
 		break;
-	case MOD_STATE_WRITE_AT_UNLOAD:
+	  case MOD_STATE_WRITE_AT_UNLOAD:
 		desc<<"WRITE_AT_UNLOAD, ";
 		break;
-	case MOD_STATE_WRITE_NEEDED:
+	  case MOD_STATE_WRITE_NEEDED:
 		desc<<"WRITE_NEEDED,    ";
 		break;
-	default:
+	  default:
 		desc<<"unknown getModified()="+itos(block->getModified())+", ";
 	}
 
@@ -576,9 +603,7 @@ std::string analyze_block(MapBlock *block)
 		desc<<"lighting_exp [ ], ";
 
 	if(block->isDummy())
-	{
 		desc<<"Dummy, ";
-	}
 	else
 	{
 		// We'll just define the numbers here, don't want to include
@@ -595,6 +620,7 @@ std::string analyze_block(MapBlock *block)
 		bool some_air = false;
 		bool trees = false;
 		bool water = false;
+		
 		for(s16 z0=0; z0<MAP_BLOCKSIZE; z0++)
 		for(s16 y0=0; y0<MAP_BLOCKSIZE; y0++)
 		for(s16 x0=0; x0<MAP_BLOCKSIZE; x0++)
