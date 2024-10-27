@@ -927,6 +927,8 @@ void Client::ProcessData(u8 *data, u32 datasize, u16 sender_peer_id)
 			Add it to mesh update queue and set it to be acknowledged after update.
 		*/
 		addUpdateMeshTaskWithEdge(p, true);
+		if(block)
+		    block->ResetCurrent();
 	}
 	break;
 	case TOCLIENT_SERVERSETTINGS:

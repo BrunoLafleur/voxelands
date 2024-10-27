@@ -658,7 +658,7 @@ struct TestMapSector
 		assert(sector.getBlockNoCreateNoEx(0) == 0);
 		assert(sector.getBlockNoCreateNoEx(1) == 0);
 
-		MapBlock * bref = sector.createBlankBlock(-2);
+		MapBlock* const bref = sector.createBlankBlock(-2);
 
 		assert(sector.getBlockNoCreateNoEx(0) == 0);
 		assert(sector.getBlockNoCreateNoEx(-2) == bref);

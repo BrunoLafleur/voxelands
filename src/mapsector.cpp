@@ -57,17 +57,17 @@ void MapSector::deleteBlocks()
 	m_blocks.clear();
 }
 
-MapBlock * MapSector::getBlockBuffered(s16 y)
+MapBlock* MapSector::getBlockBuffered(s16 y)
 {
-	MapBlock *block = NULL;
+	MapBlock* block = NULL;
 
 	if (m_block_cache != NULL && y == m_block_cache_y)
 		return m_block_cache;
 
 	// If block doesn't exist, return NULL
-	core::map<s16, MapBlock*>::Node *n = m_blocks.find(y);
+	core::map<s16, MapBlock*>::Node* const n = m_blocks.find(y);
 	// If block exists, return it
-	if (n != NULL)
+	if (n)
 		block = n->getValue();
 
 	// Cache the last result
@@ -77,12 +77,16 @@ MapBlock * MapSector::getBlockBuffered(s16 y)
 	return block;
 }
 
-MapBlock * MapSector::getBlockNoCreateNoEx(s16 y)
+MapBlock* MapSector::getBlockNoCreateNoEx(s16 y)
 {
-	return getBlockBuffered(y);
+	MapBlock* const block = getBlockBuffered(y);
+
+	if(block)
+	    block->SetCurrent();
+	return block;
 }
 
-MapBlock * MapSector::createBlankBlockNoInsert(s16 y)
+MapBlock* MapSector::createBlankBlockNoInsert(s16 y)
 {
 	assert(getBlockBuffered(y) == NULL);
 
@@ -93,7 +97,7 @@ MapBlock * MapSector::createBlankBlockNoInsert(s16 y)
 	return block;
 }
 
-MapBlock * MapSector::createBlankBlock(s16 y)
+MapBlock* MapSector::createBlankBlock(s16 y)
 {
 	MapBlock* const block = createBlankBlockNoInsert(y);
 

@@ -163,7 +163,8 @@ MapBlock* Map::getBlockNoCreateNoExNoLock(v3s16 p3d)
 	MapSector* const sector = getSectorNoGenerateNoExNoLock(p2d);
 	if(sector == NULL)
 		return NULL;
-	
+
+    // Set mesh_current.
 	MapBlock* const block = sector->getBlockNoCreateNoEx(p3d.Y);
 	return block;
 }
@@ -173,8 +174,6 @@ MapBlock* Map::getBlockNoCreateNoEx(v3s16 p3d)
 	JMutexAutoLock lock(m_sectors_mutex);
 	MapBlock* const block = getBlockNoCreateNoExNoLock(p3d);
 
-	if(block)
-	    block->SetCurrent();
 	return block;
 }
 
@@ -208,8 +207,10 @@ bool Map::isValidPosition(v3s16 p)
 	const v3s16 blockpos = getNodeBlockPos(p);
 	JMutexAutoLock lock(m_sectors_mutex);
 	MapBlock* const block = getBlockNoCreateNoExNoLock(blockpos);
-	if(block == NULL)
+	if(!block)
 		throw InvalidPositionException();
+	else
+	    block->ResetCurrent();
 	return block != NULL;
 }
 
@@ -219,7 +220,7 @@ MapNode Map::getNodeNoEx(v3s16 p, bool* is_valid_position)
 	const v3s16 blockpos = getNodeBlockPos(p);
 	JMutexAutoLock lock(m_sectors_mutex);
 	MapBlock* const block = getBlockNoCreateNoExNoLock(blockpos);
-	if (block == NULL)
+	if (!block)
 	{
 		if (is_valid_position)
 			*is_valid_position = false;
@@ -229,8 +230,11 @@ MapNode Map::getNodeNoEx(v3s16 p, bool* is_valid_position)
 	const v3s16 relpos = p - blockpos*MAP_BLOCKSIZE;
 	bool is_valid_p;
 	MapNode node = block->getNodeNoCheck(relpos, &is_valid_p);
+
+	block->ResetCurrent();
 	if (is_valid_position != NULL)
 		*is_valid_position = is_valid_p;
+
 	return node;
 }
 
@@ -240,14 +244,17 @@ MapNode Map::getNode(v3s16 p)
 	const v3s16 blockpos = getNodeBlockPos(p);
 	JMutexAutoLock lock(m_sectors_mutex);
 	MapBlock* const block = getBlockNoCreateNoExNoLock(blockpos);
-	if (block == NULL)
+	if (!block)
 		throw InvalidPositionException();
 	
 	const v3s16 relpos = p - blockpos*MAP_BLOCKSIZE;
 	bool is_valid_position;
 	MapNode node = block->getNodeNoCheck(relpos, &is_valid_position);
+
+	block->ResetCurrent();
 	if (!is_valid_position)
 		throw InvalidPositionException();
+
 	return node;
 }
 
@@ -257,11 +264,12 @@ void Map::setNode(v3s16 p, MapNode & n)
 	const v3s16 blockpos = getNodeBlockPos(p);
 	JMutexAutoLock lock(m_sectors_mutex);
 	MapBlock* const block = getBlockNoCreateNoExNoLock(blockpos);
-	if (block == NULL)
+	if (!block)
 		throw InvalidPositionException();
 	
 	const v3s16 relpos = p - blockpos*MAP_BLOCKSIZE;
 	block->setNodeNoCheck(relpos, n);
+	block->ResetCurrent();
 }
 
 
@@ -355,11 +363,15 @@ void Map::unspreadLight(enum LightBank bank,
 			{
 				if (block == NULL || blockpos != blockpos_last)
 				{
-					block = getBlockNoCreate(blockpos);
-					blockpos_last = blockpos;
+				    
+				    if(block)
+					block->ResetCurrent();
+	
+				    block = getBlockNoCreate(blockpos);
+				    blockpos_last = blockpos;
 
-					block_checked_in_modified = false;
-					blockchangecount++;
+				    block_checked_in_modified = false;
+				    blockchangecount++;
 				}
 			}
 			catch(InvalidPositionException &e)
@@ -543,11 +555,15 @@ void Map::spreadLight(enum LightBank bank,
 			{
 				if (block == NULL || blockpos != blockpos_last)
 				{
-					block = getBlockNoCreate(blockpos);
-					blockpos_last = blockpos;
+				    
+				    if(block)
+					block->ResetCurrent();
+	
+				    block = getBlockNoCreate(blockpos);
+				    blockpos_last = blockpos;
 
-					block_checked_in_modified = false;
-					blockchangecount++;
+				    block_checked_in_modified = false;
+				    blockchangecount++;
 				}
 			}
 			catch(InvalidPositionException &e)
@@ -790,14 +806,14 @@ void Map::updateLighting(enum LightBank bank,
 			pos.Y--;
 			try
 			{				
-				if(block)
-				    block->ResetCurrent();
+			    if(block)
+				block->ResetCurrent();
 				
-				block = getBlockNoCreate(pos);
+			    block = getBlockNoCreate(pos);
 			}
 			catch(InvalidPositionException &e)
 			{
-				assert(0);
+			    assert(0);
 			}
 
 		}
@@ -1713,7 +1729,8 @@ void Map::transformLiquids(core::map<v3s16, MapBlock*> & modified_blocks)
 	    // PB a traiter.
 		v3s16 blockpos = getNodeBlockPos(p0);
 		MapBlock* const block = getBlockNoCreateNoEx(blockpos);
-		if(block != NULL)
+		
+		if(block)
 		{
 			modified_blocks.insert(blockpos, block);
 			// If node emits light, MapBlock requires lighting update
@@ -2289,9 +2306,9 @@ MapBlock* ServerMap::createBlock(v3s16 p)
 		NOTE: On old save formats, this will be slow, as it generates
 		      lighting on blocks for them.
 	*/
-	ServerMapSector *sector;
+	ServerMapSector* sector;
 	try{
-		sector = (ServerMapSector*)createSector(p2d);
+		sector = (ServerMapSector*) createSector(p2d);
 		assert(sector->getId() == MAPSECTOR_SERVER);
 	}
 	catch(InvalidPositionException &e)
@@ -2667,7 +2684,8 @@ void ServerMap::saveBlock(MapBlock* const block)
 	block->resetModified();
 }
 
-void ServerMap::loadBlock(std::string *blob, v3s16 p3d, MapSector *sector, bool save_after_load)
+void ServerMap::loadBlock(std::string *blob, v3s16 p3d, MapSector *sector,
+		bool save_after_load)
 {
 	DSTACK(__FUNCTION_NAME);
 
@@ -2689,10 +2707,11 @@ void ServerMap::loadBlock(std::string *blob, v3s16 p3d, MapSector *sector, bool 
 		// This will always return a sector because we're the server
 		//MapSector *sector = emergeSector(p2d);
 
-		MapBlock *block = NULL;
 		bool created_new = false;
-		block = sector->getBlockNoCreateNoEx(p3d.Y);
-		if (block == NULL) {
+		MapBlock* block = sector->getBlockNoCreateNoEx(p3d.Y);
+		
+		if (!block)
+		{
 			block = sector->createBlankBlockNoInsert(p3d.Y);
 			created_new = true;
 		}
@@ -2717,7 +2736,6 @@ void ServerMap::loadBlock(std::string *blob, v3s16 p3d, MapSector *sector, bool 
 		// We just loaded it from, so it's up-to-date.
 		block->resetModified();
 		block->ResetCurrent();
-
 	}
 	catch(SerializationError &e)
 	{
@@ -2737,7 +2755,8 @@ MapBlock* ServerMap::loadBlock(v3s16 blockpos)
 
 	verifyDatabase();
 
-	if (sqlite3_bind_int64(m_database_read, 1, getBlockAsInteger(blockpos)) != SQLITE_OK)
+	if (sqlite3_bind_int64(m_database_read, 1,
+					getBlockAsInteger(blockpos)) != SQLITE_OK)
 		infostream<<"WARNING: Could not bind block position for load: "
 			<<sqlite3_errmsg(m_database)<<std::endl;
 	if (sqlite3_step(m_database_read) == SQLITE_ROW)
@@ -2745,12 +2764,13 @@ MapBlock* ServerMap::loadBlock(v3s16 blockpos)
 		/*
 			Make sure sector is loaded
 		*/
-		MapSector *sector = createSector(p2d);
+		MapSector* sector = createSector(p2d);
 
 		/*
 			Load block
 		*/
-		const char * data = (const char *)sqlite3_column_blob(m_database_read, 0);
+		const char* data =
+		    (const char*) sqlite3_column_blob(m_database_read, 0);
 		size_t len = sqlite3_column_bytes(m_database_read, 0);
 
 		std::string datastr(data, len);
@@ -3697,11 +3717,12 @@ void MapVoxelManipulator::blitBack(core::map<v3s16, MapBlock*> & modified_blocks
 
 		if (block == NULL || blockpos != blockpos_last)
 		{
-			block = m_map->getBlockNoCreate(blockpos);
-			blockpos_last = blockpos;
-			block_checked_in_modified = false;
-			if(block)
-			    block->ResetCurrent();
+		    
+		    if(block)
+			block->ResetCurrent();
+		    block = m_map->getBlockNoCreate(blockpos);
+		    blockpos_last = blockpos;
+		    block_checked_in_modified = false;
 		}
 
 		// Calculate relative position in block
@@ -3725,6 +3746,9 @@ void MapVoxelManipulator::blitBack(core::map<v3s16, MapBlock*> & modified_blocks
 			block_checked_in_modified = true;
 		}
 	}
+	
+	if(block)
+	    block->ResetCurrent();
 }
 
 ManualMapVoxelManipulator::ManualMapVoxelManipulator(Map *map):
@@ -3836,7 +3860,7 @@ void ManualMapVoxelManipulator::blitBackAll(
 		}
 		
 		MapBlock* const block = m_map->getBlockNoCreateNoEx(p);
-		if (block == NULL)
+		if (!block)
 		{
 			infostream<<"WARNING: "<<__FUNCTION_NAME
 					<<": got NULL block "
@@ -3878,7 +3902,7 @@ void ManualMapVoxelManipulator::blitBackAllWithMeta(
 		}
 		
 		MapBlock* const block = m_map->getBlockNoCreateNoEx(p);
-		if (block == NULL)
+		if (!block)
 		{
 			infostream<<"WARNING: "<<__FUNCTION_NAME
 					<<": got NULL block "
