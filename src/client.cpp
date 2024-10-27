@@ -383,10 +383,13 @@ void Client::step(float dtime)
 	// Get connection status
 	bool connected = connectedAndInitialized();
 
-	if (connected == false) {
-		float &counter = m_connection_reinit_timer;
+	if (connected == false)
+	{
+		float& counter = m_connection_reinit_timer;
 		counter -= dtime;
-		if (counter <= 0.0) {
+		
+		if (counter <= 0.0)
+		{
 			counter = 2.0;
 
 			//JMutexAutoLock envlock(m_env_mutex); //bulk comment-out
@@ -432,14 +435,14 @@ void Client::step(float dtime)
 		Run Map's timers and unload unused data
 	*/
 	const float map_timer_and_unload_dtime = 5.25;
-	if (m_map_timer_and_unload_interval.step(dtime, map_timer_and_unload_dtime)) {
+	if (m_map_timer_and_unload_interval.step(dtime,
+					map_timer_and_unload_dtime))
+	{
 		ScopeProfiler sp(g_profiler, "Client: map timer and unload");
 		core::list<v3s16> deleted_blocks;
-		m_env.getMap().timerUpdate(
-			map_timer_and_unload_dtime,
-			config_get_float("client.chunk.timeout"),
-			&deleted_blocks
-		);
+		m_env.getMap().timerUpdate(map_timer_and_unload_dtime,
+				config_get_float("client.chunk.timeout"),
+				&deleted_blocks);
 
 		/*if(deleted_blocks.size() > 0)
 			infostream<<"Client: Unloaded "<<deleted_blocks.size()
@@ -452,8 +455,11 @@ void Client::step(float dtime)
 
 		core::list<v3s16>::Iterator i = deleted_blocks.begin();
 		core::list<v3s16> sendlist;
-		for (;;) {
-			if (sendlist.size() == 255 || i == deleted_blocks.end()) {
+		
+		for (;;)
+		{
+			if (sendlist.size() == 255 || i == deleted_blocks.end())
+			{
 				if (sendlist.size() == 0)
 					break;
 				/*
