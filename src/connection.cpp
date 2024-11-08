@@ -552,9 +552,7 @@ Connection::~Connection()
 void * Connection::Thread()
 {
 	ThreadStarted();
-	log_mutex.Lock();
 	log_register_thread("Connection");
-	log_mutex.Unlock();
 
 	dout_con  <<  "Connection thread started"  <<  std::endl;
 

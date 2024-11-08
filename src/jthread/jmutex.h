@@ -27,17 +27,17 @@
 
 #ifndef JTHREAD_JMUTEX_H
 
-#define JTHREAD_JMUTEX_H
+# define JTHREAD_JMUTEX_H
 
-#include "jthreadconfig.h"
-#ifdef JTHREAD_CONFIG_WIN32THREADS
-	#ifndef _WIN32_WCE
-		#include <process.h>
-	#endif // _WIN32_WCE
-	#include <winsock2.h>
-	#include <windows.h>
+# include "jthreadconfig.h"
+# ifdef JTHREAD_CONFIG_WIN32THREADS
+#  ifndef _WIN32_WCE
+#   include <process.h>
+#  endif // _WIN32_WCE
+# include <winsock2.h>
+# include <windows.h>
 #else // using pthread
-	#include <pthread.h>
+# include <pthread.h>
 #endif // JTHREAD_CONFIG_WIN32THREADS
 
 #define ERR_JMUTEX_ALREADYINIT						-1
@@ -49,14 +49,14 @@ namespace jthread
 
 class JTHREAD_IMPORTEXPORT JMutex
 {
-public:
+ public:
 	JMutex();
 	~JMutex();
 	int Init();
 	int Lock();
 	int Unlock();
-	bool IsInitialized() 						{ return initialized; }
-private:
+	bool IsInitialized() { return initialized; }
+ private:
 #ifdef JTHREAD_CONFIG_WIN32THREADS
 #ifdef JTHREAD_CONFIG_JMUTEXCRITICALSECTION
 	CRITICAL_SECTION mutex;

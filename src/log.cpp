@@ -57,22 +57,25 @@ void log_add_output_all_levs(ILogOutput *out)
 void log_register_thread(const std::string &name)
 {
 	threadid_t id = get_current_thread_id();
+	log_mutex.Lock();
 	log_threadnames[id] = name;
+	log_mutex.Unlock();
 }
 
 static std::string get_lev_string(enum LogMessageLevel lev)
 {
-	switch(lev){
-	case LMT_ERROR:
-		return "ERROR";
-	case LMT_ACTION:
-		return "ACTION";
-	case LMT_INFO:
-		return "INFO";
-	case LMT_VERBOSE:
-		return "VERBOSE";
-	case LMT_NUM_VALUES:
-		break;
+	switch(lev)
+	{
+	  case LMT_ERROR:
+	    return "ERROR";
+	  case LMT_ACTION:
+	    return "ACTION";
+	  case LMT_INFO:
+	    return "INFO";
+	  case LMT_VERBOSE:
+	    return "VERBOSE";
+	  case LMT_NUM_VALUES:
+	    break;
 	}
 	return "(unknown level)";
 }
@@ -80,20 +83,26 @@ static std::string get_lev_string(enum LogMessageLevel lev)
 static void log_printline(enum LogMessageLevel lev, const std::string &text)
 {
 	std::string threadname = "(unknown thread)";
-	std::map<threadid_t, std::string>::const_iterator i;
 	
 	log_mutex.Lock();
-	i = log_threadnames.find(get_current_thread_id());
+	
+	std::map<threadid_t, std::string>::const_iterator i =
+	    log_threadnames.find(get_current_thread_id());
 	if(i != log_threadnames.end())
 		threadname = i->second;
+	
 	log_mutex.Unlock();
 
 	std::string levelname = get_lev_string(lev);
 	std::ostringstream os(std::ios_base::binary);
-	os<<getTimestamp()<<": "<<levelname<<"["<<threadname<<"]: "<<text;
+	os << getTimestamp() << ": " << levelname << "["<<threadname<<"]: "
+	   << text;
+	
 	for(std::list<ILogOutput*>::iterator i = log_outputs[lev].begin();
-			i != log_outputs[lev].end(); i++){
-		ILogOutput *out = *i;
+			i != log_outputs[lev].end(); i++)
+	{
+		ILogOutput* const out = *i;
+		
 		out->printLog(os.str());
 		out->printLog(lev, text);
 	}
@@ -101,7 +110,8 @@ static void log_printline(enum LogMessageLevel lev, const std::string &text)
 
 class Logbuf : public std::streambuf
 {
-public:
+    public:
+	
 	Logbuf(enum LogMessageLevel lev):
 			m_lev(lev),m_buf(),m_mutex()
 	{
@@ -113,22 +123,24 @@ public:
 	{
 	}
 
-	int overflow(int c)
+	int overflow(const int c)
 	{
 		bufchar(c);
 		return c;
 	}
-	std::streamsize xsputn(const char *s, std::streamsize n)
+	std::streamsize xsputn(const char* const s,const std::streamsize n)
 	{
 		for(int i=0; i<n; i++)
 			bufchar(s[i]);
 		return n;
 	}
 
-	void bufchar(char c)
+	void bufchar(const char c)
 	{
 	    	JMutexAutoLock lock(m_mutex);
-		if(c == '\n' || c == '\r'){
+		
+		if(c == '\n' || c == '\r')
+		{
 			if(m_buf != "")
 			    log_printline(m_lev, m_buf);
 			m_buf = "";
@@ -137,7 +149,8 @@ public:
 		m_buf += c;
 	}
 
-private:
+    private:
+	
 	enum LogMessageLevel m_lev;
 	std::string m_buf;
 	JMutex m_mutex;

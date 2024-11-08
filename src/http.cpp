@@ -70,9 +70,7 @@ static std::string http_player_interface(Player *player, HTTPServer *server, boo
 void * HTTPServerThread::Thread()
 {
 	ThreadStarted();
-	log_mutex.Lock();
 	log_register_thread("HTTPServerThread");
-	log_mutex.Unlock();
 
 	DSTACK(__FUNCTION_NAME);
 

@@ -190,18 +190,15 @@ void vlprintf(uint8_t type,const char* fmt,...)
 		return;
 
 	/* if it's not logged, don't process it */
-	if (
-		!type
-		|| (
-			(type < logdata.min_level || type > logdata.max_level)
-			&& (type < logdata.system_min_level || type > logdata.system_max_level)
-			&& (type < logdata.console_min_level || type > logdata.console_max_level)
-		)
-	)
+	if (!type || ((type < logdata.min_level || type > logdata.max_level)
+					&& (type < logdata.system_min_level || type > logdata.system_max_level)
+					&& (type < logdata.console_min_level || type > logdata.console_max_level)))
 		return;
 
 	va_start(ap, fmt);
-	if (vsnprintf(buff, 1024, fmt, ap) >= 1024) {
+	
+	if (vsnprintf(buff, 1024, fmt, ap) >= 1024)
+	{
 		va_end(ap);
 		return;
 	}

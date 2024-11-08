@@ -73,7 +73,7 @@ extern void debugstreams_deinit();
 
 class Debugbuf : public std::streambuf
 {
-public:
+    public:
 	Debugbuf(bool disable_stderr)
 	{
 		m_disable_stderr = disable_stderr;
@@ -108,18 +108,18 @@ public:
 		return n;
 	}
 
-private:
+    private:
 	bool m_disable_stderr;
 };
 
 // This is used to redirect output to /dev/null
-class Nullstream : public std::ostream {
-public:
+class Nullstream : public std::ostream
+{
+    public:
 	Nullstream():
 		std::ostream(0)
 	{
 	}
-private:
 };
 
 extern Debugbuf debugbuf;
@@ -168,11 +168,11 @@ extern void debug_stacks_print();
 
 class DebugStacker
 {
-public:
+    public:
 	DebugStacker(const char *text);
 	~DebugStacker();
 
-private:
+    private:
 	DebugStack *m_stack;
 	bool m_overflowed;
 };
@@ -192,7 +192,7 @@ private:
 
 class PacketCounter
 {
-public:
+    public:
 	PacketCounter()
 	{
 	}
@@ -232,7 +232,7 @@ public:
 		}
 	}
 
-private:
+    private:
 	// command, count
 	core::map<u16, u16> m_packets;
 };
@@ -242,46 +242,47 @@ private:
 */
 
 #if CATCH_UNHANDLED_EXCEPTIONS == 1
-	#define BEGIN_PORTABLE_DEBUG_EXCEPTION_HANDLER try{
-	#define END_PORTABLE_DEBUG_EXCEPTION_HANDLER(logstream)\
+# define BEGIN_PORTABLE_DEBUG_EXCEPTION_HANDLER try{
+# define END_PORTABLE_DEBUG_EXCEPTION_HANDLER(logstream)\
 		}catch(std::exception &e){\
 			logstream<<"ERROR: An unhandled exception occurred: "\
 					<<e.what()<<std::endl;\
 			assert(0);\
 		}
-	#ifdef _WIN32 // Windows
-		#ifdef _MSC_VER // MSVC
+# ifdef _WIN32 // Windows
+#  ifdef _MSC_VER // MSVC
 void se_trans_func(unsigned int, EXCEPTION_POINTERS*);
 
 class FatalSystemException : public BaseException
 {
-public:
+    public:
 	FatalSystemException(const char *s):
 		BaseException(s)
 	{}
 };
-			#define BEGIN_DEBUG_EXCEPTION_HANDLER \
+
+#   define BEGIN_DEBUG_EXCEPTION_HANDLER \
 				BEGIN_PORTABLE_DEBUG_EXCEPTION_HANDLER\
 				_set_se_translator(se_trans_func);
 
-			#define END_DEBUG_EXCEPTION_HANDLER(logstream) \
+#   define END_DEBUG_EXCEPTION_HANDLER(logstream) \
 				END_PORTABLE_DEBUG_EXCEPTION_HANDLER(logstream)
-		#else // Probably mingw
-			#define BEGIN_DEBUG_EXCEPTION_HANDLER\
+#  else // Probably mingw
+#   define BEGIN_DEBUG_EXCEPTION_HANDLER\
 				BEGIN_PORTABLE_DEBUG_EXCEPTION_HANDLER
-			#define END_DEBUG_EXCEPTION_HANDLER(logstream)\
+#   define END_DEBUG_EXCEPTION_HANDLER(logstream)\
 				END_PORTABLE_DEBUG_EXCEPTION_HANDLER(logstream)
-		#endif
-	#else // Posix
-		#define BEGIN_DEBUG_EXCEPTION_HANDLER\
+#  endif
+# else // Posix
+#  define BEGIN_DEBUG_EXCEPTION_HANDLER\
 			BEGIN_PORTABLE_DEBUG_EXCEPTION_HANDLER
-		#define END_DEBUG_EXCEPTION_HANDLER(logstream)\
+#  define END_DEBUG_EXCEPTION_HANDLER(logstream)\
 			END_PORTABLE_DEBUG_EXCEPTION_HANDLER(logstream)
-	#endif
+# endif
 #else
 	// Dummy ones
-	#define BEGIN_DEBUG_EXCEPTION_HANDLER
-	#define END_DEBUG_EXCEPTION_HANDLER(logstream)
+# define BEGIN_DEBUG_EXCEPTION_HANDLER
+# define END_DEBUG_EXCEPTION_HANDLER(logstream)
 #endif
 
 #endif // DEBUG_HEADER

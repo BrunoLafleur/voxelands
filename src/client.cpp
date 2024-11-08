@@ -151,9 +151,7 @@ QueuedMeshUpdate * MeshUpdateQueue::pop()
 void * MeshUpdateThread::Thread()
 {
 	ThreadStarted();
-	log_mutex.Lock();
 	log_register_thread("MeshUpdateThread");
-	log_mutex.Unlock();
 
 	DSTACK(__FUNCTION_NAME);
 

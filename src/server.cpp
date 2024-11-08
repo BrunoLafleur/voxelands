@@ -87,9 +87,7 @@ private:
 void* ServerThread::Thread()
 {
 	ThreadStarted();
-	log_mutex.Lock();
 	log_register_thread("ServerThread");
-	log_mutex.Unlock();
 
 	DSTACK(__FUNCTION_NAME);
 
@@ -122,12 +120,10 @@ void* ServerThread::Thread()
 	return NULL;
 }
 
-void * EmergeThread::Thread()
+void* EmergeThread::Thread()
 {
 	ThreadStarted();
-	log_mutex.Lock();
 	log_register_thread("EmergeThread");
-	log_mutex.Unlock();
 
 	DSTACK(__FUNCTION_NAME);
 
